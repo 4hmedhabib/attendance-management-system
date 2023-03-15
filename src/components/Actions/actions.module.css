@@ -1,0 +1,42 @@
+
+.replyImg {
+    @apply w-3 h-3
+}
+
+.replyText {
+    @apply text-moderateBlue font-[500] font-rubik text-sm
+}
+
+
+.voteContainer {
+    @apply bg-lightGray w-full max-w-[40px] h-[95px] rounded-lg hidden md:flex flex-col justify-around items-center
+}
+
+.voteBtn {
+    @apply hover:cursor-pointer active:scale-90
+}
+
+.voteText {
+    @apply text-moderateBlue font-[500]
+}
+
+
+.mobileVoteContainer {
+    @apply bg-lightGray py-1 rounded-lg justify-around items-center flex flex-row h-full max-h-24 w-full max-w-[90px]
+}
+
+.actionContainer {
+    @apply flex justify-center items-center gap-1 hover:cursor-pointer active:scale-90 mx-1
+}
+
+.actionIcon {
+    @apply h-[15px] w-3
+}
+
+.deleteText {
+    @apply text-[13px] text-softRed font-[500]
+}
+
+.editText {
+    @apply text-[13px] text-moderateBlue font-[500]
+}
