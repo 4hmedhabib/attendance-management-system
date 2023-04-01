@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,7 +16,7 @@ model users {
   lastname       String
   username       String    @unique
   mobileno       String    @unique
-  email          String    @unique
+  email          String?   @unique
   password       String
   ispwdupgraded  Boolean   @default(false)
   lastaccessdate DateTime?
@@ -57,14 +56,14 @@ model users {
   facultymanager faculties? @relation("FACULTY_MANAGER")
   facultydeputy  faculties? @relation("FACULTY_DEPUTY")
 
-  assignedtechercourses teacher_courses[]
-
   assignedcoursesemisters course_semisters[]
 
   assignedclasssemisters class_semisters[] @relation("ASSIGNED_CLASSSEMISTERS")
   updatedclasssemisters  class_semisters[] @relation("UPDATED_CLASSSEMISTERS")
 
   assignedstudentclasses student_classes[]
+
+  attendaces attendances[]
 }
 
 model faculties {
@@ -127,26 +126,12 @@ model classes {
   updatedby   users? @relation("UPDATED_CLASSES", fields: [updatedbyid], references: [userid])
   updatedbyid Int?
 
-  shifts        shifts @relation(fields: [shiftsShiftid], references: [shiftid])
-  shiftsShiftid Int
+  shift   shifts @relation(fields: [shiftid], references: [shiftid])
+  shiftid Int
 
   semisters class_semisters[]
 
   students student_classes[]
-}
-
-model semisters {
-  semisterid   Int      @id @default(autoincrement())
-  semistername String
-  semisterslug String   @unique
-  description  String?
-  createdat    DateTime @default(now())
-  updatedat    DateTime @updatedAt
-
-  // RELATIONS
-  coureses course_semisters[]
-
-  classes class_semisters[]
 }
 
 model class_semisters {
@@ -155,6 +140,8 @@ model class_semisters {
 
   semister   semisters @relation(fields: [semisterid], references: [semisterid])
   semisterid Int
+
+  courses course_semisters[]
 
   isstarted  Boolean  @default(false)
   startdate  DateTime
@@ -172,6 +159,20 @@ model class_semisters {
   @@id([classid, semisterid])
 }
 
+model semisters {
+  semisterid   Int      @id @default(autoincrement())
+  semistername String
+  semisterslug String   @unique
+  description  String?
+  createdat    DateTime @default(now())
+  updatedat    DateTime @updatedAt
+
+  // RELATIONS
+  coureses course_semisters[]
+
+  classes class_semisters[]
+}
+
 model students {
   studentid  Int      @id @default(autoincrement())
   stdid      String   @unique
@@ -187,6 +188,7 @@ model students {
   user users?
 
   student_classes student_classes[]
+  attendaces      attendances[]
 }
 
 model student_classes {
@@ -211,13 +213,14 @@ model teachers {
   middlename String
   lastname   String
   mobileno   String   @unique
+  email      String?  @unique
   createdat  DateTime @default(now())
   updatedat  DateTime @updatedAt
 
   // RELATIONS
   user users?
 
-  courses teacher_courses[]
+  courses course_semisters[]
 }
 
 model course_semisters {
@@ -227,12 +230,21 @@ model course_semisters {
   semister   semisters @relation(fields: [semisterid], references: [semisterid])
   semisterid Int
 
+  teacher   teachers @relation(fields: [teacherid], references: [teacherid])
+  teacherid Int
+
+  class           class_semisters @relation(fields: [classid, classsemisterid], references: [classid, semisterid])
+  classid         Int
+  classsemisterid Int
+
+  attendaces attendances[]
+
   assignedat DateTime @default(now())
 
   assignedby   users @relation(fields: [assignedbyid], references: [userid])
   assignedbyid Int
 
-  @@id([courseid, semisterid])
+  @@id([courseid, semisterid, teacherid, classid])
 }
 
 model courses {
@@ -250,22 +262,36 @@ model courses {
   updatedby   users? @relation("UPDATED_COURSES", fields: [updatedbyid], references: [userid])
   updatedbyid Int?
 
-  teachers teacher_courses[]
-
-  semisters course_semisters[]
+  courses course_semisters[]
 }
 
-model teacher_courses {
-  course   courses @relation(fields: [courseid], references: [courseid])
-  courseid Int
+model attendances {
+  attendanceid   Int      @id @default(autoincrement())
+  attendancedate DateTime
+  createddate    DateTime @default(now())
 
-  teacher   teachers @relation(fields: [teacherid], references: [teacherid])
-  teacherid Int
+  // RELATIONS
+  // =========
+  createdby   users @relation(fields: [createdbyid], references: [userid])
+  createdbyid Int
 
-  assignedat DateTime @default(now())
+  student   students @relation(fields: [studentid], references: [studentid])
+  studentid Int
 
-  assignedby   users @relation(fields: [assignedbyid], references: [userid])
-  assignedbyid Int
+  course     course_semisters @relation(fields: [courseid, semisterid, teacherid, classid], references: [courseid, semisterid, teacherid, classid])
+  courseid   Int
+  semisterid Int
+  teacherid  Int
+  classid    Int
 
-  @@id([courseid, teacherid])
+  status   attendacestatuses @relation(fields: [statusid], references: [statusid])
+  statusid Int
+}
+
+model attendacestatuses {
+  statusid   Int    @id @default(autoincrement())
+  statusname String
+  statusslug String @unique
+
+  attendances attendances[]
 }
