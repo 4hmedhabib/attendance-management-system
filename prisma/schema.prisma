@@ -111,6 +111,39 @@ model shifts {
   facultyid Int
 }
 
+model students {
+  studentid  Int      @id @default(autoincrement())
+  stdid      String   @unique
+  firstname  String
+  middlename String
+  lastname   String
+  mobileno   String   @unique
+  email      String?  @unique
+  createdat  DateTime @default(now())
+  updatedat  DateTime @updatedAt
+
+  // RELATIONS
+  user users?
+
+  student_classes student_classes[]
+  attendaces      attendances[]
+}
+
+model student_classes {
+  student   students @relation(fields: [studentid], references: [studentid])
+  studentid Int
+
+  class   classes @relation(fields: [classid], references: [classid])
+  classid Int
+
+  assignedat DateTime @default(now())
+
+  assignedby   users @relation(fields: [assignedbyid], references: [userid])
+  assignedbyid Int
+
+  @@id([classid, studentid])
+}
+
 model classes {
   classid     Int      @id @default(autoincrement())
   classname   String
@@ -173,56 +206,6 @@ model semisters {
   classes class_semisters[]
 }
 
-model students {
-  studentid  Int      @id @default(autoincrement())
-  stdid      String   @unique
-  firstname  String
-  middlename String
-  lastname   String
-  mobileno   String   @unique
-  email      String?  @unique
-  createdat  DateTime @default(now())
-  updatedat  DateTime @updatedAt
-
-  // RELATIONS
-  user users?
-
-  student_classes student_classes[]
-  attendaces      attendances[]
-}
-
-model student_classes {
-  student   students @relation(fields: [studentid], references: [studentid])
-  studentid Int
-
-  class   classes @relation(fields: [classid], references: [classid])
-  classid Int
-
-  assignedat DateTime @default(now())
-
-  assignedby   users @relation(fields: [assignedbyid], references: [userid])
-  assignedbyid Int
-
-  @@id([classid, studentid])
-}
-
-model teachers {
-  teacherid  Int      @id @default(autoincrement())
-  techid     String   @unique
-  firstname  String
-  middlename String
-  lastname   String
-  mobileno   String   @unique
-  email      String?  @unique
-  createdat  DateTime @default(now())
-  updatedat  DateTime @updatedAt
-
-  // RELATIONS
-  user users?
-
-  courses course_semisters[]
-}
-
 model course_semisters {
   course   courses @relation(fields: [courseid], references: [courseid])
   courseid Int
@@ -261,6 +244,23 @@ model courses {
 
   updatedby   users? @relation("UPDATED_COURSES", fields: [updatedbyid], references: [userid])
   updatedbyid Int?
+
+  courses course_semisters[]
+}
+
+model teachers {
+  teacherid  Int      @id @default(autoincrement())
+  techid     String   @unique
+  firstname  String
+  middlename String
+  lastname   String
+  mobileno   String   @unique
+  email      String?  @unique
+  createdat  DateTime @default(now())
+  updatedat  DateTime @updatedAt
+
+  // RELATIONS
+  user users?
 
   courses course_semisters[]
 }
