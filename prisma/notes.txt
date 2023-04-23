@@ -1,3 +1,0 @@
-ATTANDACE STATUSES
-=======
-- Present | Abasent | Off
