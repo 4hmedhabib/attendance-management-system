@@ -1,301 +1,354 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 generator client {
-provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-provider = "postgresql"
-url = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model users {
-userid Int @id @default(autoincrement())
-firstname String
-middlename String
-lastname String
-username String @unique
-mobileno String @unique
-email String? @unique
-password String
-ispwdupgraded Boolean @default(false)
-lastaccessdate DateTime?
-lastchangepwd DateTime?
-isstudent Boolean @default(false)
-isteacher Boolean @default(false)
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    userid         Int       @id @default(autoincrement())
+    firstname      String
+    middlename     String
+    lastname       String
+    username       String    @unique
+    mobileno       String    @unique
+    email          String?   @unique
+    password       String
+    ispwdupgraded  Boolean   @default(false)
+    lastaccessdate DateTime?
+    lastchangepwd  DateTime?
+    isstudent      Boolean   @default(false)
+    isteacher      Boolean   @default(false)
+    createdat      DateTime  @default(now())
+    updatedat      DateTime  @updatedAt
 
-// RELATIONS
-createdusers users[] @relation("CREATED_USERS")
-createdby users? @relation("CREATED_USERS", fields: [createdbyid], references: [userid])
-createdbyid Int?
+    // RELATIONS
+    createdusers users[] @relation("CREATED_USERS")
+    createdby    users?  @relation("CREATED_USERS", fields: [createdbyid], references: [userid])
+    createdbyid  Int?
 
-updatedusers users[] @relation("UPDATED_USERS")
-updatedby users? @relation("UPDATED_USERS", fields: [updatedbyid], references: [userid])
-updatedbyid Int?
+    updatedusers users[] @relation("UPDATED_USERS")
+    updatedby    users?  @relation("UPDATED_USERS", fields: [updatedbyid], references: [userid])
+    updatedbyid  Int?
 
-student students? @relation(fields: [studentid], references: [studentid])
-studentid Int? @unique
+    student   students? @relation(fields: [studentid], references: [studentid])
+    studentid Int?      @unique
 
-teacher teachers? @relation(fields: [teacherid], references: [teacherid])
-teacherid Int? @unique
+    teacher   teachers? @relation(fields: [teacherid], references: [teacherid])
+    teacherid Int?      @unique
 
-createdshifts shifts[] @relation("CREATED_SHIFTS")
-updatedshifts shifts[] @relation("UPDATED_SHIFTS")
+    createdshifts shifts[] @relation("CREATED_SHIFTS")
+    updatedshifts shifts[] @relation("UPDATED_SHIFTS")
 
-createdclasses classes[] @relation("CREATED_CLASSES")
-updatedclasses classes[] @relation("UPDATED_CLASSES")
+    createdclasses classes[] @relation("CREATED_CLASSES")
+    updatedclasses classes[] @relation("UPDATED_CLASSES")
 
-createdfaculties faculties[] @relation("CREATED_FACULTIES")
-updatedfaculties faculties[] @relation("UPDATED_FACULTIES")
+    createdfaculties faculties[] @relation("CREATED_FACULTIES")
+    updatedfaculties faculties[] @relation("UPDATED_FACULTIES")
 
-createdcourses courses[] @relation("CREATED_COURSES")
-updatedcourses courses[] @relation("UPDATED_COURSES")
+    createdcourses courses[] @relation("CREATED_COURSES")
+    updatedcourses courses[] @relation("UPDATED_COURSES")
 
-facultymanager faculties? @relation("FACULTY_MANAGER")
-facultydeputy faculties? @relation("FACULTY_DEPUTY")
+    facultymanager faculties? @relation("FACULTY_MANAGER")
+    facultydeputy  faculties? @relation("FACULTY_DEPUTY")
 
-assignedcoursesemisters course_semisters[]
+    assignedcoursesemisters course_semisters[]
 
-assignedclasssemisters class_semisters[] @relation("ASSIGNED_CLASSSEMISTERS")
-updatedclasssemisters class_semisters[] @relation("UPDATED_CLASSSEMISTERS")
+    assignedclasssemisters class_semisters[] @relation("ASSIGNED_CLASSSEMISTERS")
+    updatedclasssemisters  class_semisters[] @relation("UPDATED_CLASSSEMISTERS")
 
-assignedstudentclasses student_classes[]
+    assignedstudentclasses student_classes[]
 
-attendaces attendances[]
+    attendaces attendances[]
+
+    group_permissions group_permissions[]
+
+    createdgroups groups[] @relation("CREATED_BY")
+    updatedgroups groups[] @relation("UPDATED_BY")
+
+    createdpermissions permissions[] @relation("CREATED_BY")
+    updatedpermissions permissions[] @relation("UPDATED_BY")
 }
 
 model faculties {
-facultyid Int @id @default(autoincrement())
-facultyname String
-facultyslug String @unique
-description String?
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    facultyid   Int      @id @default(autoincrement())
+    facultyname String
+    facultyslug String   @unique
+    description String?
+    createdat   DateTime @default(now())
+    updatedat   DateTime @updatedAt
 
-// RELATIONS
-manager users @relation("FACULTY_MANAGER", fields: [managerid], references: [userid])
-managerid Int @unique
+    // RELATIONS
+    manager   users @relation("FACULTY_MANAGER", fields: [managerid], references: [userid])
+    managerid Int   @unique
 
-deputy users? @relation("FACULTY_DEPUTY", fields: [deputyid], references: [userid])
-deputyid Int? @unique // relation scalar field (used in the `@relation` attribute above)
+    deputy   users? @relation("FACULTY_DEPUTY", fields: [deputyid], references: [userid])
+    deputyid Int?   @unique // relation scalar field (used in the `@relation` attribute above)
 
-createdby users @relation("CREATED_FACULTIES", fields: [createdbyid], references: [userid])
-createdbyid Int
+    createdby   users @relation("CREATED_FACULTIES", fields: [createdbyid], references: [userid])
+    createdbyid Int
 
-updatedby users? @relation("UPDATED_FACULTIES", fields: [updatedbyid], references: [userid])
-updatedbyid Int?
+    updatedby   users? @relation("UPDATED_FACULTIES", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 
-shifts shifts[]
+    shifts shifts[]
 }
 
 model shifts {
-shiftid Int @id @default(autoincrement())
-shiftname String
-shiftslug String @unique
-description String?
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    shiftid     Int      @id @default(autoincrement())
+    shiftname   String
+    shiftslug   String   @unique
+    description String?
+    createdat   DateTime @default(now())
+    updatedat   DateTime @updatedAt
 
-// RELATIONS
-createdby users @relation("CREATED_SHIFTS", fields: [createdbyid], references: [userid])
-createdbyid Int
+    // RELATIONS
+    createdby   users @relation("CREATED_SHIFTS", fields: [createdbyid], references: [userid])
+    createdbyid Int
 
-updatedby users? @relation("UPDATED_SHIFTS", fields: [updatedbyid], references: [userid])
-updatedbyid Int?
+    updatedby   users? @relation("UPDATED_SHIFTS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 
-classes classes[]
+    classes classes[]
 
-faculty faculties @relation(fields: [facultyid], references: [facultyid])
-facultyid Int
+    faculty   faculties @relation(fields: [facultyid], references: [facultyid])
+    facultyid Int
 }
 
 model students {
-studentid Int @id @default(autoincrement())
-stdid String @unique
-firstname String
-middlename String
-lastname String
-mobileno String @unique
-email String? @unique
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    studentid  Int      @id @default(autoincrement())
+    stdid      String   @unique
+    firstname  String
+    middlename String
+    lastname   String
+    mobileno   String   @unique
+    email      String?  @unique
+    createdat  DateTime @default(now())
+    updatedat  DateTime @updatedAt
 
-// RELATIONS
-user users?
+    // RELATIONS
+    user users?
 
-student_classes student_classes[]
-attendaces attendances[]
+    student_classes student_classes[]
+    attendaces      attendances[]
 }
 
 model student_classes {
-student students @relation(fields: [studentid], references: [studentid])
-studentid Int
+    student   students @relation(fields: [studentid], references: [studentid])
+    studentid Int
 
-class classes @relation(fields: [classid], references: [classid])
-classid Int
+    class   classes @relation(fields: [classid], references: [classid])
+    classid Int
 
-assignedat DateTime @default(now())
+    assignedat DateTime @default(now())
 
-assignedby users @relation(fields: [assignedbyid], references: [userid])
-assignedbyid Int
+    assignedby   users @relation(fields: [assignedbyid], references: [userid])
+    assignedbyid Int
 
-@@id([classid, studentid])
+    @@id([classid, studentid])
 }
 
 model classes {
-classid Int @id @default(autoincrement())
-classname String
-classslug String @unique
-description String?
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    classid     Int      @id @default(autoincrement())
+    classname   String
+    classslug   String   @unique
+    description String?
+    createdat   DateTime @default(now())
+    updatedat   DateTime @updatedAt
 
-// RELATIONS
-createdby users @relation("CREATED_CLASSES", fields: [createdbyid], references: [userid])
-createdbyid Int
+    // RELATIONS
+    createdby   users @relation("CREATED_CLASSES", fields: [createdbyid], references: [userid])
+    createdbyid Int
 
-updatedby users? @relation("UPDATED_CLASSES", fields: [updatedbyid], references: [userid])
-updatedbyid Int?
+    updatedby   users? @relation("UPDATED_CLASSES", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 
-shift shifts @relation(fields: [shiftid], references: [shiftid])
-shiftid Int
+    shift   shifts @relation(fields: [shiftid], references: [shiftid])
+    shiftid Int
 
-semisters class_semisters[]
+    semisters class_semisters[]
 
-students student_classes[]
+    students student_classes[]
 }
 
 model class_semisters {
-class classes @relation(fields: [classid], references: [classid])
-classid Int
+    class   classes @relation(fields: [classid], references: [classid])
+    classid Int
 
-semister semisters @relation(fields: [semisterid], references: [semisterid])
-semisterid Int
+    semister   semisters @relation(fields: [semisterid], references: [semisterid])
+    semisterid Int
 
-courses course_semisters[]
+    courses course_semisters[]
 
-isstarted Boolean @default(false)
-startdate DateTime
-isended Boolean @default(false)
-enddate DateTime
-isgoingon Boolean @default(false)
-assignedat DateTime @default(now())
+    isstarted  Boolean  @default(false)
+    startdate  DateTime
+    isended    Boolean  @default(false)
+    enddate    DateTime
+    isgoingon  Boolean  @default(false)
+    assignedat DateTime @default(now())
 
-assignedby users @relation("ASSIGNED_CLASSSEMISTERS", fields: [assignedbyid], references: [userid])
-assignedbyid Int
+    assignedby   users @relation("ASSIGNED_CLASSSEMISTERS", fields: [assignedbyid], references: [userid])
+    assignedbyid Int
 
-updatedby users @relation("UPDATED_CLASSSEMISTERS", fields: [updatedbyid], references: [userid])
-updatedbyid Int
+    updatedby   users @relation("UPDATED_CLASSSEMISTERS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int
 
-@@id([classid, semisterid])
+    @@id([classid, semisterid])
 }
 
 model semisters {
-semisterid Int @id @default(autoincrement())
-semistername String
-semisterslug String @unique
-description String?
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    semisterid   Int      @id @default(autoincrement())
+    semistername String
+    semisterslug String   @unique
+    description  String?
+    createdat    DateTime @default(now())
+    updatedat    DateTime @updatedAt
 
-// RELATIONS
-coureses course_semisters[]
+    // RELATIONS
+    coureses course_semisters[]
 
-classes class_semisters[]
+    classes class_semisters[]
 }
 
 model course_semisters {
-course courses @relation(fields: [courseid], references: [courseid])
-courseid Int
+    course   courses @relation(fields: [courseid], references: [courseid])
+    courseid Int
 
-semister semisters @relation(fields: [semisterid], references: [semisterid])
-semisterid Int
+    semister   semisters @relation(fields: [semisterid], references: [semisterid])
+    semisterid Int
 
-teacher teachers @relation(fields: [teacherid], references: [teacherid])
-teacherid Int
+    teacher   teachers @relation(fields: [teacherid], references: [teacherid])
+    teacherid Int
 
-class class_semisters @relation(fields: [classid, classsemisterid], references: [classid, semisterid])
-classid Int
-classsemisterid Int
+    class           class_semisters @relation(fields: [classid, classsemisterid], references: [classid, semisterid])
+    classid         Int
+    classsemisterid Int
 
-attendaces attendances[]
+    attendaces attendances[]
 
-assignedat DateTime @default(now())
+    assignedat DateTime @default(now())
 
-assignedby users @relation(fields: [assignedbyid], references: [userid])
-assignedbyid Int
+    assignedby   users @relation(fields: [assignedbyid], references: [userid])
+    assignedbyid Int
 
-@@id([courseid, semisterid, teacherid, classid])
+    @@id([courseid, semisterid, teacherid, classid])
 }
 
 model courses {
-courseid Int @id @default(autoincrement())
-coursename String
-courseslug String @unique
-description String?
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    courseid    Int      @id @default(autoincrement())
+    coursename  String
+    courseslug  String   @unique
+    description String?
+    createdat   DateTime @default(now())
+    updatedat   DateTime @updatedAt
 
-// RELATIONS
-createdby users @relation("CREATED_COURSES", fields: [createdbyid], references: [userid])
-createdbyid Int
+    // RELATIONS
+    createdby   users @relation("CREATED_COURSES", fields: [createdbyid], references: [userid])
+    createdbyid Int
 
-updatedby users? @relation("UPDATED_COURSES", fields: [updatedbyid], references: [userid])
-updatedbyid Int?
+    updatedby   users? @relation("UPDATED_COURSES", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 
-courses course_semisters[]
+    courses course_semisters[]
 }
 
 model teachers {
-teacherid Int @id @default(autoincrement())
-techid String @unique
-firstname String
-middlename String
-lastname String
-mobileno String @unique
-email String? @unique
-createdat DateTime @default(now())
-updatedat DateTime @updatedAt
+    teacherid  Int      @id @default(autoincrement())
+    techid     String   @unique
+    firstname  String
+    middlename String
+    lastname   String
+    mobileno   String   @unique
+    email      String?  @unique
+    createdat  DateTime @default(now())
+    updatedat  DateTime @updatedAt
 
-// RELATIONS
-user users?
+    // RELATIONS
+    user users?
 
-courses course_semisters[]
+    courses course_semisters[]
 }
 
 model attendances {
-attendanceid Int @id @default(autoincrement())
-attendancedate DateTime
-createddate DateTime @default(now())
+    attendanceid   Int      @id @default(autoincrement())
+    attendancedate DateTime
+    createddate    DateTime @default(now())
 
-// RELATIONS
-// =========
-createdby users @relation(fields: [createdbyid], references: [userid])
-createdbyid Int
+    // RELATIONS
+    // =========
+    createdby   users @relation(fields: [createdbyid], references: [userid])
+    createdbyid Int
 
-student students @relation(fields: [studentid], references: [studentid])
-studentid Int
+    student   students @relation(fields: [studentid], references: [studentid])
+    studentid Int
 
-course course_semisters @relation(fields: [courseid, semisterid, teacherid, classid], references: [courseid, semisterid, teacherid, classid])
-courseid Int
-semisterid Int
-teacherid Int
-classid Int
+    course     course_semisters @relation(fields: [courseid, semisterid, teacherid, classid], references: [courseid, semisterid, teacherid, classid])
+    courseid   Int
+    semisterid Int
+    teacherid  Int
+    classid    Int
 
-status attendacestatuses @relation(fields: [statusid], references: [statusid])
-statusid Int
+    status   attendacestatuses @relation(fields: [statusid], references: [statusid])
+    statusid Int
 }
 
 model attendacestatuses {
-statusid Int @id @default(autoincrement())
-statusname String
-statusslug String @unique
+    statusid   Int    @id @default(autoincrement())
+    statusname String
+    statusslug String @unique
 
-attendances attendances[]
+    attendances attendances[]
 }
 
+model permissions {
+    permissionid   Int    @id @default(autoincrement())
+    permissionslug String @unique
+    permissionname String
 
+    createddate DateTime @default(now())
+    updateddate DateTime @updatedAt
 
+    groups group_permissions[]
 
+    createdby   users? @relation("CREATED_BY", fields: [createdbyid], references: [userid])
+    createdbyid Int?
+
+    updatedby   users? @relation("UPDATED_BY", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
+}
+
+model groups {
+    groupid   Int    @id @default(autoincrement())
+    groupslug String @unique
+    groupname String
+
+    createddate DateTime @default(now())
+    updateddate DateTime @updatedAt
+
+    permissions group_permissions[]
+
+    createdby   users? @relation("CREATED_BY", fields: [createdbyid], references: [userid])
+    createdbyid Int?
+
+    updatedby   users? @relation("UPDATED_BY", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
+}
+
+model group_permissions {
+    permission   permissions @relation(fields: [permissionid], references: [permissionid])
+    permissionid Int
+
+    group   groups @relation(fields: [groupid], references: [groupid])
+    groupid Int
+
+    assignedAt DateTime @default(now())
+
+    assignedby   users? @relation(fields: [assignedbyid], references: [userid])
+    assignedbyid Int?
+
+    @@id([permissionid, groupid])
+}
