@@ -1,1 +1,2 @@
-export * from './routes.interface';
+export * from "./faculties.interface";
+export * from "./routes.interface";
