@@ -5,6 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
+import "reflect-metadata";
 import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from "./config";
 import { IRoutes } from "./interfaces";
 import { ErrorMiddleware } from "./middlewares";
