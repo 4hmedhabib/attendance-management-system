@@ -36,6 +36,8 @@ const logger = winston.createLogger({
       filename: `%DATE%.log`,
       maxFiles: 30, // 30 Days saved
       json: false,
+      handleExceptions: true,
+      handleRejections: true,
       zippedArchive: true,
     }),
     // error log setting
@@ -46,6 +48,7 @@ const logger = winston.createLogger({
       filename: `%DATE%.log`,
       maxFiles: 30, // 30 Days saved
       handleExceptions: true,
+      handleRejections: true,
       json: false,
       zippedArchive: true,
     }),
@@ -58,6 +61,8 @@ logger.add(
       winston.format.splat(),
       winston.format.colorize()
     ),
+    handleExceptions: true,
+    handleRejections: true,
   })
 );
 
