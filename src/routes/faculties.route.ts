@@ -3,9 +3,10 @@ import { FacultyController } from "../controllers";
 import {
   CreateFacultyDto,
   DeleteFacultyBySlugDto,
+  GetFaculiesDto,
   GetFacultyBySlugDto,
   UpdateFacultyDto,
-} from "../dtos/faculties.dto";
+} from "../dtos";
 import { IRoutes } from "../interfaces/";
 import { ValidationMiddleware } from "../middlewares/validation.middleware";
 
@@ -19,7 +20,11 @@ class FacultyRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, this.faculty.getFaculties);
+    this.router.get(
+      `${this.path}`,
+      ValidationMiddleware(GetFaculiesDto),
+      this.faculty.getFaculties
+    );
 
     this.router.get(
       `${this.path}/detail`,
