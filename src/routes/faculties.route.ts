@@ -2,6 +2,7 @@ import { Router } from "express";
 import { FacultyController } from "../controllers";
 import {
   CreateFacultyDto,
+  DeleteFacultyBySlugDto,
   GetFacultyBySlugDto,
   UpdateFacultyDto,
 } from "../dtos/faculties.dto";
@@ -33,12 +34,16 @@ class FacultyRoute implements IRoutes {
     );
 
     this.router.put(
-      `${this.path}/:fucultySlug`,
+      `${this.path}/update`,
       ValidationMiddleware(UpdateFacultyDto),
       this.faculty.updateFaculty
     );
 
-    this.router.delete(`${this.path}/:fucultySlug`, this.faculty.deleteFaculty);
+    this.router.delete(
+      `${this.path}/delete`,
+      ValidationMiddleware(DeleteFacultyBySlugDto),
+      this.faculty.deleteFaculty
+    );
   }
 }
 
