@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { GetFacultyBySlugDto } from "../dtos/faculties.dto";
+import {
+  DeleteFacultyBySlugDto,
+  GetFacultyBySlugDto,
+  UpdateFacultyDto,
+} from "../dtos/faculties.dto";
 import {
   IFaculty,
   IRBCreateFaculty,
@@ -21,7 +25,7 @@ class FacultyController {
 
       res.status(200).json({
         data: findAllFacultiesData,
-        message: "Successfully facalites loaded!",
+        message: "Faculties Successfully loaded!",
       });
     } catch (error) {
       next(error);
@@ -42,12 +46,10 @@ class FacultyController {
         isMiniView
       );
 
-      res
-        .status(200)
-        .json({
-          data: findOneFacultyData,
-          message: "Successfully faculty loaded",
-        });
+      res.status(200).json({
+        data: findOneFacultyData,
+        message: "Faculty successfully loaded",
+      });
     } catch (error) {
       next(error);
     }
@@ -67,7 +69,7 @@ class FacultyController {
 
       res.status(201).json({
         data: createFacultyData,
-        message: "Successfully faculty created",
+        message: "Faculty successfully created",
       });
     } catch (error) {
       next(error);
@@ -75,36 +77,44 @@ class FacultyController {
   };
 
   public updateFaculty = async (
-    req: Request,
+    req: Request<any, any, UpdateFacultyDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
-      const facultyId = Number(req.params.id);
-      const facultyData: IFaculty = req.body;
-      const updateFacultyData: IFaculty[] = await this.faculty.updateFaculty(
-        facultyId,
+      const facultySlug = req.body.payload.facultySlug;
+      const facultyData = req.body.payload.data;
+
+      const updateFacultyData: IFaculty = await this.faculty.updateFaculty(
+        facultySlug,
         facultyData
       );
 
-      res.status(200).json({ data: updateFacultyData, message: "updated" });
+      res.status(200).json({
+        data: updateFacultyData,
+        message: "Faculty successfully updated",
+      });
     } catch (error) {
       next(error);
     }
   };
 
   public deleteFaculty = async (
-    req: Request,
+    req: Request<any, any, DeleteFacultyBySlugDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
-      const facultyId = Number(req.params.id);
-      const deleteFacultyData: IFaculty[] = await this.faculty.deleteFaculty(
-        facultyId
+      const facultySlug = req.body.payload.facultySlug;
+
+      const deleteFacultyData: IFaculty = await this.faculty.deleteFaculty(
+        facultySlug
       );
 
-      res.status(200).json({ data: deleteFacultyData, message: "deleted" });
+      res.status(200).json({
+        data: deleteFacultyData,
+        message: "Faculty successfully deleted",
+      });
     } catch (error) {
       next(error);
     }
