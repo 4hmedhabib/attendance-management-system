@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
-import { UpdateFacultyData } from "../dtos/faculties.dto";
+import { UpdateFacultyData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
 import { IFaculty, IRPCreateFacultyPayload } from "../interfaces";
 import { logger } from "../utils";
@@ -11,26 +11,30 @@ const usersDB = prisma.users;
 
 @Service()
 class FacultyService {
-  public async findAllFaculty(): Promise<IFaculty[]> {
+  public async findAllFaculty(isMiniView: boolean): Promise<IFaculty[]> {
     const faculties: IFaculty[] = await facultiesDB.findMany({
       select: {
         facultyid: true,
         facultyname: true,
         facultyslug: true,
-        description: true,
-        createdby: {
-          select: {
-            username: true,
-            firstname: true,
-            middlename: true,
-            lastname: true,
-          },
-        },
-        _count: {
-          select: {
-            shifts: true,
-          },
-        },
+        description: !isMiniView,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        _count: !isMiniView
+          ? {
+              select: {
+                shifts: true,
+              },
+            }
+          : false,
       },
     });
 
