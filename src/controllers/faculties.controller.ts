@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import {
   DeleteFacultyBySlugDto,
+  GetFaculiesDto,
   GetFacultyBySlugDto,
   UpdateFacultyDto,
-} from "../dtos/faculties.dto";
+} from "../dtos";
 import {
   IFaculty,
   IRBCreateFaculty,
@@ -15,13 +16,15 @@ class FacultyController {
   public faculty = new FacultyService();
 
   public getFaculties = async (
-    req: Request,
+    req: Request<any, any, GetFaculiesDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
+      const isMiniView = req.body.payload.isMiniView;
+
       const findAllFacultiesData: IFaculty[] =
-        await this.faculty.findAllFaculty();
+        await this.faculty.findAllFaculty(isMiniView);
 
       res.status(200).json({
         data: findAllFacultiesData,
