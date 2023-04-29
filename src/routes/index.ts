@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { IRoutes } from "../interfaces/";
 import ClassRoute from "./classes.route";
+import CourseRoute from "./courses.route";
 import FacultyRoute from "./faculties.route";
+import SemisterRoute from "./semisters.route";
 import ShiftRoute from "./shifts.route";
 import UserRoute from "./users.route";
 
@@ -15,6 +17,8 @@ class IndexRoutes implements IRoutes {
       new FacultyRoute(),
       new ShiftRoute(),
       new ClassRoute(),
+      new SemisterRoute(),
+      new CourseRoute(),
     ];
 
     this.initializeRoutes(routes);

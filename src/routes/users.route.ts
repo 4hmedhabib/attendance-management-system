@@ -3,7 +3,7 @@ import { UserController } from "../controllers";
 import {
   CreateUserDto,
   DeleteUserBySlugDto,
-  GetFaculiesDto,
+  GetFacultiesDto,
   GetUserBySlugDto,
   UpdateUserDto,
 } from "../dtos";
@@ -22,7 +22,7 @@ class UserRoute implements IRoutes {
   private initializeRoutes() {
     this.router.get(
       `${this.path}`,
-      ValidationMiddleware(GetFaculiesDto),
+      ValidationMiddleware(GetFacultiesDto),
       this.user.getUsers
     );
 
