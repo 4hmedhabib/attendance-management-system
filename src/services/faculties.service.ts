@@ -299,6 +299,7 @@ class FacultyService {
     updatedData = {
       ...updatedData,
       facultyname: facultyData.facultyName,
+      facultyslug: facultyData.facultySlug,
       description: facultyData.description || null,
       updatedby: {
         connect: {

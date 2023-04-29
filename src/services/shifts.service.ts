@@ -222,6 +222,7 @@ class ShiftService {
     updatedData = {
       ...updatedData,
       shiftname: shiftData.shiftName,
+      shiftslug: shiftData.shiftSlug,
       description: shiftData.description || null,
       faculty: {
         connect: {
