@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import {
   DeleteUserBySlugDto,
-  GetFaculiesDto,
+  GetFacultiesDto,
   GetUserBySlugDto,
   UpdateUserDto,
 } from "../dtos";
@@ -12,7 +12,7 @@ class UserController {
   public user = new UserService();
 
   public getUsers = async (
-    req: Request<any, any, GetFaculiesDto>,
+    req: Request<any, any, GetFacultiesDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
