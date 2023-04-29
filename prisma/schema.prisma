@@ -16,7 +16,7 @@ model users {
     lastname       String
     username       String    @unique
     mobileno       String    @unique
-    email          String?   @unique
+    email          String    @unique
     password       String
     ispwdupgraded  Boolean   @default(false)
     lastaccessdate DateTime?
