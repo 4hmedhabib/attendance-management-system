@@ -72,6 +72,9 @@ model users {
 
     createdpermissions permissions[] @relation("CREATED_BY")
     updatedpermissions permissions[] @relation("UPDATED_BY")
+
+    createdsemisters semisters[] @relation("CREATED_SEMISTERS")
+    updatedsemisters semisters[] @relation("UPDATED_SEMISTERS")
 }
 
 model faculties {
@@ -212,6 +215,12 @@ model semisters {
     coureses course_semisters[]
 
     classes class_semisters[]
+
+    createdby   users @relation("CREATED_SEMISTERS", fields: [createdbyid], references: [userid])
+    createdbyid Int
+
+    updatedby   users? @relation("UPDATED_SEMISTERS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 }
 
 model course_semisters {
