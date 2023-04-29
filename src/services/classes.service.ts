@@ -217,6 +217,7 @@ class ClassService {
     updatedData = {
       ...updatedData,
       classname: classData.className,
+      classslug: classData.classSlug,
       description: classData.description || null,
       shift: {
         connect: {
