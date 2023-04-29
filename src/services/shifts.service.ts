@@ -228,6 +228,11 @@ class ShiftService {
           facultyid: faculty.facultyid,
         },
       },
+      updatedby: {
+        connect: {
+          username: "ahmedhabib",
+        },
+      },
     };
 
     const updateShiftData: IShift = await shiftsDB.update({
