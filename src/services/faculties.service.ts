@@ -300,6 +300,11 @@ class FacultyService {
       ...updatedData,
       facultyname: facultyData.facultyName,
       description: facultyData.description || null,
+      updatedby: {
+        connect: {
+          username: "ahmedhabib",
+        },
+      },
     };
 
     const updateFacultyData: IFaculty = await facultiesDB.update({
