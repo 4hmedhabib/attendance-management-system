@@ -128,17 +128,17 @@ class GetFacultyBySlugPayload {
   isMiniView: boolean;
 }
 
-export class GetFaculiesBySlugPayload {
+export class GetFacultiesBySlugPayload {
   @IsBoolean({ message: "Is min view must be a boolean" })
   @IsNotEmpty({ message: "Is min view is required" })
   isMiniView: boolean;
 }
 
-export class GetFaculiesDto {
+export class GetFacultiesDto {
   @IsNotEmptyObject()
   @ValidateNested()
-  @Type(() => GetFaculiesBySlugPayload)
-  payload: GetFaculiesBySlugPayload;
+  @Type(() => GetFacultiesBySlugPayload)
+  payload: GetFacultiesBySlugPayload;
 }
 
 export class GetFacultyBySlugDto {
