@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import {
   DeleteFacultyBySlugDto,
-  GetFaculiesDto,
+  GetFacultiesDto,
   GetFacultyBySlugDto,
   UpdateFacultyDto,
 } from "../dtos";
@@ -16,7 +16,7 @@ class FacultyController {
   public faculty = new FacultyService();
 
   public getFaculties = async (
-    req: Request<any, any, GetFaculiesDto>,
+    req: Request<any, any, GetFacultiesDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
