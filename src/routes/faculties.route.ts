@@ -3,7 +3,7 @@ import { FacultyController } from "../controllers";
 import {
   CreateFacultyDto,
   DeleteFacultyBySlugDto,
-  GetFaculiesDto,
+  GetFacultiesDto,
   GetFacultyBySlugDto,
   UpdateFacultyDto,
 } from "../dtos";
@@ -22,7 +22,7 @@ class FacultyRoute implements IRoutes {
   private initializeRoutes() {
     this.router.get(
       `${this.path}`,
-      ValidationMiddleware(GetFaculiesDto),
+      ValidationMiddleware(GetFacultiesDto),
       this.faculty.getFaculties
     );
 
