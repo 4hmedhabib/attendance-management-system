@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { hash } from "bcrypt";
 import { Service } from "typedi";
+import { UpdateFacultyData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
 import { IFaculty, IRPCreateFacultyPayload } from "../interfaces";
 import { logger } from "../utils";
@@ -11,28 +11,37 @@ const usersDB = prisma.users;
 
 @Service()
 class FacultyService {
-  public async findAllFaculty(): Promise<IFaculty[]> {
+  public async findAllFaculty(isMiniView: boolean): Promise<IFaculty[]> {
     const faculties: IFaculty[] = await facultiesDB.findMany({
       select: {
         facultyid: true,
         facultyname: true,
         facultyslug: true,
-        description: true,
-        createdby: {
-          select: {
-            username: true,
-            firstname: true,
-            middlename: true,
-            lastname: true,
-          },
-        },
-        _count: {
-          select: {
-            shifts: true,
-          },
-        },
+        description: !isMiniView,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        _count: !isMiniView
+          ? {
+              select: {
+                shifts: true,
+              },
+            }
+          : false,
       },
     });
+
+    if (faculties.length <= 0) {
+      throw new HttpException(404, "No data found!.");
+    }
+
     return faculties;
   }
 
@@ -104,12 +113,11 @@ class FacultyService {
 
       return findFaculty;
     } catch (err: any) {
-      console.log(err);
-
       logger.error(JSON.stringify(err.message) || err);
       throw new HttpException(
         500,
-        `Something went wrong creating faculty, please contact support team.`
+        err.message ||
+          `Something went wrong creating faculty, please contact support team.`
       );
     }
   }
@@ -208,27 +216,183 @@ class FacultyService {
     }
   }
 
-  public async updateFaculty(userId: number, facultyData: any): Promise<any[]> {
-    const findFaculty: any = [].find((user) => user.id === userId);
+  public async updateFaculty(
+    facultySlug: string,
+    facultyData: UpdateFacultyData
+  ): Promise<IFaculty> {
+    let updatedData: Prisma.facultiesUpdateInput;
+
+    const findFaculty: IFaculty = await facultiesDB.findUnique({
+      where: {
+        facultyslug: facultySlug,
+      },
+      select: {
+        facultyid: true,
+        facultyslug: true,
+      },
+    });
+
     if (!findFaculty) throw new HttpException(409, "Faculty doesn't exist");
 
-    const hashedPassword = await hash(facultyData.password, 10);
-    const updateFacultyData: any[] = [].map((user: any) => {
-      if (user.id === findFaculty.id)
-        user = { ...facultyData, id: userId, password: hashedPassword };
-      return user;
+    const checkFaculty: IFaculty = await facultiesDB.findUnique({
+      where: {
+        facultyslug: facultyData.facultySlug,
+      },
+      select: {
+        facultyid: true,
+        facultyslug: true,
+      },
+    });
+
+    // check faculty slug is duplicate or not
+    if (checkFaculty && checkFaculty.facultyid !== findFaculty.facultyid)
+      throw new HttpException(
+        409,
+        "This faculty already exists please check it: " +
+          facultyData.facultyName
+      );
+
+    if (facultyData.manager?.length) {
+      const findManager = await usersDB.findUnique({
+        where: { username: facultyData.manager },
+        select: { userid: true, username: true },
+      });
+
+      if (!findManager)
+        throw new HttpException(
+          403,
+          `This manager ${facultyData.manager} not exists`
+        );
+
+      updatedData = {
+        ...updatedData,
+        manager: {
+          connect: {
+            userid: findManager.userid,
+          },
+        },
+      };
+    }
+
+    if (facultyData.deputy?.length) {
+      const findDeputy = await usersDB.findUnique({
+        where: { username: facultyData.deputy },
+        select: { userid: true, username: true },
+      });
+
+      if (!findDeputy)
+        throw new HttpException(
+          403,
+          `This deputy manager ${facultyData.deputy} not exists`
+        );
+
+      updatedData = {
+        ...updatedData,
+        deputy: {
+          connect: {
+            userid: findDeputy.userid,
+          },
+        },
+      };
+    }
+
+    updatedData = {
+      ...updatedData,
+      facultyname: facultyData.facultyName,
+      facultyslug: facultyData.facultySlug,
+      description: facultyData.description || null,
+      updatedby: {
+        connect: {
+          username: "ahmedhabib",
+        },
+      },
+    };
+
+    const updateFacultyData: IFaculty = await facultiesDB.update({
+      where: {
+        facultyid: findFaculty.facultyid,
+      },
+      data: updatedData,
+      select: {
+        facultyid: true,
+        facultyname: true,
+        facultyslug: true,
+        description: true,
+        createdat: true,
+        updatedat: true,
+        createdby: true
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        updatedby: true
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        manager: true
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        deputy: true
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        _count: true
+          ? {
+              select: {
+                shifts: true,
+              },
+            }
+          : false,
+      },
     });
 
     return updateFacultyData;
   }
 
-  public async deleteFaculty(userId: number): Promise<any[]> {
-    const findFaculty: any = [].find((user) => user.id === userId);
+  public async deleteFaculty(facultySlug: string): Promise<IFaculty> {
+    const findFaculty: IFaculty = await facultiesDB.findUnique({
+      where: {
+        facultyslug: facultySlug,
+      },
+    });
+
     if (!findFaculty) throw new HttpException(409, "Faculty doesn't exist");
 
-    const deleteFacultyData: any[] = [].filter(
-      (user) => user.id !== findFaculty.id
-    );
+    const deleteFacultyData: IFaculty = await facultiesDB.delete({
+      where: {
+        facultyid: findFaculty.facultyid,
+      },
+      select: {
+        facultyid: true,
+        facultyname: true,
+        facultyslug: true,
+      },
+    });
+
     return deleteFacultyData;
   }
 }
