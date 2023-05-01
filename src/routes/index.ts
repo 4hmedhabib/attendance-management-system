@@ -5,6 +5,8 @@ import CourseRoute from "./courses.route";
 import FacultyRoute from "./faculties.route";
 import SemisterRoute from "./semisters.route";
 import ShiftRoute from "./shifts.route";
+import StudentRoute from "./students.route";
+import TeacherRoute from "./teachers.route";
 import UserRoute from "./users.route";
 
 class IndexRoutes implements IRoutes {
@@ -19,6 +21,8 @@ class IndexRoutes implements IRoutes {
       new ClassRoute(),
       new SemisterRoute(),
       new CourseRoute(),
+      new StudentRoute(),
+      new TeacherRoute(),
     ];
 
     this.initializeRoutes(routes);
