@@ -5,4 +5,6 @@ export * from "./faculties.interface";
 export * from "./routes.interface";
 export * from "./semisters.interface";
 export * from "./shifts.interface";
+export * from "./students.interface";
+export * from "./teachers.interface";
 export * from "./users.interface";
