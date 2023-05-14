@@ -11,6 +11,10 @@ import {
   IStudent,
 } from "../interfaces";
 import { StudentService } from "../services";
+import {
+  BulkStudentDataPayload,
+  CreateBulkStudentDto,
+} from "./../dtos/students.dto";
 
 class StudentController {
   public student = new StudentService();
@@ -69,6 +73,35 @@ class StudentController {
 
       const createStudentData: IStudent = await this.student.createStudent(
         studentData
+      );
+
+      res.status(201).json({
+        data: createStudentData,
+        message: "Student successfully created",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createBulkStudents = async (
+    req: Request<any, any, CreateBulkStudentDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const studentsData: BulkStudentDataPayload = req.body.payload;
+
+      if (studentsData.data.length > 100) {
+        res.status(413).json({
+          message:
+            "Student data is too large, please the maximum students is 100",
+        });
+        return;
+      }
+
+      const createStudentData: IStudent = await this.student.createBulkStudents(
+        studentsData
       );
 
       res.status(201).json({
