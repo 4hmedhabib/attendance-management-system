@@ -75,6 +75,12 @@ model users {
 
     createdsemisters semisters[] @relation("CREATED_SEMISTERS")
     updatedsemisters semisters[] @relation("UPDATED_SEMISTERS")
+
+    createdstudents students[] @relation("CREATED_STUDENTS")
+    updatedstudents students[] @relation("UPDATED_STUDENTS")
+
+    createdteachers teachers[] @relation("CREATED_TEACHERS")
+    updatedteachers teachers[] @relation("UPDATED_TEACHERS")
 }
 
 model faculties {
@@ -123,21 +129,27 @@ model shifts {
 }
 
 model students {
-    studentid  Int      @id @default(autoincrement())
-    stdid      String   @unique
-    firstname  String
-    middlename String
-    lastname   String
-    mobileno   String   @unique
-    email      String?  @unique
-    createdat  DateTime @default(now())
-    updatedat  DateTime @updatedAt
+    studentid   Int      @id @default(autoincrement())
+    stdid       String   @unique
+    firstname   String
+    middlename  String
+    lastname    String
+    mobileno    String   @unique
+    yearofstudy Int      @default(1)
+    createdat   DateTime @default(now())
+    updatedat   DateTime @updatedAt
 
     // RELATIONS
     user users?
 
     student_classes student_classes[]
     attendaces      attendances[]
+
+    createdby   users @relation("CREATED_STUDENTS", fields: [createdbyid], references: [userid])
+    createdbyid Int
+
+    updatedby   users? @relation("UPDATED_STUDENTS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 }
 
 model student_classes {
@@ -266,20 +278,26 @@ model courses {
 }
 
 model teachers {
-    teacherid  Int      @id @default(autoincrement())
-    techid     String   @unique
+    teacherid  Int    @id @default(autoincrement())
+    techid     String @unique
     firstname  String
     middlename String
     lastname   String
-    mobileno   String   @unique
-    email      String?  @unique
-    createdat  DateTime @default(now())
-    updatedat  DateTime @updatedAt
+    mobileno   String @unique
+
+    createdat DateTime @default(now())
+    updatedat DateTime @updatedAt
 
     // RELATIONS
     user users?
 
     courses course_semisters[]
+
+    createdby   users @relation("CREATED_TEACHERS", fields: [createdbyid], references: [userid])
+    createdbyid Int
+
+    updatedby   users? @relation("UPDATED_TEACHERS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 }
 
 model attendances {
