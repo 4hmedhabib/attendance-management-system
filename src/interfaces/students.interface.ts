@@ -24,3 +24,7 @@ export interface IRPCreateStudentPayload {
 export interface IRBCreateStudent {
   payload: IRPCreateStudentPayload;
 }
+
+export interface IRBCreateStudent {
+  payload: IRPCreateStudentPayload;
+}
