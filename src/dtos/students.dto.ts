@@ -1,5 +1,8 @@
 import { Type } from "class-transformer";
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
   IsBoolean,
   IsInt,
   IsNotEmpty,
@@ -11,7 +14,7 @@ import {
   ValidateNested,
 } from "class-validator";
 
-class CreateStudentPayload {
+export class CreateStudentPayload {
   @IsString({ message: "firstname must be a string" })
   @IsNotEmpty({ message: "firstname is required" })
   @MinLength(3, {
@@ -72,6 +75,22 @@ export class CreateStudentDto {
   @ValidateNested()
   @Type(() => CreateStudentPayload)
   payload: CreateStudentPayload;
+}
+
+export class BulkStudentDataPayload {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @Type(() => CreateStudentPayload)
+  data: CreateStudentPayload[];
+}
+
+export class CreateBulkStudentDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => BulkStudentDataPayload)
+  payload: BulkStudentDataPayload;
 }
 
 export class UpdateStudentData {
@@ -137,9 +156,8 @@ class UpdateStudentPayload {
   @MaxLength(62)
   studentId: string;
 
-  @IsNotEmptyObject()
-  @ValidateNested()
-  @Type(() => UpdateStudentData)
+  @Type(() => BulkStudentDataPayload)
+  payload: BulkStudentDataPayload;
   data: UpdateStudentData;
 }
 
