@@ -1,6 +1,11 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import asyncjs from "async";
 import { Service } from "typedi";
-import { UpdateStudentData } from "../dtos";
+import {
+  BulkStudentDataPayload,
+  CreateStudentPayload,
+  UpdateStudentData,
+} from "../dtos";
 import { HttpException } from "../exceptions/httpException";
 import { IRPCreateStudentPayload, IStudent } from "../interfaces";
 import { logger } from "../utils";
@@ -152,6 +157,101 @@ class StudentService {
         `Something went wrong creating student, please contact support team.`
       );
     }
+  }
+
+  public async createBulkStudents(
+    studentsData: BulkStudentDataPayload
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let totalErrors: number = 0;
+      let totalRecords: number = studentsData.data.length;
+      let errors: string[] = [];
+      let dataSaved: Prisma.studentsCreateManyInput[] = null;
+
+      const prepareStudent = (studentData: CreateStudentPayload, _next: any) =>
+        new Promise(async (resolve, reject) => {
+          let savedData: Prisma.studentsCreateManyInput;
+
+          const findStudent = await studentsDB.findUnique({
+            where: { stdid: studentData.studentId },
+            select: { studentid: true, stdid: true },
+          });
+
+          if (findStudent)
+            reject(
+              `This student id ${studentData.studentId} already exists: ${studentData.studentId}`
+            );
+
+          const findMobileNo = await studentsDB.findUnique({
+            where: { stdid: studentData.studentId },
+            select: { studentid: true, stdid: true },
+          });
+
+          if (findMobileNo)
+            reject(
+              `This mobileno ${studentData.mobileNo} already exists: ${studentData.studentId}`
+            );
+
+          savedData = {
+            ...savedData,
+            firstname: studentData.firstName,
+            middlename: studentData.middleName,
+            lastname: studentData.lastName,
+            stdid: studentData.studentId,
+            mobileno: studentData.mobileNo,
+            yearofstudy: studentData.yearOfStudy,
+            createdbyid: 5,
+          };
+
+          resolve(savedData);
+        })
+          .then((res) => {
+            _next(null, res);
+          })
+          .catch((err) => {
+            totalErrors++;
+            errors.push(err.message || err);
+            logger.error(err.message || err);
+            _next(null, null);
+          });
+
+      asyncjs.map<any, Prisma.studentsCreateManyInput>(
+        studentsData.data,
+        prepareStudent,
+        async (err, savedData) => {
+          if (err) {
+            logger.error(JSON.stringify(err.message) || err);
+            throw new HttpException(
+              500,
+              `Something went wrong creating student, please contact support team.`
+            );
+          } else {
+            try {
+              dataSaved = savedData.filter((data) => data);
+
+              const createdStudentsData: Prisma.BatchPayload =
+                await studentsDB.createMany({
+                  data: dataSaved,
+                  skipDuplicates: true,
+                });
+
+              resolve({
+                totalRecords,
+                totalSaved: createdStudentsData.count || 0,
+                totalErrors,
+                errors,
+              });
+            } catch (err: any) {
+              logger.error(JSON.stringify(err.message) || err);
+              throw new HttpException(
+                500,
+                `Something went wrong creating student, please contact support team.`
+              );
+            }
+          }
+        }
+      );
+    });
   }
 
   public async updateStudent(
