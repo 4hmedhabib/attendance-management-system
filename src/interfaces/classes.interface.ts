@@ -22,6 +22,7 @@ export interface IRPCreateClassPayload {
   classSlug: string;
   description?: string;
   shiftSlug: string;
+  facultySlug: string;
 }
 
 export interface IRBCreateClass {
