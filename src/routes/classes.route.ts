@@ -32,6 +32,12 @@ class ClassRoute implements IRoutes {
       this.class.getClassBySlug
     );
 
+    this.router.get(
+      `${this.path}/detail/semesters`,
+      ValidationMiddleware(GetClassBySlugDto),
+      this.class.getClassBySlug
+    );
+
     this.router.post(
       `${this.path}`,
       ValidationMiddleware(CreateClassDto),
