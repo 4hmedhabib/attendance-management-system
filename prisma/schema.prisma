@@ -105,6 +105,8 @@ model faculties {
     updatedbyid Int?
 
     shifts shifts[]
+
+    classes classes[]
 }
 
 model shifts {
@@ -143,7 +145,8 @@ model students {
     user users?
 
     student_classes student_classes[]
-    attendaces      attendances[]
+
+    attendaces attendances[]
 
     createdby   users @relation("CREATED_STUDENTS", fields: [createdbyid], references: [userid])
     createdbyid Int
@@ -188,6 +191,9 @@ model classes {
     semisters class_semisters[]
 
     students student_classes[]
+
+    faculty   faculties? @relation(fields: [facultyid], references: [facultyid])
+    facultyid Int?
 }
 
 model class_semisters {
