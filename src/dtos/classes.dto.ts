@@ -45,6 +45,16 @@ class CreateClassPayload {
     message: "shift slug must be shorter than or equal to 62 characters",
   })
   shiftSlug: string;
+
+  @IsString({ message: "faculty slug must be a string" })
+  @IsNotEmpty({ message: "faculty slug is required" })
+  @MinLength(3, {
+    message: "faculty slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "faculty slug must be shorter than or equal to 62 characters",
+  })
+  facultySlug: string;
 }
 
 export class CreateClassDto {
@@ -90,6 +100,16 @@ export class UpdateClassData {
     message: "shift slug must be shorter than or equal to 62 characters",
   })
   shiftSlug: string;
+
+  @IsString({ message: "faculty slug must be a string" })
+  @IsNotEmpty({ message: "faculty slug is required" })
+  @MinLength(3, {
+    message: "faculty slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "faculty slug must be shorter than or equal to 62 characters",
+  })
+  facultySlug: string;
 }
 
 class UpdateClassPayload {
