@@ -17,9 +17,14 @@ import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
 // Images
-import bg1 from "assets/images/img-2.jpg";
-import bg2 from "assets/images/img-1.jpg";
-import bg3 from "assets/images/img-3.jpg";
+// import bg1 from "assets/images/img-2.jpg";
+// import bg2 from "assets/images/img-1.jpg";
+// import bg3 from "assets/images/img-3.jpg";
+
+const bg1 = "https://pbs.twimg.com/media/FBgUNmbXEA0_aa2?format=jpg&name=medium";
+const bg2 = "https://pbs.twimg.com/media/FBgUNmRXEA0DFC3?format=jpg&name=medium";
+const bg3 =
+  "https://i0.wp.com/Hargeisapress.com/wp-content/uploads/2019/10/75247494_2453132468133925_4871700946230444032_n.jpg?resize=960%2C640&ssl=1";
 
 function Slider() {
   // install SwiperJS modules
