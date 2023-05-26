@@ -80,14 +80,6 @@ class ShiftService {
                 },
               }
             : false,
-          faculty: !isMiniView
-            ? {
-                select: {
-                  facultyslug: !isMiniView,
-                  facultyname: !isMiniView,
-                },
-              }
-            : false,
           _count: !isMiniView
             ? {
                 select: {
@@ -125,16 +117,6 @@ class ShiftService {
         `This shift ${shiftData.shiftName} already exists`
       );
 
-    let faculty: IFaculty = await facultiesDB.findUnique({
-      where: { facultyslug: shiftData.facultySlug || "" },
-    });
-
-    if (!faculty)
-      throw new HttpException(
-        409,
-        `faculty ${shiftData.facultySlug} not found`
-      );
-
     savedData = {
       ...savedData,
       shiftname: shiftData.shiftName,
@@ -143,11 +125,6 @@ class ShiftService {
       createdby: {
         connect: {
           username: "ahmedhabib",
-        },
-      },
-      faculty: {
-        connect: {
-          facultyid: faculty.facultyid,
         },
       },
     };
@@ -209,26 +186,11 @@ class ShiftService {
         "This shift already exists please check it: " + shiftData.shiftName
       );
 
-    let faculty: IFaculty = await facultiesDB.findUnique({
-      where: { facultyslug: shiftData.facultySlug || "" },
-    });
-
-    if (!faculty)
-      throw new HttpException(
-        409,
-        `faculty ${shiftData.facultySlug} not found`
-      );
-
     updatedData = {
       ...updatedData,
       shiftname: shiftData.shiftName,
       shiftslug: shiftData.shiftSlug,
       description: shiftData.description || null,
-      faculty: {
-        connect: {
-          facultyid: faculty.facultyid,
-        },
-      },
       updatedby: {
         connect: {
           username: "ahmedhabib",
@@ -268,12 +230,6 @@ class ShiftService {
               },
             }
           : false,
-        faculty: {
-          select: {
-            facultyslug: true,
-            facultyname: true,
-          },
-        },
         _count: true
           ? {
               select: {
