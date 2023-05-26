@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBadge from "components/ArgonBadge";
 
 // ProductsList page components

@@ -8,17 +8,17 @@ import { useLocation, Link } from "react-router-dom";
 // mui components
 import Grid from "@mui/material/Grid";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import Sidenav from "examples/Sidenav";
 
-// Argon Dashboard 2 PRO MUI context
+// FFU ATMS MUI context
 import { useArgonController, setMiniSidenav, setLayout, setDarkSidenav } from "context";
 
-// Argon Dashboard 2 PRO MUI routes
+// FFU ATMS MUI routes
 import routes from "routes";
 
 // Images
@@ -75,7 +75,7 @@ function Default() {
       <Sidenav
         color={sidenavColor}
         brand={darkSidenav || darkMode ? brand : brandDark}
-        brandName="Argon Dashboard 2 PRO"
+        brandName="FFU ATMS"
         routes={routes}
         onMouseEnter={handleOnMouseEnter}
         onMouseLeave={handleOnMouseLeave}

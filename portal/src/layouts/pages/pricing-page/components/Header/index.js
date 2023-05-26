@@ -7,17 +7,17 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 
-// Argon Dashboard 2 PRO MUI page layout routes
+// FFU ATMS MUI page layout routes
 import pageRoutes from "page.routes";
 
-// Argon Dashboard 2 PRO MUI contexts
+// FFU ATMS MUI contexts
 import { useArgonController } from "context";
 
 // Images

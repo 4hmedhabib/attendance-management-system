@@ -1,7 +1,7 @@
 /**
- * The base breakpoints for the Argon Dashboard 2 PRO MUI.
+ * The base breakpoints for the FFU ATMS MUI.
  * You can add new breakpoints using this file.
- * You can customized the breakpoints for the entire Argon Dashboard 2 PRO MUI using thie file.
+ * You can customized the breakpoints for the entire FFU ATMS MUI using thie file.
  */
 
 const breakpoints = {

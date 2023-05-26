@@ -1,7 +1,7 @@
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonInput from "components/ArgonInput";

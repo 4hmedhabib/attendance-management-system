@@ -1,7 +1,7 @@
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import colors from "assets/theme/base/colors";
 
-// Argon Dashboard 2 PRO MUI helper functions
+// FFU ATMS MUI helper functions
 import rgba from "assets/theme/functions/rgba";
 
 const { info, white, gradients } = colors;

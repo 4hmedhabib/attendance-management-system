@@ -10,14 +10,14 @@ import Slider from "@mui/material/Slider";
 import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonButton from "components/ArgonButton";
 import ArgonInput from "components/ArgonInput";
 import ArgonAvatar from "components/ArgonAvatar";
 
-// Argon Dashboard 2 PRO MUI contexts
+// FFU ATMS MUI contexts
 import { useArgonController } from "context";
 
 // Images

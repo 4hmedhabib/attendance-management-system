@@ -3,10 +3,10 @@ import { useState } from "react";
 // @mui material components
 import Container from "@mui/material/Container";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
 // Pricing page components

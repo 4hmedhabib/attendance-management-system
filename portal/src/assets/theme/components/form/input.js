@@ -1,4 +1,4 @@
-// Argon Dashboard 2 PRO MUI Base Styles
+// FFU ATMS MUI Base Styles
 import colors from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
 

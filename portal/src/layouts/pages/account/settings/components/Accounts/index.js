@@ -7,7 +7,7 @@ import Switch from "@mui/material/Switch";
 import Tooltip from "@mui/material/Tooltip";
 import Divider from "@mui/material/Divider";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonAvatar from "components/ArgonAvatar";
@@ -20,7 +20,7 @@ import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
 import logoAtlassian from "assets/images/small-logos/logo-atlassian.svg";
 import logoAsana from "assets/images/small-logos/logo-asana.svg";
 
-// Argon Dashboard 2 PRO MUI contexts
+// FFU ATMS MUI contexts
 import { useArgonController } from "context";
 
 function Accounts() {

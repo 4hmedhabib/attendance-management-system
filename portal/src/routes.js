@@ -1,5 +1,5 @@
 /** 
-  All of the routes for the Argon Dashboard 2 PRO MUI are added here,
+  All of the routes for the FFU ATMS MUI are added here,
   You can add a new route, customize the routes and delete the routes here.
 
   Once you add a new route on this file it will be visible automatically on
@@ -20,7 +20,7 @@
   10. The `component` key is used to store the component of its route.
 */
 
-// Argon Dashboard 2 PRO MUI layouts
+// FFU ATMS MUI layouts
 import Default from "layouts/dashboards/default";
 import SignInCover from "layouts/authentication/sign-in/cover";
 import ResetCover from "layouts/authentication/reset-password/cover";
@@ -28,7 +28,7 @@ import VerificationCover from "layouts/authentication/2-step-verification/cover"
 import Error404 from "layouts/authentication/error/404";
 import Error500 from "layouts/authentication/error/500";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
 const routes = [

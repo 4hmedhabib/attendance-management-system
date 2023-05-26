@@ -1,7 +1,7 @@
 // @mui material components
 import { styled } from "@mui/material/styles";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonButton from "components/ArgonButton";
 
 export default styled(ArgonButton)(({ theme, ownerState }) => {

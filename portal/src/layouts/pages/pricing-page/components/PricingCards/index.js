@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 // @mui material components
 import Grid from "@mui/material/Grid";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DefaultPricingCard from "examples/Cards/PricingCards/DefaultPricingCard";
 
 function PricingCards({ prices }) {

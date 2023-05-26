@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 // Custom styles for ArgonInput
 import ArgonInputRoot from "components/ArgonInput/ArgonInputRoot";
 
-// Argon Dashboard 2 PRO MUI context
+// FFU ATMS MUI context
 import { useArgonController } from "context";
 
 const ArgonInput = forwardRef(({ size, error, success, disabled, ...rest }, ref) => {

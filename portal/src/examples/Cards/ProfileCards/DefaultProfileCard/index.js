@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 // @mui material components
 import Link from "@mui/material/Link";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonAvatar from "components/ArgonAvatar";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import colors from "assets/theme/base/colors";
 
 function DefaultProfileCard({ image, name, position, description, social }) {

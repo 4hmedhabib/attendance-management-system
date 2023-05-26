@@ -9,14 +9,14 @@ import { Line } from "react-chartjs-2";
 // @mui material components
 import Card from "@mui/material/Card";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
 // DefaultLineChart configurations
 import configs from "examples/Charts/LineCharts/DefaultLineChart/configs";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import colors from "assets/theme/base/colors";
 
 function DefaultLineChart({ title, description, height, chart }) {

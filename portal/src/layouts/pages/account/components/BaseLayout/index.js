@@ -9,13 +9,13 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import breakpoints from "assets/theme/base/breakpoints";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";

@@ -4,18 +4,18 @@ import PropTypes from "prop-types";
 // @mui material components
 import Grid from "@mui/material/Grid";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
 // Authentication layout components
 import Footer from "layouts/authentication/components/Footer";
 
-// Argon Dashboard 2 PRO MUI page layout routes
+// FFU ATMS MUI page layout routes
 import pageRoutes from "page.routes";
 
 function BasicLayout({ button, image, children }) {

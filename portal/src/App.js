@@ -8,14 +8,14 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import Sidenav from "examples/Sidenav";
 import Configurator from "examples/Configurator";
 
-// Argon Dashboard 2 PRO MUI themes
+// FFU ATMS MUI themes
 import theme from "assets/theme";
 import themeRTL from "assets/theme/theme-rtl";
 import themeDark from "assets/theme-dark";
@@ -26,10 +26,10 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 
-// Argon Dashboard 2 PRO MUI routes
+// FFU ATMS MUI routes
 import routes from "routes";
 
-// Argon Dashboard 2 PRO MUI contexts
+// FFU ATMS MUI contexts
 import { useArgonController, setMiniSidenav, setOpenConfigurator } from "context";
 
 // Images
@@ -134,7 +134,7 @@ export default function App() {
             <Sidenav
               color={sidenavColor}
               brand={darkSidenav || darkMode ? brand : brandDark}
-              brandName="Argon Dashboard 2 PRO"
+              brandName="FFU ATMS"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -143,7 +143,6 @@ export default function App() {
             {configsButton}
           </>
         )}
-        {layout === "vr" && <Configurator />}
         <Routes>
           {getRoutes(routes)}
           <Route path="*" element={<Navigate to="/dashboards/default" />} />
@@ -158,7 +157,7 @@ export default function App() {
           <Sidenav
             color={sidenavColor}
             brand={darkSidenav || darkMode ? brand : brandDark}
-            brandName="Argon Dashboard 2 PRO"
+            brandName="FFU ATMS"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}

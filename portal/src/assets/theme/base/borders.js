@@ -1,13 +1,13 @@
 /**
- * The base border styles for the Argon Dashboard 2 PRO MUI.
+ * The base border styles for the FFU ATMS MUI.
  * You can add new border width, border color or border radius using this file.
- * You can customized the borders value for the entire Argon Dashboard 2 PRO MUI using thie file.
+ * You can customized the borders value for the entire FFU ATMS MUI using thie file.
  */
 
-// Argon Dashboard 2 PRO MUI Base Styles
+// FFU ATMS MUI Base Styles
 import colors from "assets/theme/base/colors";
 
-// Argon Dashboard 2 PRO MUI Helper Functions
+// FFU ATMS MUI Helper Functions
 import pxToRem from "assets/theme/functions/pxToRem";
 
 const { grey } = colors;

@@ -3,7 +3,7 @@ import { Fragment } from "react";
 // @mui material components
 import Card from "@mui/material/Card";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonAvatar from "components/ArgonAvatar";
 import ArgonProgress from "components/ArgonProgress";

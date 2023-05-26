@@ -1,4 +1,4 @@
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import typography from "assets/theme/base/typography";
 
 function configs(labels, datasets, customTick) {

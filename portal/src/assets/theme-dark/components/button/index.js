@@ -1,4 +1,4 @@
-// Argon Dashboard 2 PRO MUI Button Styles
+// FFU ATMS MUI Button Styles
 import root from "assets/theme-dark/components/button/root";
 import contained from "assets/theme-dark/components/button/contained";
 import outlined from "assets/theme-dark/components/button/outlined";

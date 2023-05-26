@@ -7,13 +7,13 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
 // Custom styles for the SidenavItem
 import { item, itemContent, itemArrow } from "examples/Sidenav/styles/sidenavItem";
 
-// Argon Dashboard 2 PRO MUI contexts
+// FFU ATMS MUI contexts
 import { useArgonController } from "context";
 
 function SidenavItem({ name, active, nested, children, open, ...rest }) {

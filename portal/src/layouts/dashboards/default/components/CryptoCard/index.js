@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import Tooltip from "@mui/material/Tooltip";
 import Stack from "@mui/material/Stack";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonBadge from "components/ArgonBadge";
 import ArgonButton from "components/ArgonButton";

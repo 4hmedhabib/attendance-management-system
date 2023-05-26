@@ -6,14 +6,14 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonAvatar from "components/ArgonAvatar";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonButton from "components/ArgonButton";
 import ArgonInput from "components/ArgonInput";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import borders from "assets/theme/base/borders";
 
 // Images

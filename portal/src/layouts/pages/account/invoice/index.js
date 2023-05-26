@@ -5,12 +5,12 @@ import Table from "@mui/material/Table";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonButton from "components/ArgonButton";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import borders from "assets/theme/base/borders";
 import colors from "assets/theme/base/colors";
 
@@ -21,7 +21,7 @@ import BaseLayout from "layouts/pages/account/components/BaseLayout";
 import logoCT from "assets/images/logo-ct.png";
 import logoCTDark from "assets/images/logo-ct-dark.png";
 
-// Argon Dashboard 2 PRO MUI contexts
+// FFU ATMS MUI contexts
 import { useArgonController } from "context";
 
 function Invoice() {

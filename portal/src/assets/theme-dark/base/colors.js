@@ -1,7 +1,7 @@
 /**
- * The base colors for the Argon Dashboard 2 PRO MUI.
+ * The base colors for the FFU ATMS MUI.
  * You can add new color using this file.
- * You can customized the colors for the entire Argon Dashboard 2 PRO MUI using thie file.
+ * You can customized the colors for the entire FFU ATMS MUI using thie file.
  */
 
 const colors = {

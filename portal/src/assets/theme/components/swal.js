@@ -1,10 +1,10 @@
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import borders from "assets/theme/base/borders";
 import typography from "assets/theme/base/typography";
 import colors from "assets/theme/base/colors";
 import boxShadows from "assets/theme/base/boxShadows";
 
-// // Argon Dashboard 2 PRO MUI helper functions
+// // FFU ATMS MUI helper functions
 import linearGradient from "assets/theme/functions/linearGradient";
 import pxToRem from "assets/theme/functions/pxToRem";
 

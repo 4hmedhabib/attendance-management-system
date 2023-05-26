@@ -1,9 +1,9 @@
-// Argon Dashboard 2 PRO MUI Base Styles
+// FFU ATMS MUI Base Styles
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
 import boxShadows from "assets/theme/base/boxShadows";
 
-// Argon Dashboard 2 PRO MUI Helper Functions
+// FFU ATMS MUI Helper Functions
 import pxToRem from "assets/theme/functions/pxToRem";
 
 const { white, text, info, secondary } = colors;

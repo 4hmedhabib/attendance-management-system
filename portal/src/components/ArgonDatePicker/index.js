@@ -7,7 +7,7 @@ import Flatpickr from "react-flatpickr";
 // react-flatpickr styles
 import "flatpickr/dist/flatpickr.css";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonInput from "components/ArgonInput";
 
 function ArgonDatePicker({ input, ...rest }) {

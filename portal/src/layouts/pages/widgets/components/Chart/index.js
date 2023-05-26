@@ -9,17 +9,17 @@ import { Line } from "react-chartjs-2";
 // @mui material components
 import Card from "@mui/material/Card";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI helper functions
+// FFU ATMS MUI helper functions
 import gradientChartLine from "assets/theme/functions/gradientChartLine";
 
 // Chart configurations
 import configs from "layouts/pages/widgets/components/Chart/configs";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import colors from "assets/theme/base/colors";
 
 function Chart({ title, count, percentage, chart }) {

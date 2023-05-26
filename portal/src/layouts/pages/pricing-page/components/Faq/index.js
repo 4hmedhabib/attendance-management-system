@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 

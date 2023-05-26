@@ -8,7 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
 // Custom styles for the SidenavCollapse
@@ -20,7 +20,7 @@ import {
   collapseArrow,
 } from "examples/Sidenav/styles/sidenavCollapse";
 
-// Argon Dashboard 2 PRO MUI context
+// FFU ATMS MUI context
 import { useArgonController } from "context";
 
 function SidenavCollapse({ icon, name, children, active, noCollapse, open, ...rest }) {

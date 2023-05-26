@@ -1,8 +1,8 @@
 /* eslint-disable no-dupe-keys */
-// Argon Dashboard 2 PRO MUI helper functions
+// FFU ATMS MUI helper functions
 import rgba from "assets/theme/functions/rgba";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import typography from "assets/theme/base/typography";
 import colors from "assets/theme/base/colors";
 

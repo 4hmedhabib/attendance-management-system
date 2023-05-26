@@ -13,14 +13,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonSelect from "components/ArgonSelect";
 import ArgonInput from "components/ArgonInput";
 import ArgonPagination from "components/ArgonPagination";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 

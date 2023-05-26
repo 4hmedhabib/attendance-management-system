@@ -1,6 +1,6 @@
 /**
 =========================================================
-* Argon Dashboard 2 PRO MUI - v1.0.0
+* FFU ATMS MUI - v1.0.0
 =========================================================
 
 * Product Page: https://www.creative-tim.com/product/argon-dashboard-pro-material-ui

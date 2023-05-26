@@ -3,16 +3,16 @@ import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonAvatar from "components/ArgonAvatar";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import colors from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
 
-// Argon Dashboard 2 PRO MUI data variables
+// FFU ATMS MUI data variables
 import storiesData from "layouts/pages/profile/teams/components/Stories/data/storiesData";
 
 function Stories() {

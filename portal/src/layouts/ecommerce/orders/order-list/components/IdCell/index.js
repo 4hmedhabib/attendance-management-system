@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // @mui material components
 import Checkbox from "@mui/material/Checkbox";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 

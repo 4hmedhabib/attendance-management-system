@@ -1,9 +1,9 @@
-// Argon Dashboard 2 PRO MUI Base Styles
+// FFU ATMS MUI Base Styles
 import colors from "assets/theme-dark/base/colors";
 import borders from "assets/theme-dark/base/borders";
 import boxShadows from "assets/theme-dark/base/boxShadows";
 
-// Argon Dashboard 2 PRO MUI Helper Function
+// FFU ATMS MUI Helper Function
 import rgba from "assets/theme-dark/functions/rgba";
 
 const { black, background } = colors;

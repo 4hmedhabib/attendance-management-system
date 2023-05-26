@@ -9,7 +9,7 @@ import Dropzone from "dropzone";
 // Dropzone styles
 import "dropzone/dist/dropzone.css";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 
 // Custom styles for the ArgonDropzone

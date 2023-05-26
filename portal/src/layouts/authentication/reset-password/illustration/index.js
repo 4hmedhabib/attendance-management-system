@@ -1,4 +1,4 @@
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonInput from "components/ArgonInput";
 import ArgonButton from "components/ArgonButton";

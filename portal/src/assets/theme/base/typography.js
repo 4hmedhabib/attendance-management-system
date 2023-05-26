@@ -1,13 +1,13 @@
 /**
- * The base typography styles for the Argon Dashboard 2 PRO MUI.
+ * The base typography styles for the FFU ATMS MUI.
  * You can add new typography style using this file.
- * You can customized the typography styles for the entire Argon Dashboard 2 PRO MUI using thie file.
+ * You can customized the typography styles for the entire FFU ATMS MUI using thie file.
  */
 
-// Argon Dashboard 2 PRO MUI Base Styles
+// FFU ATMS MUI Base Styles
 import colors from "assets/theme/base/colors";
 
-// Argon Dashboard 2 PRO MUI Helper Functions
+// FFU ATMS MUI Helper Functions
 import pxToRem from "assets/theme/functions/pxToRem";
 
 const { dark } = colors;

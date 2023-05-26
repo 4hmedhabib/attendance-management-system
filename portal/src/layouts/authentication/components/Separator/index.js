@@ -1,7 +1,7 @@
 // @mui material components
 import Divider from "@mui/material/Divider";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 

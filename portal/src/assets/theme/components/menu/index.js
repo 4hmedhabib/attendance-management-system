@@ -1,10 +1,10 @@
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import boxShadows from "assets/theme/base/boxShadows";
 import typography from "assets/theme/base/typography";
 import colors from "assets/theme/base/colors";
 import borders from "assets/theme/base/borders";
 
-// Argon Dashboard 2 PRO MUI helper functions
+// FFU ATMS MUI helper functions
 import pxToRem from "assets/theme/functions/pxToRem";
 
 const { lg } = boxShadows;

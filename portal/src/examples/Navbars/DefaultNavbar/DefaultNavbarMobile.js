@@ -26,14 +26,14 @@ import Collapse from "@mui/material/Collapse";
 import MuiLink from "@mui/material/Link";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI exampless
+// FFU ATMS MUI exampless
 import DefaultNavbarDropdown from "examples/Navbars/DefaultNavbar/DefaultNavbarDropdown";
 
-// Argon Dashboard 2 PRO React contexts
+// FFU ATMS React contexts
 import { useArgonController } from "context";
 
 function DefaultNavbarMobile({ routes, open }) {

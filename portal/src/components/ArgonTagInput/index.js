@@ -10,7 +10,7 @@ import "@pathofdev/react-tag-input/build/index.css";
 // Custom styles for ArgonTagInput
 import ArgonTagInputRoot from "components/ArgonTagInput/ArgonTagInputRoot";
 
-// Argon Dashboard 2 PRO MUI context
+// FFU ATMS MUI context
 import { useArgonController } from "context";
 
 const ArgonTagInput = forwardRef(({ size, error, success, ...rest }, ref) => {

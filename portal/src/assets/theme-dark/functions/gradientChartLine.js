@@ -2,7 +2,7 @@
   The gradientChartLine() function helps you to create a gradient color for the chart line
  */
 
-// Argon Dashboard 2 PRO MUI helper functions
+// FFU ATMS MUI helper functions
 import rgba from "assets/theme-dark/functions/rgba";
 
 function gradientChartLine(chart, color, opacity = 0.2) {

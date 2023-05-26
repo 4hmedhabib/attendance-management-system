@@ -1,5 +1,5 @@
 /* eslint-disable no-dupe-keys */
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import colors from "assets/theme/base/colors";
 
 function configs(color, labels, datasets) {

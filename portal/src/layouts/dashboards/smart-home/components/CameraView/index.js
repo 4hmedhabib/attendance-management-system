@@ -5,12 +5,12 @@ import PropTypes from "prop-types";
 import Fade from "@mui/material/Fade";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonBadge from "components/ArgonBadge";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import typography from "assets/theme/base/typography";
 
 function CameraView({ image, date, time, value, index }) {

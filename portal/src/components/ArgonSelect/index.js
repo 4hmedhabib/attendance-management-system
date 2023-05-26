@@ -6,10 +6,10 @@ import PropTypes from "prop-types";
 // react-select components
 import Select from "react-select";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import colors from "assets/theme/base/colors";
 
-// Argon Dashboard 2 PRO MUI context
+// FFU ATMS MUI context
 import { useArgonController } from "context";
 
 // Custom styles for ArgonSelect

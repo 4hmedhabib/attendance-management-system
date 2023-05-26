@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // formik components
 import { ErrorMessage, Field } from "formik";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonInput from "components/ArgonInput";

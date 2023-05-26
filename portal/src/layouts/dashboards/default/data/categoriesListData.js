@@ -1,4 +1,4 @@
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonTypography from "components/ArgonTypography";
 
 const categoriesListData = [

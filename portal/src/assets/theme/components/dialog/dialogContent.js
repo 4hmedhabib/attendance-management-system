@@ -1,9 +1,9 @@
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import typography from "assets/theme/base/typography";
 import borders from "assets/theme/base/borders";
 import colors from "assets/theme/base/colors";
 
-// Argon Dashboard 2 PRO MUI helper functions
+// FFU ATMS MUI helper functions
 import pxToRem from "assets/theme/functions/pxToRem";
 
 const { size } = typography;

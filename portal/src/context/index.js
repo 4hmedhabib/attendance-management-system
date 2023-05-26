@@ -3,13 +3,13 @@ import { createContext, useContext, useReducer, useMemo } from "react";
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
-// The Argon Dashboard 2 PRO MUI main context
+// The FFU ATMS MUI main context
 const Argon = createContext(null);
 
 // Setting custom name for the context which is visible on react dev tools
 Argon.displayName = "ArgonContext";
 
-// Argon Dashboard 2 PRO MUI reducer
+// FFU ATMS MUI reducer
 function reducer(state, action) {
   switch (action.type) {
     case "MINI_SIDENAV": {
@@ -45,7 +45,7 @@ function reducer(state, action) {
   }
 }
 
-// Argon Dashboard 2 PRO MUI context provider
+// FFU ATMS MUI context provider
 function ArgonControllerProvider({ children }) {
   const initialState = {
     miniSidenav: false,
@@ -66,7 +66,7 @@ function ArgonControllerProvider({ children }) {
   return <Argon.Provider value={value}>{children}</Argon.Provider>;
 }
 
-// Argon Dashboard 2 PRO MUI custom hook for using context
+// FFU ATMS MUI custom hook for using context
 function useArgonController() {
   const context = useContext(Argon);
 

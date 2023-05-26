@@ -17,16 +17,16 @@ import Divider from "@mui/material/Divider";
 import MuiLink from "@mui/material/Link";
 import Container from "@mui/material/Container";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonButton from "components/ArgonButton";
 
-// Argon Dashboard 2 PRO MUI examples components
+// FFU ATMS MUI examples components
 import DefaultNavbarDropdown from "examples/Navbars/DefaultNavbar/DefaultNavbarDropdown";
 import DefaultNavbarMobile from "examples/Navbars/DefaultNavbar/DefaultNavbarMobile";
 
-// Argon Dashboard 2 PRO MUI Base Styles
+// FFU ATMS MUI Base Styles
 import breakpoints from "assets/theme/base/breakpoints";
 
 // Material Dashboard 2 PRO React context
@@ -615,7 +615,7 @@ function DefaultNavbar({ routes, brand, transparent, light, action }) {
 
 // Declaring default props for DefaultNavbar
 DefaultNavbar.defaultProps = {
-  brand: "Argon Dashboard 2 PRO",
+  brand: "FFU ATMS",
   transparent: false,
   light: false,
   action: false,

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // @mui material components
 import TableCell from "@mui/material/TableCell";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonTypography from "components/ArgonTypography";
 import ArgonBox from "components/ArgonBox";
 

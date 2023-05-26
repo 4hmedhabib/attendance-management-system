@@ -5,11 +5,11 @@ import PropTypes from "prop-types";
 import Icon from "@mui/material/Icon";
 import Collapse from "@mui/material/Collapse";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import borders from "assets/theme/base/borders";
 
 function FaqCollapse({ title, open, children, ...rest }) {

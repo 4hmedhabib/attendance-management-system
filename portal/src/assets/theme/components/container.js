@@ -1,7 +1,7 @@
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import breakpoints from "assets/theme/base/breakpoints";
 
-// Argon Dashboard 2 PRO MUI helper functions
+// FFU ATMS MUI helper functions
 import pxToRem from "assets/theme/functions/pxToRem";
 
 const {

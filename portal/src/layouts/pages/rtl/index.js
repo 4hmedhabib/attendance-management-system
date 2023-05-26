@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -36,7 +36,7 @@ import categoriesListData from "layouts/pages/rtl/data/categoriesListData";
 import incomeChartData from "layouts/pages/rtl/data/incomeChartData";
 import caloriesChartData from "layouts/pages/rtl/data/caloriesChartData";
 
-// Argon Dashboard 2 PRO MUI contexts
+// FFU ATMS MUI contexts
 import { useArgonController, setDirection } from "context";
 
 function RTL() {

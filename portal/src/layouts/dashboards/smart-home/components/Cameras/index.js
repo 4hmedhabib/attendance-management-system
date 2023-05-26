@@ -9,14 +9,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Icon from "@mui/material/Icon";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI base styles
+// FFU ATMS MUI base styles
 import breakpoints from "assets/theme/base/breakpoints";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import CameraView from "layouts/dashboards/smart-home/components/CameraView";
 
 // Images

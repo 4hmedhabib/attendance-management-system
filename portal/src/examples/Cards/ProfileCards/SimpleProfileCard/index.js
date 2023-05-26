@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 // @mui material components
 import MuiLink from "@mui/material/Link";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonAvatar from "components/ArgonAvatar";

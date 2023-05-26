@@ -2,17 +2,17 @@
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 import ArgonInput from "components/ArgonInput";
 import ArgonButton from "components/ArgonButton";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
-// Argon Dashboard 2 PRO MUI page layout routes
+// FFU ATMS MUI page layout routes
 import pageRoutes from "page.routes";
 
 // Images

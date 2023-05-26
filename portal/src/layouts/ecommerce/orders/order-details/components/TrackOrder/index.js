@@ -1,8 +1,8 @@
-// Argon Dashboard 2 PRO MUI components
+// FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
-// Argon Dashboard 2 PRO MUI example components
+// FFU ATMS MUI example components
 import TimelineItem from "examples/Timeline/TimelineItem";
 
 function OrdersOverview() {
