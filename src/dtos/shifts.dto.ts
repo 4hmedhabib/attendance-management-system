@@ -35,16 +35,6 @@ class CreateShiftPayload {
     message: "description must be shorter than or equal to 500 characters",
   })
   description?: string;
-
-  @IsString({ message: "faculty slug must be a string" })
-  @IsNotEmpty({ message: "faculty slug is required" })
-  @MinLength(3, {
-    message: "faculty slug must be longer than or equal to 3 characters",
-  })
-  @MaxLength(62, {
-    message: "faculty slug must be shorter than or equal to 62 characters",
-  })
-  facultySlug: string;
 }
 
 export class CreateShiftDto {
@@ -80,16 +70,6 @@ export class UpdateShiftData {
     message: "description must be shorter than or equal to 500 characters",
   })
   description?: string;
-
-  @IsString({ message: "faculty slug must be a string" })
-  @IsNotEmpty({ message: "faculty slug is required" })
-  @MinLength(3, {
-    message: "faculty slug must be longer than or equal to 3 characters",
-  })
-  @MaxLength(62, {
-    message: "faculty slug must be shorter than or equal to 62 characters",
-  })
-  facultySlug: string;
 }
 
 class UpdateShiftPayload {
