@@ -104,11 +104,6 @@ model faculties {
     updatedby   users? @relation("UPDATED_FACULTIES", fields: [updatedbyid], references: [userid])
     updatedbyid Int?
 
-<<<<<<< HEAD:prisma/schema.prisma
-=======
-    shifts shifts[]
-
->>>>>>> 3363e06bda03109050248357d9dfded754dcfb9a:api/prisma/schema.prisma
     classes classes[]
 }
 
