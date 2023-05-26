@@ -20,7 +20,6 @@ export interface IRPCreateShiftPayload {
   shiftName: string;
   shiftSlug: string;
   description?: string;
-  facultySlug: string;
 }
 
 export interface IRBCreateShift {
