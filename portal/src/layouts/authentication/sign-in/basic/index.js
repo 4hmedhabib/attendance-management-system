@@ -84,7 +84,7 @@ function Basic() {
             <ArgonBox mt={1} mb={3}>
               <ArgonButton
                 component={Link}
-                to="/authentication/sign-up/basic"
+                to="/authentication/sign-up"
                 variant="gradient"
                 color="dark"
                 fullWidth
