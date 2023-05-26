@@ -104,6 +104,11 @@ model faculties {
     updatedby   users? @relation("UPDATED_FACULTIES", fields: [updatedbyid], references: [userid])
     updatedbyid Int?
 
+<<<<<<< HEAD:prisma/schema.prisma
+=======
+    shifts shifts[]
+
+>>>>>>> 3363e06bda03109050248357d9dfded754dcfb9a:api/prisma/schema.prisma
     classes classes[]
 }
 
@@ -140,7 +145,8 @@ model students {
     user users?
 
     student_classes student_classes[]
-    attendaces      attendances[]
+
+    attendaces attendances[]
 
     createdby   users @relation("CREATED_STUDENTS", fields: [createdbyid], references: [userid])
     createdbyid Int

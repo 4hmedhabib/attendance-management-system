@@ -33,12 +33,14 @@ class StudentRoute implements IRoutes {
       this.student.getStudentBySlug
     );
 
+    // create student in specific class
     this.router.post(
       `${this.path}`,
       ValidationMiddleware(CreateStudentDto),
       this.student.createStudent
     );
 
+    // bulk create students in specific class
     this.router.post(
       `${this.path}/bulk-create`,
       ValidationMiddleware(CreateBulkStudentDto),

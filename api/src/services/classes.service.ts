@@ -4,10 +4,12 @@ import { UpdateClassData } from "../dtos/classes.dto";
 import { HttpException } from "../exceptions/httpException";
 import { IClass, IRPCreateClassPayload, IShift } from "../interfaces";
 import { logger } from "../utils";
+import { IFaculty } from "./../interfaces/faculties.interface";
 
 const prisma = new PrismaClient();
 const classesDB = prisma.classes;
 const shiftsDB = prisma.shifts;
+const facultiesDB = prisma.faculties;
 
 @Service()
 class ClassService {
@@ -17,7 +19,6 @@ class ClassService {
         classid: true,
         classname: true,
         classslug: true,
-        description: !isMiniView,
         createdby: !isMiniView
           ? {
               select: {
@@ -25,6 +26,22 @@ class ClassService {
                 firstname: true,
                 middlename: true,
                 lastname: true,
+              },
+            }
+          : false,
+        shift: !isMiniView
+          ? {
+              select: {
+                shiftslug: !isMiniView,
+                shiftname: !isMiniView,
+              },
+            }
+          : false,
+        faculty: !isMiniView
+          ? {
+              select: {
+                facultyslug: !isMiniView,
+                facultyname: !isMiniView,
               },
             }
           : false,
@@ -88,6 +105,14 @@ class ClassService {
                 },
               }
             : false,
+          faculty: !isMiniView
+            ? {
+                select: {
+                  facultyslug: !isMiniView,
+                  facultyname: !isMiniView,
+                },
+              }
+            : false,
           _count: !isMiniView
             ? {
                 select: {
@@ -126,6 +151,13 @@ class ClassService {
         `This class ${classData.className} already exists`
       );
 
+    let faculty: IFaculty = await facultiesDB.findUnique({
+      where: { facultyslug: classData.facultySlug || "" },
+    });
+
+    if (!faculty)
+      throw new HttpException(409, `faculty ${classData.shiftSlug} not found`);
+
     let shift: IShift = await shiftsDB.findUnique({
       where: { shiftslug: classData.shiftSlug || "" },
     });
@@ -146,6 +178,11 @@ class ClassService {
       shift: {
         connect: {
           shiftid: shift.shiftid,
+        },
+      },
+      faculty: {
+        connect: {
+          facultyid: faculty.facultyid,
         },
       },
     };
@@ -207,6 +244,13 @@ class ClassService {
         "This class already exists please check it: " + classData.className
       );
 
+    let faculty: IFaculty = await facultiesDB.findUnique({
+      where: { facultyslug: classData.facultySlug || "" },
+    });
+
+    if (!faculty)
+      throw new HttpException(409, `faculty ${classData.shiftSlug} not found`);
+
     let shift: IShift = await shiftsDB.findUnique({
       where: { shiftslug: classData.shiftSlug || "" },
     });
@@ -222,6 +266,11 @@ class ClassService {
       shift: {
         connect: {
           shiftid: shift.shiftid,
+        },
+      },
+      faculty: {
+        connect: {
+          facultyid: faculty.facultyid,
         },
       },
       updatedby: {
@@ -267,6 +316,12 @@ class ClassService {
           select: {
             shiftslug: true,
             shiftname: true,
+          },
+        },
+        faculty: {
+          select: {
+            facultyslug: true,
+            facultyname: true,
           },
         },
         _count: true
