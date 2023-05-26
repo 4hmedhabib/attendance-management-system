@@ -36,7 +36,7 @@ const routes = [
     type: "collapse",
     name: "Dashboard",
     key: "dashboard",
-    icon: <ArgonBox component="i" color="primary" fontSize="14px" className="ni ni-shop" />,
+    icon: <ArgonBox component="i" color="primary" fontSize="14px" className="ni ni-spaceship" />,
     route: "/dashboard",
     component: <Default />,
     noCollapse: true,
@@ -114,6 +114,15 @@ const routes = [
     ],
   },
   { type: "divider", key: "divider-1" },
+  {
+    type: "collapse",
+    name: "Faculties",
+    key: "faculties",
+    icon: <ArgonBox component="i" color="warning" fontSize="14px" className="ni ni-ungroup" />,
+    route: "/faculties",
+    component: <h1>Faculties</h1>,
+    noCollapse: true,
+  },
 ];
 
 export default routes;
