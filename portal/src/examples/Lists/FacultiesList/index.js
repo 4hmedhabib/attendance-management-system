@@ -11,9 +11,14 @@ import Icon from "@mui/material/Icon";
 // FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
+import { useEffect } from "react";
 
-function CategoriesList({ title, categories }) {
-  const renderItems = categories?.map(({ color, icon, name, description, route }, key) => (
+function CategoriesList({ title, faculties }) {
+  useEffect(() => {
+    console.log(faculties);
+  }, []);
+
+  const renderItems = faculties?.map(({ color, icon, name, description, route }, key) => (
     <ArgonBox
       key={name}
       component="li"
@@ -23,7 +28,7 @@ function CategoriesList({ title, categories }) {
       borderRadius="lg"
       py={1}
       pr={2}
-      mb={categories.length - 1 === key ? 0 : 1}
+      mb={faculties.length - 1 === key ? 0 : 1}
     >
       <ArgonBox display="flex" alignItems="center">
         <ArgonBox
@@ -98,7 +103,7 @@ function CategoriesList({ title, categories }) {
 // Typechecking props for the CategoriesList
 CategoriesList.propTypes = {
   title: PropTypes.string.isRequired,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  faculties: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default CategoriesList;
