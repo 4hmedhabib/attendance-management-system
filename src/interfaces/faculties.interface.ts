@@ -12,7 +12,7 @@ export interface IFaculty {
   manager?: IUser;
   deputy?: IUser | null;
   _count?: {
-    shifts?: number;
+    classes?: number;
   };
 }
 
