@@ -6,7 +6,7 @@ CREATE TABLE "users" (
     "lastname" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "mobileno" TEXT NOT NULL,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "ispwdupgraded" BOOLEAN NOT NULL DEFAULT false,
     "lastaccessdate" TIMESTAMP(3),
@@ -49,7 +49,6 @@ CREATE TABLE "shifts" (
     "updatedat" TIMESTAMP(3) NOT NULL,
     "createdbyid" INTEGER NOT NULL,
     "updatedbyid" INTEGER,
-    "facultyid" INTEGER NOT NULL,
 
     CONSTRAINT "shifts_pkey" PRIMARY KEY ("shiftid")
 );
@@ -62,9 +61,11 @@ CREATE TABLE "students" (
     "middlename" TEXT NOT NULL,
     "lastname" TEXT NOT NULL,
     "mobileno" TEXT NOT NULL,
-    "email" TEXT,
+    "yearofstudy" INTEGER NOT NULL DEFAULT 1,
     "createdat" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedat" TIMESTAMP(3) NOT NULL,
+    "createdbyid" INTEGER NOT NULL,
+    "updatedbyid" INTEGER,
 
     CONSTRAINT "students_pkey" PRIMARY KEY ("studentid")
 );
@@ -90,6 +91,7 @@ CREATE TABLE "classes" (
     "createdbyid" INTEGER NOT NULL,
     "updatedbyid" INTEGER,
     "shiftid" INTEGER NOT NULL,
+    "facultyid" INTEGER,
 
     CONSTRAINT "classes_pkey" PRIMARY KEY ("classid")
 );
@@ -118,6 +120,8 @@ CREATE TABLE "semisters" (
     "description" TEXT,
     "createdat" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedat" TIMESTAMP(3) NOT NULL,
+    "createdbyid" INTEGER NOT NULL,
+    "updatedbyid" INTEGER,
 
     CONSTRAINT "semisters_pkey" PRIMARY KEY ("semisterid")
 );
@@ -157,9 +161,10 @@ CREATE TABLE "teachers" (
     "middlename" TEXT NOT NULL,
     "lastname" TEXT NOT NULL,
     "mobileno" TEXT NOT NULL,
-    "email" TEXT,
     "createdat" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedat" TIMESTAMP(3) NOT NULL,
+    "createdbyid" INTEGER NOT NULL,
+    "updatedbyid" INTEGER,
 
     CONSTRAINT "teachers_pkey" PRIMARY KEY ("teacherid")
 );
@@ -187,6 +192,42 @@ CREATE TABLE "attendacestatuses" (
     "statusslug" TEXT NOT NULL,
 
     CONSTRAINT "attendacestatuses_pkey" PRIMARY KEY ("statusid")
+);
+
+-- CreateTable
+CREATE TABLE "permissions" (
+    "permissionid" SERIAL NOT NULL,
+    "permissionslug" TEXT NOT NULL,
+    "permissionname" TEXT NOT NULL,
+    "createddate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updateddate" TIMESTAMP(3) NOT NULL,
+    "createdbyid" INTEGER,
+    "updatedbyid" INTEGER,
+
+    CONSTRAINT "permissions_pkey" PRIMARY KEY ("permissionid")
+);
+
+-- CreateTable
+CREATE TABLE "groups" (
+    "groupid" SERIAL NOT NULL,
+    "groupslug" TEXT NOT NULL,
+    "groupname" TEXT NOT NULL,
+    "createddate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updateddate" TIMESTAMP(3) NOT NULL,
+    "createdbyid" INTEGER,
+    "updatedbyid" INTEGER,
+
+    CONSTRAINT "groups_pkey" PRIMARY KEY ("groupid")
+);
+
+-- CreateTable
+CREATE TABLE "group_permissions" (
+    "permissionid" INTEGER NOT NULL,
+    "groupid" INTEGER NOT NULL,
+    "assignedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "assignedbyid" INTEGER,
+
+    CONSTRAINT "group_permissions_pkey" PRIMARY KEY ("permissionid","groupid")
 );
 
 -- CreateIndex
@@ -223,9 +264,6 @@ CREATE UNIQUE INDEX "students_stdid_key" ON "students"("stdid");
 CREATE UNIQUE INDEX "students_mobileno_key" ON "students"("mobileno");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "students_email_key" ON "students"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "classes_classslug_key" ON "classes"("classslug");
 
 -- CreateIndex
@@ -241,10 +279,13 @@ CREATE UNIQUE INDEX "teachers_techid_key" ON "teachers"("techid");
 CREATE UNIQUE INDEX "teachers_mobileno_key" ON "teachers"("mobileno");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "teachers_email_key" ON "teachers"("email");
+CREATE UNIQUE INDEX "attendacestatuses_statusslug_key" ON "attendacestatuses"("statusslug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "attendacestatuses_statusslug_key" ON "attendacestatuses"("statusslug");
+CREATE UNIQUE INDEX "permissions_permissionslug_key" ON "permissions"("permissionslug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "groups_groupslug_key" ON "groups"("groupslug");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_createdbyid_fkey" FOREIGN KEY ("createdbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -277,7 +318,10 @@ ALTER TABLE "shifts" ADD CONSTRAINT "shifts_createdbyid_fkey" FOREIGN KEY ("crea
 ALTER TABLE "shifts" ADD CONSTRAINT "shifts_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "shifts" ADD CONSTRAINT "shifts_facultyid_fkey" FOREIGN KEY ("facultyid") REFERENCES "faculties"("facultyid") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "students" ADD CONSTRAINT "students_createdbyid_fkey" FOREIGN KEY ("createdbyid") REFERENCES "users"("userid") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "students" ADD CONSTRAINT "students_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "student_classes" ADD CONSTRAINT "student_classes_studentid_fkey" FOREIGN KEY ("studentid") REFERENCES "students"("studentid") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -298,6 +342,9 @@ ALTER TABLE "classes" ADD CONSTRAINT "classes_updatedbyid_fkey" FOREIGN KEY ("up
 ALTER TABLE "classes" ADD CONSTRAINT "classes_shiftid_fkey" FOREIGN KEY ("shiftid") REFERENCES "shifts"("shiftid") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "classes" ADD CONSTRAINT "classes_facultyid_fkey" FOREIGN KEY ("facultyid") REFERENCES "faculties"("facultyid") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "class_semisters" ADD CONSTRAINT "class_semisters_classid_fkey" FOREIGN KEY ("classid") REFERENCES "classes"("classid") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -308,6 +355,12 @@ ALTER TABLE "class_semisters" ADD CONSTRAINT "class_semisters_assignedbyid_fkey"
 
 -- AddForeignKey
 ALTER TABLE "class_semisters" ADD CONSTRAINT "class_semisters_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "semisters" ADD CONSTRAINT "semisters_createdbyid_fkey" FOREIGN KEY ("createdbyid") REFERENCES "users"("userid") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "semisters" ADD CONSTRAINT "semisters_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "course_semisters" ADD CONSTRAINT "course_semisters_courseid_fkey" FOREIGN KEY ("courseid") REFERENCES "courses"("courseid") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -331,6 +384,12 @@ ALTER TABLE "courses" ADD CONSTRAINT "courses_createdbyid_fkey" FOREIGN KEY ("cr
 ALTER TABLE "courses" ADD CONSTRAINT "courses_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "teachers" ADD CONSTRAINT "teachers_createdbyid_fkey" FOREIGN KEY ("createdbyid") REFERENCES "users"("userid") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "teachers" ADD CONSTRAINT "teachers_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "attendances" ADD CONSTRAINT "attendances_createdbyid_fkey" FOREIGN KEY ("createdbyid") REFERENCES "users"("userid") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -341,3 +400,24 @@ ALTER TABLE "attendances" ADD CONSTRAINT "attendances_courseid_semisterid_teache
 
 -- AddForeignKey
 ALTER TABLE "attendances" ADD CONSTRAINT "attendances_statusid_fkey" FOREIGN KEY ("statusid") REFERENCES "attendacestatuses"("statusid") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "permissions" ADD CONSTRAINT "permissions_createdbyid_fkey" FOREIGN KEY ("createdbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "permissions" ADD CONSTRAINT "permissions_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "groups" ADD CONSTRAINT "groups_createdbyid_fkey" FOREIGN KEY ("createdbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "groups" ADD CONSTRAINT "groups_updatedbyid_fkey" FOREIGN KEY ("updatedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "group_permissions" ADD CONSTRAINT "group_permissions_permissionid_fkey" FOREIGN KEY ("permissionid") REFERENCES "permissions"("permissionid") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "group_permissions" ADD CONSTRAINT "group_permissions_groupid_fkey" FOREIGN KEY ("groupid") REFERENCES "groups"("groupid") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "group_permissions" ADD CONSTRAINT "group_permissions_assignedbyid_fkey" FOREIGN KEY ("assignedbyid") REFERENCES "users"("userid") ON DELETE SET NULL ON UPDATE CASCADE;
