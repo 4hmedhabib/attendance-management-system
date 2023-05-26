@@ -13,9 +13,8 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DetailedStatisticsCard from "examples/Cards/StatisticsCards/DetailedStatisticsCard";
-import SalesTable from "examples/Tables/SalesTable";
 import Table from "examples/Tables/Table";
-import CategoriesList from "examples/Lists/CategoriesList";
+import FacultiesList from "examples/Lists/FacultiesList";
 import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
 
 // FFU ATMS MUI base styles
@@ -23,22 +22,11 @@ import typography from "assets/theme/base/typography";
 
 // Dashboard layout components
 import Slider from "layouts/dashboards/default/components/Slider";
-import TeamMembers from "layouts/dashboards/default/components/TeamMembers";
-import TodoList from "layouts/dashboards/default/components/TodoList";
-import ProgressTrack from "layouts/dashboards/default/components/ProgressTrack";
-import BalanceCard from "layouts/dashboards/default/components/BalanceCard";
-import CryptoCard from "layouts/dashboards/default/components/CryptoCard";
-
-// Pages layout components
-import Post from "layouts/pages/profile/teams/components/Post";
 
 // Data
-import reportsBarChartData from "layouts/dashboards/default/data/reportsBarChartData";
 import gradientLineChartData from "layouts/dashboards/default/data/gradientLineChartData";
-import projectsTableData from "layouts/dashboards/default/data/projectsTableData";
-import salesTableData from "layouts/dashboards/default/data/salesTableData";
-import authorsTableData from "layouts/dashboards/default/data/authorsTableData";
-import categoriesListData from "layouts/dashboards/default/data/categoriesListData";
+import classesTableData from "layouts/dashboards/default/data/classesTableData";
+import facultiesListData from "layouts/dashboards/default/data/facultiesListData";
 
 function Default() {
   const { size } = typography;
@@ -104,52 +92,6 @@ function Default() {
             <Slider />
           </Grid>
         </Grid>
-        <Grid container spacing={3} mb={3}>
-          <Grid item xs={12} md={6} lg={4}>
-            <TeamMembers />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <TodoList />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <ProgressTrack />
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} mb={3}>
-          <Grid item xs={12} lg={5}>
-            <Post />
-          </Grid>
-          <Grid container item xs={12} lg={7} spacing={3}>
-            <Grid item xs={12} height="max-content">
-              <ArgonBox
-                sx={{
-                  "& .MuiTableContainer-root": {
-                    p: 3,
-                  },
-                  "& .MuiTableRow-root:not(:last-child)": {
-                    "& td": {
-                      borderBottom: ({ borders: { borderWidth, borderColor } }) =>
-                        `${borderWidth[1]} solid ${borderColor}`,
-                    },
-                  },
-                }}
-              >
-                <Table columns={projectsTableData.columns} rows={projectsTableData.rows} />
-              </ArgonBox>
-            </Grid>
-            <Grid container item xs={12} spacing={3}>
-              <Grid item xs={12} md={6}>
-                <BalanceCard />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <CryptoCard />
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <SalesTable title="Sales by Country" rows={salesTableData} />
-            </Grid>
-          </Grid>
-        </Grid>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
             <ArgonBox
@@ -162,11 +104,11 @@ function Default() {
                 },
               }}
             >
-              <Table columns={authorsTableData.columns} rows={authorsTableData.rows} />
+              <Table columns={classesTableData.columns} rows={classesTableData.rows} />
             </ArgonBox>
           </Grid>
           <Grid item xs={12} md={4}>
-            <CategoriesList title="categories" categories={categoriesListData} />
+            <FacultiesList title="Faculties" faculties={facultiesListData} />
           </Grid>
         </Grid>
       </ArgonBox>

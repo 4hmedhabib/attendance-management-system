@@ -43,6 +43,7 @@ const routes = [
   },
   {
     key: "authentication",
+    name: "Authentication",
     collapse: [
       {
         name: "Sign In",
@@ -113,7 +114,6 @@ const routes = [
     ],
   },
   { type: "divider", key: "divider-1" },
-  { type: "title", title: "Administrations", key: "administrations" },
 ];
 
 export default routes;

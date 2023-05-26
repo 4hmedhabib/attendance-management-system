@@ -1,17 +1,7 @@
 {
   "name": "argon-dashboard-pro-mui",
   "version": "3.0.0",
-  "author": "Creative Tim",
-  "license": "SEE LICENSE IN <https://www.creative-tim.com/license>",
-  "description": "React version of FFU ATMS by Creative Tim",
-  "homepage": "https://demos.creative-tim.com/argon-dashboard-pro-material-ui/#/dashboards/default",
-  "bugs": {
-    "url": "https://github.com/creativetimofficial/ct-argon-dashboard-pro-material-ui/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/creativetimofficial/ct-argon-dashboard-pro-material-ui.git"
-  },
+  "author": "Ahmed Habib",
   "engines": {
     "node": "14 || 15 || 16 || 18",
     "npm": ">=6"
@@ -88,12 +78,5 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
-  "devDependencies": {
-    "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.30.0",
-    "eslint-plugin-react-hooks": "4.5.0",
-    "prettier": "2.6.2"
-  }
+  "devDependencies": {}
 }

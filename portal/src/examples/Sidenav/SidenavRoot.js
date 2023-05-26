@@ -1,6 +1,7 @@
 // @mui material components
 import Drawer from "@mui/material/Drawer";
 import { styled } from "@mui/material/styles";
+import { dark } from "@mui/material/styles/createPalette";
 
 export default styled(Drawer)(({ theme, ownerState }) => {
   const { palette, boxShadows, transitions, breakpoints, functions } = theme;
@@ -14,7 +15,7 @@ export default styled(Drawer)(({ theme, ownerState }) => {
   let bgColor;
 
   if ((darkSidenav && layout === "landing") || (!darkSidenav && layout === "landing")) {
-    bgColor = transparent.main;
+    bgColor = background.dark;
   } else if (darkSidenav) {
     bgColor = background.dark;
   } else {
@@ -70,7 +71,7 @@ export default styled(Drawer)(({ theme, ownerState }) => {
     "& .MuiDrawer-paper": {
       boxShadow: xxl,
       border: "none",
-      backgroundColor: transparent.main,
+      backgroundColor: background.dark,
 
       ...(miniSidenav ? drawerCloseStyles() : drawerOpenStyles()),
     },

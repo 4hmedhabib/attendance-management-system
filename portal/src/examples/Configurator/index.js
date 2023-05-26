@@ -40,10 +40,8 @@ function Configurator() {
   const handleCloseConfigurator = () => setOpenConfigurator(dispatch, false);
   const handledarkSidenav = () => setDarkSidenav(dispatch, true);
   const handleWhiteSidenav = () => setDarkSidenav(dispatch, false);
-  const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
-  const handleFixedNavbar = () => setFixedNavbar(dispatch, !fixedNavbar);
   const handleDarkMode = () => {
-    setDarkSidenav(dispatch, !darkMode);
+    setDarkSidenav(dispatch, true);
     setDarkMode(dispatch, !darkMode);
   };
 
