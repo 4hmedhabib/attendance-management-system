@@ -10,7 +10,7 @@ import ArgonTypography from "components/ArgonTypography";
 import { useArgonController } from "context";
 
 // Images
-import icon from "assets/images/illustrations/icon-documentation.svg";
+import icon from "assets/images/illustrations/rocket-white.png";
 
 function SidenavFooter() {
   const [controller] = useArgonController();
@@ -29,38 +29,12 @@ function SidenavFooter() {
           lineHeight={0}
         >
           <ArgonTypography color="inherit" variant="h6">
-            Need help?
+            Powered By
           </ArgonTypography>
           <ArgonTypography color="inherit" variant="caption">
-            Please check our docs
+            FFU Class of 2023
           </ArgonTypography>
         </ArgonBox>
-      </ArgonBox>
-      <ArgonBox display="flex" flexDirection="column">
-        <ArgonButton
-          component={Link}
-          href="https://www.creative-tim.com/learning-lab/react/overview/argon-dashboard/"
-          target="_blank"
-          rel="noreferrer"
-          color="dark"
-          size="small"
-          fullWidth
-          sx={{ mb: 1 }}
-        >
-          Documentation
-        </ArgonButton>
-        <ArgonButton
-          component={Link}
-          href="https://www.creative-tim.com/product/argon-dashboard-pro-material-ui"
-          target="_blank"
-          rel="noreferrer"
-          color="info"
-          size="small"
-          fullWidth
-          mb={2}
-        >
-          Buy Now
-        </ArgonButton>
       </ArgonBox>
     </ArgonBox>
   );
