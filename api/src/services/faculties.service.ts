@@ -31,7 +31,7 @@ class FacultyService {
         _count: !isMiniView
           ? {
               select: {
-                shifts: true,
+                classes: true,
               },
             }
           : false,
@@ -102,7 +102,7 @@ class FacultyService {
           _count: !isMiniView
             ? {
                 select: {
-                  shifts: !isMiniView,
+                  classes: !isMiniView,
                 },
               }
             : false,
@@ -363,7 +363,7 @@ class FacultyService {
         _count: true
           ? {
               select: {
-                shifts: true,
+                classes: true,
               },
             }
           : false,
