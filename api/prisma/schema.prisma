@@ -56,7 +56,7 @@ model users {
     facultymanager faculties? @relation("FACULTY_MANAGER")
     facultydeputy  faculties? @relation("FACULTY_DEPUTY")
 
-    assignedcoursesemisters course_semisters[]
+    assignedcoursesemisters semister_courses[]
 
     assignedclasssemisters class_semisters[] @relation("ASSIGNED_CLASSSEMISTERS")
     updatedclasssemisters  class_semisters[] @relation("UPDATED_CLASSSEMISTERS")
@@ -81,6 +81,9 @@ model users {
 
     createdteachers teachers[] @relation("CREATED_TEACHERS")
     updatedteachers teachers[] @relation("UPDATED_TEACHERS")
+
+    createdenrollments enrollments[] @relation("CREATED_ENROLLMENTS")
+    updatedenrollments enrollments[] @relation("UPDATED_ENROLLMENTS")
 }
 
 model faculties {
@@ -141,13 +144,13 @@ model students {
 
     student_classes student_classes[]
 
-    attendaces attendances[]
-
     createdby   users @relation("CREATED_STUDENTS", fields: [createdbyid], references: [userid])
     createdbyid Int
 
     updatedby   users? @relation("UPDATED_STUDENTS", fields: [updatedbyid], references: [userid])
     updatedbyid Int?
+
+    enrollments enrollments[]
 }
 
 model student_classes {
@@ -198,8 +201,6 @@ model class_semisters {
     semister   semisters @relation(fields: [semisterid], references: [semisterid])
     semisterid Int
 
-    courses course_semisters[]
-
     isstarted  Boolean  @default(false)
     startdate  DateTime
     isended    Boolean  @default(false)
@@ -213,6 +214,8 @@ model class_semisters {
     updatedby   users @relation("UPDATED_CLASSSEMISTERS", fields: [updatedbyid], references: [userid])
     updatedbyid Int
 
+    courses semister_courses[]
+
     @@id([classid, semisterid])
 }
 
@@ -225,8 +228,6 @@ model semisters {
     updatedat    DateTime @updatedAt
 
     // RELATIONS
-    coureses course_semisters[]
-
     classes class_semisters[]
 
     createdby   users @relation("CREATED_SEMISTERS", fields: [createdbyid], references: [userid])
@@ -236,28 +237,25 @@ model semisters {
     updatedbyid Int?
 }
 
-model course_semisters {
+model semister_courses {
     course   courses @relation(fields: [courseid], references: [courseid])
     courseid Int
 
-    semister   semisters @relation(fields: [semisterid], references: [semisterid])
-    semisterid Int
-
     teacher   teachers @relation(fields: [teacherid], references: [teacherid])
     teacherid Int
-
-    class           class_semisters @relation(fields: [classid, classsemisterid], references: [classid, semisterid])
-    classid         Int
-    classsemisterid Int
-
-    attendaces attendances[]
 
     assignedat DateTime @default(now())
 
     assignedby   users @relation(fields: [assignedbyid], references: [userid])
     assignedbyid Int
 
-    @@id([courseid, semisterid, teacherid, classid])
+    semister   class_semisters @relation(fields: [classid, semisterid], references: [classid, semisterid])
+    classid    Int
+    semisterid Int
+
+    enrollments enrollments[]
+
+    @@id([teacherid, courseid, semisterid, classid])
 }
 
 model courses {
@@ -275,7 +273,7 @@ model courses {
     updatedby   users? @relation("UPDATED_COURSES", fields: [updatedbyid], references: [userid])
     updatedbyid Int?
 
-    courses course_semisters[]
+    courses semister_courses[]
 }
 
 model teachers {
@@ -292,7 +290,7 @@ model teachers {
     // RELATIONS
     user users?
 
-    courses course_semisters[]
+    courses semister_courses[]
 
     createdby   users @relation("CREATED_TEACHERS", fields: [createdbyid], references: [userid])
     createdbyid Int
@@ -311,17 +309,11 @@ model attendances {
     createdby   users @relation(fields: [createdbyid], references: [userid])
     createdbyid Int
 
-    student   students @relation(fields: [studentid], references: [studentid])
-    studentid Int
-
-    course     course_semisters @relation(fields: [courseid, semisterid, teacherid, classid], references: [courseid, semisterid, teacherid, classid])
-    courseid   Int
-    semisterid Int
-    teacherid  Int
-    classid    Int
-
     status   attendacestatuses @relation(fields: [statusid], references: [statusid])
     statusid Int
+
+    enrollment   enrollments @relation(fields: [enrollmentid], references: [enrollment_id])
+    enrollmentid Int
 }
 
 model attendacestatuses {
@@ -379,4 +371,31 @@ model group_permissions {
     assignedbyid Int?
 
     @@id([permissionid, groupid])
+}
+
+model enrollments {
+    enrollment_id   Int      @id @default(autoincrement())
+    enrollment_date DateTime
+
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+
+    // RELATIONS
+    // ===
+    student   students @relation(fields: [studentid], references: [studentid])
+    studentid Int
+
+    attendances attendances[]
+
+    semister_course semister_courses @relation(fields: [teacherid, courseid, semisterid, classid], references: [teacherid, courseid, semisterid, classid])
+    teacherid       Int
+    courseid        Int
+    semisterid      Int
+    classid         Int
+
+    createdby   users @relation("CREATED_ENROLLMENTS", fields: [createdbyid], references: [userid])
+    createdbyid Int
+
+    updatedby   users? @relation("UPDATED_ENROLLMENTS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 }
