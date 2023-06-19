@@ -1,3 +1,4 @@
+import { ISemester } from "./semesters.interface";
 import { IShift } from "./shifts.interface";
 import { IUser } from "./users.interface";
 
@@ -12,10 +13,20 @@ export interface IClass {
   updatedby?: IUser | null;
   shift?: IShift;
   _count?: {
-    semisters?: number;
+    semesters?: number;
     students?: number;
   };
 }
+
+export interface IClassSemester {
+  class?: IClass;
+  semester?: ISemester;
+  startdate?: string | Date;
+  enddate?: string | Date;
+  assignedBy?: IUser;
+}
+
+export interface IClassSemesterCourses {}
 
 export interface IRPCreateClassPayload {
   className: string;
