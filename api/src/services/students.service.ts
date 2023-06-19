@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import asyncjs from "async";
 import { Service } from "typedi";
 import {
   BulkStudentDataPayload,
@@ -213,45 +212,7 @@ class StudentService {
             errors.push(err.message || err);
             logger.error(err.message || err);
             _next(null, null);
-          });
-
-      asyncjs.map<any, Prisma.studentsCreateManyInput>(
-        studentsData.data,
-        prepareStudent,
-        async (err, savedData) => {
-          if (err) {
-            logger.error(JSON.stringify(err.message) || err);
-            throw new HttpException(
-              500,
-              `Something went wrong creating student, please contact support team.`
-            );
-          } else {
-            try {
-              dataSaved = savedData.filter((data) => data);
-
-              const createdStudentsData: Prisma.BatchPayload =
-                await studentsDB.createMany({
-                  data: dataSaved,
-                  skipDuplicates: true,
-                });
-
-              resolve({
-                totalRecords,
-                totalSaved: createdStudentsData.count || 0,
-                totalErrors,
-                errors,
-              });
-            } catch (err: any) {
-              logger.error(JSON.stringify(err.message) || err);
-              throw new HttpException(
-                500,
-                `Something went wrong creating student, please contact support team.`
-              );
-            }
-          }
-        }
-      );
-    });
+          });    });
   }
 
   public async updateStudent(
