@@ -1,11 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  CreateClassSemesterCoursesDto,
+  CreateClassSemesterDto,
   DeleteClassBySlugDto,
   GetClassBySlugDto,
+  GetClassSemesterCoursesBySlugDto,
+  GetClassSemestersBySlugDto,
   GetClassesDto,
   UpdateClassDto,
 } from "../dtos";
-import { IClass, IRBCreateClass, IRPCreateClassPayload } from "../interfaces/";
+import {
+  IClass,
+  IClassSemester,
+  IRBCreateClass,
+  IRPCreateClassPayload,
+} from "../interfaces/";
 import { ClassService } from "../services/";
 
 class ClassController {
@@ -110,6 +119,90 @@ class ClassController {
       res.status(200).json({
         data: deleteClassData,
         message: "Class successfully deleted",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createClassSemester = async (
+    req: Request<any, any, CreateClassSemesterDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const createClassSemesterData = await this.class.createClassSemester(
+        req.body
+      );
+
+      res.status(200).json({
+        data: createClassSemesterData,
+        message: "Classes Successfully loaded!",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getClassSemestersBySlug = async (
+    req: Request<any, any, GetClassSemestersBySlugDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const classSlug = req.body.payload.classSlug;
+      const isMiniView = req.body.payload.isMiniView;
+
+      const findOneClassSemestersData: IClassSemester[] =
+        await this.class.findClassSemestersBySlug(classSlug, isMiniView);
+
+      res.status(200).json({
+        data: findOneClassSemestersData,
+        message: "Class Semesters successfully loaded",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createClassSemesterCourses = async (
+    req: Request<any, any, CreateClassSemesterCoursesDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const createClassSemesterCoursesData =
+        await this.class.createClassSemesterCourses(req.body);
+
+      res.status(200).json({
+        data: createClassSemesterCoursesData,
+        message: "Semester Courses Successfully created!",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getClassSemesterCoursesBySlug = async (
+    req: Request<any, any, GetClassSemesterCoursesBySlugDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const classSlug = req.body.payload.classSlug;
+      const semesterSlug = req.body.payload.semesterSlug;
+      const isMiniView = req.body.payload.isMiniView;
+
+      const findOneClassSemestersData: IClassSemester[] =
+        await this.class.findClassSemesterCoursesBySlug(
+          classSlug,
+          semesterSlug,
+          isMiniView
+        );
+
+      res.status(200).json({
+        data: findOneClassSemestersData,
+        message: "Class Semesters successfully loaded",
       });
     } catch (error) {
       next(error);
