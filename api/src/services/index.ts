@@ -1,7 +1,7 @@
 export { default as ClassService } from "./classes.service";
 export { default as CourseService } from "./courses.service";
 export { default as FacultyService } from "./faculties.service";
-export { default as SemisterService } from "./semisters.service";
+export { default as SemesterService } from "./semesters.service";
 export { default as ShiftService } from "./shifts.service";
 export { default as StudentService } from "./students.service";
 export { default as TeacherService } from "./teachers.service";
