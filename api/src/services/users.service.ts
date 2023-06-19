@@ -160,23 +160,38 @@ class UserService {
     if (userData.password !== userData.passwordConfirm)
       throw new HttpException(409, `Passwords do NOT match`);
 
-    savedData = {
-      ...savedData,
-      firstname: userData.firstName,
-      middlename: userData.middleName,
-      lastname: userData.lastName,
-      username: userData.username,
-      mobileno: userData.mobileNo,
-      email: userData.email,
-      isstudent: userData.isStudent,
-      isteacher: userData.isTeacher,
-      password: userData.password,
-      createdby: {
-        connect: {
-          username: "ahmedhabib",
+    if ((await usersDB.count()) <= 0) {
+      savedData = {
+        ...savedData,
+        firstname: userData.firstName,
+        middlename: userData.middleName,
+        lastname: userData.lastName,
+        username: userData.username,
+        mobileno: userData.mobileNo,
+        email: userData.email,
+        isstudent: userData.isStudent,
+        isteacher: userData.isTeacher,
+        password: userData.password,
+      };
+    } else {
+      savedData = {
+        ...savedData,
+        firstname: userData.firstName,
+        middlename: userData.middleName,
+        lastname: userData.lastName,
+        username: userData.username,
+        mobileno: userData.mobileNo,
+        email: userData.email,
+        isstudent: userData.isStudent,
+        isteacher: userData.isTeacher,
+        password: userData.password,
+        createdby: {
+          connect: {
+            username: "ahmedhabib",
+          },
         },
-      },
-    };
+      };
+    }
 
     try {
       const createUserData: IUser = await usersDB.create({

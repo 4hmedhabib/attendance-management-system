@@ -47,6 +47,20 @@ class StudentRoute implements IRoutes {
       this.student.createBulkStudents
     );
 
+    // bulk create students in specific class
+    this.router.post(
+      `${this.path}/enrollments/create`,
+      ValidationMiddleware(CreateBulkStudentDto),
+      this.student.createBulkStudents
+    );
+
+    // bulk create students in specific class
+    this.router.post(
+      `${this.path}/enrollments/bulk`,
+      ValidationMiddleware(CreateBulkStudentDto),
+      this.student.createBulkStudents
+    );
+
     this.router.put(
       `${this.path}/update`,
       ValidationMiddleware(UpdateStudentDto),

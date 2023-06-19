@@ -1,22 +1,22 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
-import { UpdateSemisterData } from "../dtos";
+import { UpdateSemesterData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
-import { IRPCreateSemisterPayload, ISemister } from "../interfaces";
+import { IRPCreateSemesterPayload, ISemester } from "../interfaces";
 import { logger } from "../utils";
 
 const prisma = new PrismaClient();
-const semistersDB = prisma.semisters;
+const semestersDB = prisma.semesters;
 const usersDB = prisma.users;
 
 @Service()
-class SemisterService {
-  public async findAllSemister(isMiniView: boolean): Promise<ISemister[]> {
-    const semisters: ISemister[] = await semistersDB.findMany({
+class SemesterService {
+  public async findAllSemester(isMiniView: boolean): Promise<ISemester[]> {
+    const semesters: ISemester[] = await semestersDB.findMany({
       select: {
-        semisterid: true,
-        semistername: true,
-        semisterslug: true,
+        semesterid: true,
+        semestername: true,
+        semesterslug: true,
         description: !isMiniView,
         createdby: !isMiniView
           ? {
@@ -32,31 +32,30 @@ class SemisterService {
           ? {
               select: {
                 classes: true,
-                coureses: true,
               },
             }
           : false,
       },
     });
 
-    if (semisters.length <= 0) {
+    if (semesters.length <= 0) {
       throw new HttpException(404, "No data found!.");
     }
 
-    return semisters;
+    return semesters;
   }
 
-  public async findSemisterBySlug(
-    semisterSlug: string,
+  public async findSemesterBySlug(
+    semesterSlug: string,
     isMiniView: boolean
-  ): Promise<ISemister> {
+  ): Promise<ISemester> {
     try {
-      const findSemister: ISemister = await semistersDB.findUnique({
-        where: { semisterslug: semisterSlug },
+      const findSemester: ISemester = await semestersDB.findUnique({
+        where: { semesterslug: semesterSlug },
         select: {
-          semisterid: !isMiniView,
-          semistername: true,
-          semisterslug: true,
+          semesterid: !isMiniView,
+          semestername: true,
+          semesterslug: true,
           description: !isMiniView,
           createdat: !isMiniView,
           updatedat: !isMiniView,
@@ -84,47 +83,46 @@ class SemisterService {
             ? {
                 select: {
                   classes: !isMiniView,
-                  coureses: !isMiniView,
                 },
               }
             : false,
         },
       });
 
-      if (!findSemister) throw new HttpException(409, "Semister doesn't exist");
+      if (!findSemester) throw new HttpException(409, "Semester doesn't exist");
 
-      return findSemister;
+      return findSemester;
     } catch (err: any) {
       logger.error(JSON.stringify(err.message) || err);
       throw new HttpException(
         500,
         err.message ||
-          `Something went wrong creating semister, please contact support team.`
+          `Something went wrong creating semester, please contact support team.`
       );
     }
   }
 
-  public async createSemister(
-    semisterData: IRPCreateSemisterPayload
+  public async createSemester(
+    semesterData: IRPCreateSemesterPayload
   ): Promise<any> {
-    let savedData: Prisma.semistersCreateInput;
+    let savedData: Prisma.semestersCreateInput;
 
-    const findSemister = await semistersDB.findUnique({
-      where: { semisterslug: semisterData.semisterSlug },
-      select: { semisterid: true, semisterslug: true, semistername: true },
+    const findSemester = await semestersDB.findUnique({
+      where: { semesterslug: semesterData.semesterSlug },
+      select: { semesterid: true, semesterslug: true, semestername: true },
     });
 
-    if (findSemister)
+    if (findSemester)
       throw new HttpException(
         409,
-        `This semister ${semisterData.semisterName} already exists`
+        `This semester ${semesterData.semesterName} already exists`
       );
 
     savedData = {
       ...savedData,
-      semistername: semisterData.semisterName,
-      semisterslug: semisterData.semisterSlug,
-      description: semisterData.description || null,
+      semestername: semesterData.semesterName,
+      semesterslug: semesterData.semesterSlug,
+      description: semesterData.description || null,
       createdby: {
         connect: {
           username: "ahmedhabib",
@@ -133,68 +131,68 @@ class SemisterService {
     };
 
     try {
-      const createSemisterData: ISemister = await semistersDB.create({
+      const createSemesterData: ISemester = await semestersDB.create({
         data: savedData,
         select: {
-          semisterid: true,
-          semistername: true,
-          semisterslug: true,
+          semesterid: true,
+          semestername: true,
+          semesterslug: true,
         },
       });
 
-      return createSemisterData;
+      return createSemesterData;
     } catch (err: any) {
       console.log(err);
 
       logger.error(JSON.stringify(err.message) || err);
       throw new HttpException(
         500,
-        `Something went wrong creating semister, please contact support team.`
+        `Something went wrong creating semester, please contact support team.`
       );
     }
   }
 
-  public async updateSemister(
-    semisterSlug: string,
-    semisterData: UpdateSemisterData
-  ): Promise<ISemister> {
-    let updatedData: Prisma.semistersUpdateInput;
+  public async updateSemester(
+    semesterSlug: string,
+    semesterData: UpdateSemesterData
+  ): Promise<ISemester> {
+    let updatedData: Prisma.semestersUpdateInput;
 
-    const findSemister: ISemister = await semistersDB.findUnique({
+    const findSemester: ISemester = await semestersDB.findUnique({
       where: {
-        semisterslug: semisterSlug,
+        semesterslug: semesterSlug,
       },
       select: {
-        semisterid: true,
-        semisterslug: true,
+        semesterid: true,
+        semesterslug: true,
       },
     });
 
-    if (!findSemister) throw new HttpException(409, "Semister doesn't exist");
+    if (!findSemester) throw new HttpException(409, "Semester doesn't exist");
 
-    const checkSemister: ISemister = await semistersDB.findUnique({
+    const checkSemester: ISemester = await semestersDB.findUnique({
       where: {
-        semisterslug: semisterData.semisterSlug,
+        semesterslug: semesterData.semesterSlug,
       },
       select: {
-        semisterid: true,
-        semisterslug: true,
+        semesterid: true,
+        semesterslug: true,
       },
     });
 
-    // check semister slug is duplicate or not
-    if (checkSemister && checkSemister.semisterid !== findSemister.semisterid)
+    // check semester slug is duplicate or not
+    if (checkSemester && checkSemester.semesterid !== findSemester.semesterid)
       throw new HttpException(
         409,
-        "This semister already exists please check it: " +
-          semisterData.semisterName
+        "This semester already exists please check it: " +
+          semesterData.semesterName
       );
 
     updatedData = {
       ...updatedData,
-      semistername: semisterData.semisterName,
-      semisterslug: semisterData.semisterSlug,
-      description: semisterData.description || null,
+      semestername: semesterData.semesterName,
+      semesterslug: semesterData.semesterSlug,
+      description: semesterData.description || null,
       updatedby: {
         connect: {
           username: "ahmedhabib",
@@ -202,15 +200,15 @@ class SemisterService {
       },
     };
 
-    const updateSemisterData: ISemister = await semistersDB.update({
+    const updateSemesterData: ISemester = await semestersDB.update({
       where: {
-        semisterid: findSemister.semisterid,
+        semesterid: findSemester.semesterid,
       },
       data: updatedData,
       select: {
-        semisterid: true,
-        semistername: true,
-        semisterslug: true,
+        semesterid: true,
+        semestername: true,
+        semesterslug: true,
         description: true,
         createdat: true,
         updatedat: true,
@@ -244,31 +242,31 @@ class SemisterService {
       },
     });
 
-    return updateSemisterData;
+    return updateSemesterData;
   }
 
-  public async deleteSemister(semisterSlug: string): Promise<ISemister> {
-    const findSemister: ISemister = await semistersDB.findUnique({
+  public async deleteSemester(semesterSlug: string): Promise<ISemester> {
+    const findSemester: ISemester = await semestersDB.findUnique({
       where: {
-        semisterslug: semisterSlug,
+        semesterslug: semesterSlug,
       },
     });
 
-    if (!findSemister) throw new HttpException(409, "Semister doesn't exist");
+    if (!findSemester) throw new HttpException(409, "Semester doesn't exist");
 
-    const deleteSemisterData: ISemister = await semistersDB.delete({
+    const deleteSemesterData: ISemester = await semestersDB.delete({
       where: {
-        semisterid: findSemister.semisterid,
+        semesterid: findSemester.semesterid,
       },
       select: {
-        semisterid: true,
-        semistername: true,
-        semisterslug: true,
+        semesterid: true,
+        semestername: true,
+        semesterslug: true,
       },
     });
 
-    return deleteSemisterData;
+    return deleteSemesterData;
   }
 }
 
-export default SemisterService;
+export default SemesterService;

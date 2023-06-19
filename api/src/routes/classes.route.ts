@@ -2,8 +2,12 @@ import { Router } from "express";
 import { ClassController } from "../controllers";
 import {
   CreateClassDto,
+  CreateClassSemesterCoursesDto,
+  CreateClassSemesterDto,
   DeleteClassBySlugDto,
   GetClassBySlugDto,
+  GetClassSemesterCoursesBySlugDto,
+  GetClassSemestersBySlugDto,
   GetClassesDto,
   UpdateClassDto,
 } from "../dtos";
@@ -32,12 +36,6 @@ class ClassRoute implements IRoutes {
       this.class.getClassBySlug
     );
 
-    this.router.get(
-      `${this.path}/detail/semesters`,
-      ValidationMiddleware(GetClassBySlugDto),
-      this.class.getClassBySlug
-    );
-
     this.router.post(
       `${this.path}`,
       ValidationMiddleware(CreateClassDto),
@@ -54,6 +52,30 @@ class ClassRoute implements IRoutes {
       `${this.path}/delete`,
       ValidationMiddleware(DeleteClassBySlugDto),
       this.class.deleteClass
+    );
+
+    this.router.get(
+      `${this.path}/detail/semesters`,
+      ValidationMiddleware(GetClassSemestersBySlugDto),
+      this.class.getClassSemestersBySlug
+    );
+
+    this.router.post(
+      `${this.path}/detail/semesters/create`,
+      ValidationMiddleware(CreateClassSemesterDto),
+      this.class.createClassSemester
+    );
+
+    this.router.get(
+      `${this.path}/detail/semesters/courses`,
+      ValidationMiddleware(GetClassSemesterCoursesBySlugDto),
+      this.class.getClassSemesterCoursesBySlug
+    );
+
+    this.router.post(
+      `${this.path}/detail/semesters/courses/create`,
+      ValidationMiddleware(CreateClassSemesterCoursesDto),
+      this.class.createClassSemesterCourses
     );
   }
 }
