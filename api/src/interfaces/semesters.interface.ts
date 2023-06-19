@@ -1,9 +1,9 @@
 import { IUser } from "./users.interface";
 
-export interface ISemister {
-  semisterid?: number;
-  semistername?: string;
-  semisterslug: string;
+export interface ISemester {
+  semesterid?: number;
+  semestername?: string;
+  semesterslug: string;
   description?: string | null;
   createdat?: string | Date;
   updatedat?: string | Date;
@@ -17,12 +17,12 @@ export interface ISemister {
   };
 }
 
-export interface IRPCreateSemisterPayload {
-  semisterName: string;
-  semisterSlug: string;
+export interface IRPCreateSemesterPayload {
+  semesterName: string;
+  semesterSlug: string;
   description?: string;
 }
 
-export interface IRBCreateSemister {
-  payload: IRPCreateSemisterPayload;
+export interface IRBCreateSemester {
+  payload: IRPCreateSemesterPayload;
 }
