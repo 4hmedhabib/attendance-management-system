@@ -56,10 +56,10 @@ model users {
     facultymanager faculties? @relation("FACULTY_MANAGER")
     facultydeputy  faculties? @relation("FACULTY_DEPUTY")
 
-    assignedcoursesemisters semister_courses[]
+    assignedcoursesemesters semester_courses[]
 
-    assignedclasssemisters class_semisters[] @relation("ASSIGNED_CLASSSEMISTERS")
-    updatedclasssemisters  class_semisters[] @relation("UPDATED_CLASSSEMISTERS")
+    assignedclasssemesters class_semesters[] @relation("ASSIGNED_CLASSSEMISTERS")
+    updatedclasssemesters  class_semesters[] @relation("UPDATED_CLASSSEMISTERS")
 
     assignedstudentclasses student_classes[]
 
@@ -73,8 +73,8 @@ model users {
     createdpermissions permissions[] @relation("CREATED_BY")
     updatedpermissions permissions[] @relation("UPDATED_BY")
 
-    createdsemisters semisters[] @relation("CREATED_SEMISTERS")
-    updatedsemisters semisters[] @relation("UPDATED_SEMISTERS")
+    createdsemesters semesters[] @relation("CREATED_SEMISTERS")
+    updatedsemesters semesters[] @relation("UPDATED_SEMISTERS")
 
     createdstudents students[] @relation("CREATED_STUDENTS")
     updatedstudents students[] @relation("UPDATED_STUDENTS")
@@ -186,7 +186,7 @@ model classes {
     shift   shifts @relation(fields: [shiftid], references: [shiftid])
     shiftid Int
 
-    semisters class_semisters[]
+    semesters class_semesters[]
 
     students student_classes[]
 
@@ -194,12 +194,12 @@ model classes {
     facultyid Int?
 }
 
-model class_semisters {
+model class_semesters {
     class   classes @relation(fields: [classid], references: [classid])
     classid Int
 
-    semister   semisters @relation(fields: [semisterid], references: [semisterid])
-    semisterid Int
+    semester   semesters @relation(fields: [semesterid], references: [semesterid])
+    semesterid Int
 
     isstarted  Boolean  @default(false)
     startdate  DateTime
@@ -211,24 +211,24 @@ model class_semisters {
     assignedby   users @relation("ASSIGNED_CLASSSEMISTERS", fields: [assignedbyid], references: [userid])
     assignedbyid Int
 
-    updatedby   users @relation("UPDATED_CLASSSEMISTERS", fields: [updatedbyid], references: [userid])
-    updatedbyid Int
+    updatedby   users? @relation("UPDATED_CLASSSEMISTERS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 
-    courses semister_courses[]
+    courses semester_courses[]
 
-    @@id([classid, semisterid])
+    @@id([classid, semesterid])
 }
 
-model semisters {
-    semisterid   Int      @id @default(autoincrement())
-    semistername String
-    semisterslug String   @unique
+model semesters {
+    semesterid   Int      @id @default(autoincrement())
+    semestername String
+    semesterslug String   @unique
     description  String?
     createdat    DateTime @default(now())
     updatedat    DateTime @updatedAt
 
     // RELATIONS
-    classes class_semisters[]
+    classes class_semesters[]
 
     createdby   users @relation("CREATED_SEMISTERS", fields: [createdbyid], references: [userid])
     createdbyid Int
@@ -237,7 +237,7 @@ model semisters {
     updatedbyid Int?
 }
 
-model semister_courses {
+model semester_courses {
     course   courses @relation(fields: [courseid], references: [courseid])
     courseid Int
 
@@ -249,13 +249,13 @@ model semister_courses {
     assignedby   users @relation(fields: [assignedbyid], references: [userid])
     assignedbyid Int
 
-    semister   class_semisters @relation(fields: [classid, semisterid], references: [classid, semisterid])
+    semester   class_semesters @relation(fields: [classid, semesterid], references: [classid, semesterid])
     classid    Int
-    semisterid Int
+    semesterid Int
 
     enrollments enrollments[]
 
-    @@id([teacherid, courseid, semisterid, classid])
+    @@id([teacherid, courseid, semesterid, classid])
 }
 
 model courses {
@@ -273,7 +273,7 @@ model courses {
     updatedby   users? @relation("UPDATED_COURSES", fields: [updatedbyid], references: [userid])
     updatedbyid Int?
 
-    courses semister_courses[]
+    courses semester_courses[]
 }
 
 model teachers {
@@ -290,7 +290,7 @@ model teachers {
     // RELATIONS
     user users?
 
-    courses semister_courses[]
+    courses semester_courses[]
 
     createdby   users @relation("CREATED_TEACHERS", fields: [createdbyid], references: [userid])
     createdbyid Int
@@ -387,10 +387,10 @@ model enrollments {
 
     attendances attendances[]
 
-    semister_course semister_courses @relation(fields: [teacherid, courseid, semisterid, classid], references: [teacherid, courseid, semisterid, classid])
+    semester_course semester_courses @relation(fields: [teacherid, courseid, semesterid, classid], references: [teacherid, courseid, semesterid, classid])
     teacherid       Int
     courseid        Int
-    semisterid      Int
+    semesterid      Int
     classid         Int
 
     createdby   users @relation("CREATED_ENROLLMENTS", fields: [createdbyid], references: [userid])
