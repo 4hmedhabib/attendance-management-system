@@ -21,15 +21,16 @@
 */
 
 // Argon Dashboard 2 PRO MUI layouts
-import Default from "layouts/dashboards/default";
-import SignInCover from "layouts/authentication/sign-in/cover";
-import ResetCover from "layouts/authentication/reset-password/cover";
 import VerificationCover from "layouts/authentication/2-step-verification/cover";
 import Error404 from "layouts/authentication/error/404";
 import Error500 from "layouts/authentication/error/500";
+import ResetCover from "layouts/authentication/reset-password/cover";
+import SignInCover from "layouts/authentication/sign-in/cover";
+import Default from "layouts/dashboards/default";
 
 // Argon Dashboard 2 PRO MUI components
-import ArgonBox from "components/ArgonBox";
+import ArgonBox from "./components/ArgonBox";
+import Faculties from "./layouts/pages/faculties";
 
 const routes = [
   {
@@ -120,7 +121,43 @@ const routes = [
     key: "faculties",
     icon: <ArgonBox component="i" color="warning" fontSize="14px" className="ni ni-ungroup" />,
     route: "/faculties",
-    component: <h1>Faculties</h1>,
+    component: <Faculties />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Courses",
+    key: "courses",
+    icon: <ArgonBox component="i" color="warning" fontSize="14px" className="ni ni-ungroup" />,
+    route: "/courses",
+    component: <Faculties />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Students",
+    key: "students",
+    icon: <ArgonBox component="i" color="warning" fontSize="14px" className="ni ni-users-fill" />,
+    route: "/students",
+    component: <Faculties />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Teachers",
+    key: "teachers",
+    icon: <ArgonBox component="i" color="warning" fontSize="14px" className="ni ni-ungroup" />,
+    route: "/teachers",
+    component: <Faculties />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Attendances",
+    key: "attendances",
+    icon: <ArgonBox component="i" color="warning" fontSize="14px" className="ni ni-ungroup" />,
+    route: "/attendances",
+    component: <Faculties />,
     noCollapse: true,
   },
 ];
