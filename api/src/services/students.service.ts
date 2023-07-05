@@ -23,6 +23,7 @@ class StudentService {
         middlename: true,
         lastname: true,
         mobileno: !isMiniView,
+        createdat: !isMiniView,
         createdby: !isMiniView
           ? {
               select: {
@@ -212,7 +213,8 @@ class StudentService {
             errors.push(err.message || err);
             logger.error(err.message || err);
             _next(null, null);
-          });    });
+          });
+    });
   }
 
   public async updateStudent(
