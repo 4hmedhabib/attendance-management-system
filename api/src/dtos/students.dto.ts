@@ -222,3 +222,71 @@ export class DeleteStudentBySlugDto {
   @Type(() => DeleteStudentBySlugPayload)
   payload: DeleteStudentBySlugPayload;
 }
+
+export class CreateEnrollmentPayload {
+  @IsString({ message: "student id must be a string" })
+  @IsNotEmpty({ message: "student id is required" })
+  @MinLength(3, {
+    message: "student id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(20, {
+    message: "student id must be shorter than or equal to 20 characters",
+  })
+  studentId: string;
+
+  @IsString({ message: "teacher id must be a string" })
+  @IsNotEmpty({ message: "teacher id is required" })
+  @MinLength(3, {
+    message: "teacher id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(20, {
+    message: "teacher id must be shorter than or equal to 20 characters",
+  })
+  teacherId: string;
+
+  @IsString({ message: "course id must be a string" })
+  @IsNotEmpty({ message: "course id is required" })
+  @MinLength(3, {
+    message: "course id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(20, {
+    message: "course id must be shorter than or equal to 20 characters",
+  })
+  courseId: string;
+
+  @IsString({ message: "semester id must be a string" })
+  @IsNotEmpty({ message: "semester id is required" })
+  @MinLength(3, {
+    message: "semester id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(15, {
+    message: "semester id must be shorter than or equal to 15 characters",
+  })
+  semesterId: string;
+
+  @IsString({ message: "class id must be a string" })
+  @IsNotEmpty({ message: "class id is required" })
+  @MinLength(3, {
+    message: "class id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(15, {
+    message: "class id must be shorter than or equal to 15 characters",
+  })
+  classId: string;
+}
+
+export class EnrollmentDataPayload {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @Type(() => CreateStudentPayload)
+  data: CreateEnrollmentPayload[];
+}
+
+export class CreateEnrollmentDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => EnrollmentDataPayload)
+  payload: EnrollmentDataPayload;
+}
