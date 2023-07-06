@@ -2,6 +2,7 @@ import { Router } from "express";
 import { StudentController } from "../controllers";
 import {
   CreateBulkStudentDto,
+  CreateEnrollmentDto,
   CreateStudentDto,
   DeleteStudentBySlugDto,
   GetFacultiesDto,
@@ -43,6 +44,7 @@ class StudentRoute implements IRoutes {
     // bulk create students in specific class
     this.router.post(
       `${this.path}/bulk-create`,
+
       ValidationMiddleware(CreateBulkStudentDto),
       this.student.createBulkStudents
     );
@@ -50,15 +52,15 @@ class StudentRoute implements IRoutes {
     // bulk create students in specific class
     this.router.post(
       `${this.path}/enrollments/create`,
-      ValidationMiddleware(CreateBulkStudentDto),
-      this.student.createBulkStudents
+      ValidationMiddleware(CreateEnrollmentDto),
+      this.student.createEnrollment
     );
 
     // bulk create students in specific class
     this.router.post(
       `${this.path}/enrollments/bulk`,
       ValidationMiddleware(CreateBulkStudentDto),
-      this.student.createBulkStudents
+      this.student.createBulkEnrollments
     );
 
     this.router.put(
