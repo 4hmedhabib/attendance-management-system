@@ -6,6 +6,7 @@ import {
   UpdateStudentDto,
 } from "../dtos";
 import {
+  IEnrollment,
   IRBCreateStudent,
   IRPCreateStudentPayload,
   IStudent,
@@ -14,6 +15,8 @@ import { StudentService } from "../services";
 import {
   BulkStudentDataPayload,
   CreateBulkStudentDto,
+  CreateEnrollmentDto,
+  CreateEnrollmentPayload,
 } from "./../dtos/students.dto";
 
 class StudentController {
@@ -151,6 +154,26 @@ class StudentController {
       res.status(200).json({
         data: deleteStudentData,
         message: "Student successfully deleted",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createEnrollment = async (
+    req: Request<any, any, CreateEnrollmentDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const enrollmentData: CreateEnrollmentPayload = req.body.payload.data[0];
+
+      const createEnrollmentData: IEnrollment =
+        await this.student.createEnrollment(enrollmentData);
+
+      res.status(201).json({
+        data: createEnrollmentData,
+        message: "Enrollment successfully created",
       });
     } catch (error) {
       next(error);
