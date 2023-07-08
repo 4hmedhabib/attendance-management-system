@@ -5,6 +5,8 @@ import {
   CreateEnrollmentDto,
   CreateStudentDto,
   DeleteStudentBySlugDto,
+  EnrollmentDetailDto,
+  EnrollmentsDto,
   GetFacultiesDto,
   GetStudentBySlugDto,
   UpdateStudentDto,
@@ -41,27 +43,29 @@ class StudentRoute implements IRoutes {
       this.student.createStudent
     );
 
-    // bulk create students in specific class
     this.router.post(
       `${this.path}/bulk-create`,
-
       ValidationMiddleware(CreateBulkStudentDto),
       this.student.createBulkStudents
     );
 
-    // bulk create students in specific class
     this.router.post(
       `${this.path}/enrollments/create`,
       ValidationMiddleware(CreateEnrollmentDto),
       this.student.createEnrollment
     );
 
-    // bulk create students in specific class
-    // this.router.post(
-    //   `${this.path}/enrollments/bulk`,
-    //   ValidationMiddleware(CreateBulkStudentDto),
-    //   this.student.createBulkEnrollments
-    // );
+    this.router.get(
+      `${this.path}/enrollments/detail`,
+      ValidationMiddleware(EnrollmentDetailDto),
+      this.student.createEnrollment
+    );
+
+    this.router.get(
+      `${this.path}/enrollments/`,
+      ValidationMiddleware(EnrollmentsDto),
+      this.student.getEnrollments
+    );
 
     this.router.put(
       `${this.path}/update`,
