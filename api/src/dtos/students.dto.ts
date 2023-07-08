@@ -7,6 +7,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNotEmptyObject,
+  IsOptional,
   IsPositive,
   IsString,
   MaxLength,
@@ -266,9 +267,6 @@ export class CreateEnrollmentPayload {
 
   @IsString({ message: "class id must be a string" })
   @IsNotEmpty({ message: "class id is required" })
-  @MinLength(3, {
-    message: "class id must be longer than or equal to 3 characters",
-  })
   @MaxLength(15, {
     message: "class id must be shorter than or equal to 15 characters",
   })
@@ -280,7 +278,7 @@ export class EnrollmentDataPayload {
   @ValidateNested({ each: true })
   @ArrayMinSize(1)
   @ArrayMaxSize(100)
-  @Type(() => CreateStudentPayload)
+  @Type(() => CreateEnrollmentPayload)
   data: CreateEnrollmentPayload[];
 }
 
@@ -289,4 +287,70 @@ export class CreateEnrollmentDto {
   @ValidateNested()
   @Type(() => EnrollmentDataPayload)
   payload: EnrollmentDataPayload;
+}
+
+export class EnrollmentsPayloadFiltersDto {
+  @IsString({ message: "student id must be a string" })
+  @IsOptional()
+  @MaxLength(15, {
+    message: "student id must be shorter than or equal to 15 characters",
+  })
+  studentId: string;
+
+  @IsString({ message: "class id must be a string" })
+  @IsOptional()
+  @MaxLength(15, {
+    message: "class id must be shorter than or equal to 15 characters",
+  })
+  classId: string;
+
+  @IsString({ message: "course id must be a string" })
+  @IsOptional()
+  @MaxLength(15, {
+    message: "course id must be shorter than or equal to 15 characters",
+  })
+  courseId: string;
+
+  @IsString({ message: "semester id must be a string" })
+  @IsOptional()
+  @MaxLength(15, {
+    message: "semester id must be shorter than or equal to 15 characters",
+  })
+  semesterId: string;
+}
+
+export class EnrollmentsPayloadDto {
+  @IsBoolean({ message: "is mini view must be a boolean" })
+  @IsNotEmpty()
+  isMiniView: boolean;
+
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => EnrollmentsPayloadFiltersDto)
+  filters: EnrollmentsPayloadFiltersDto;
+}
+
+export class EnrollmentsDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => EnrollmentsPayloadDto)
+  payload: EnrollmentsPayloadDto;
+}
+
+export class EnrollmentDetailPayloadDto {
+  @IsString({ message: "enrollment id must be a string" })
+  @MinLength(3, {
+    message: "enrollment id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(15, {
+    message: "enrollment id must be shorter than or equal to 15 characters",
+  })
+  enrollmentId: string;
+}
+
+export class EnrollmentDetailDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => EnrollmentDetailPayloadDto)
+  payload: EnrollmentDetailPayloadDto;
 }
