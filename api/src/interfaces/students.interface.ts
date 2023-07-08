@@ -35,8 +35,8 @@ export interface IRBCreateStudent {
 }
 
 export interface IEnrollment {
-  enrollment_id?: boolean;
-  enrollment_date?: String | Date;
+  enrollment_id?: number;
+  enrollment_date?: string | Date;
 
   student?: IStudent;
   teacher?: ITeacher;
@@ -44,8 +44,8 @@ export interface IEnrollment {
   semester?: ISemester;
   class?: IClass;
 
-  created_at?: String | Date;
-  updated_at?: String | Date;
+  created_at?: string | Date;
+  updated_at?: string | Date;
 
   createdby?: IUser;
   updatedby?: IUser;
