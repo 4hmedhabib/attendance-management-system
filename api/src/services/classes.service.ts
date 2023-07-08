@@ -612,7 +612,7 @@ class ClassService {
 
           let classSemesterCourse = await semester_coursesDB.create({
             data: {
-              semester: {
+              class_semester: {
                 connect: {
                   classid_semesterid: {
                     classid: findClass.classid,
@@ -694,7 +694,7 @@ class ClassService {
             semesterid: findSemester.semesterid,
           },
           select: {
-            semester: {
+            class_semester: {
               select: {
                 courses: {
                   select: {
@@ -718,6 +718,13 @@ class ClassService {
                     classslug: true,
                   },
                 },
+              },
+            },
+            teacher: {
+              select: {
+                firstname: true,
+                middlename: true,
+                techid: true,
               },
             },
             assignedby: !isMiniView

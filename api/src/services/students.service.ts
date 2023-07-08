@@ -5,6 +5,7 @@ import {
   BulkStudentDataPayload,
   CreateEnrollmentPayload,
   CreateStudentPayload,
+  EnrollmentsPayloadFiltersDto,
   UpdateStudentData,
 } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
@@ -569,6 +570,132 @@ class StudentService {
         `Something went wrong creating student, please contact support team.`
       );
     }
+  }
+
+  public async findAllEnrollments(
+    isMiniView: boolean,
+    filters: EnrollmentsPayloadFiltersDto
+  ): Promise<IEnrollment[]> {
+    let enrollmentsWhere: Prisma.enrollmentsWhereInput;
+
+    if (filters.studentId.trim().length > 0) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        student: { stdid: filters.studentId },
+      };
+    }
+
+    if (filters.courseId) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        semester_course: {
+          ...(enrollmentsWhere.semester_course as any),
+          course: { courseslug: filters.courseId },
+        },
+      };
+    }
+
+    if (filters.semesterId) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        semester_course: {
+          class_semester: {
+            semester: { semesterslug: filters.semesterId },
+          },
+        },
+      };
+    }
+
+    if (filters.classId) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        semester_course: {
+          ...(enrollmentsWhere.semester_course as any),
+          class_semester: {
+            ...enrollmentsWhere.semester_course.class_semester,
+            class: { classslug: filters.classId },
+          },
+        },
+      };
+    }
+
+    const enrollments: IEnrollment[] = await enrollmentsDB.findMany({
+      where: enrollmentsWhere,
+      select: {
+        enrollment_id: true,
+        enrollment_date: true,
+        student: {
+          select: {
+            studentid: true,
+            stdid: true,
+            firstname: !isMiniView,
+            middlename: !isMiniView,
+            lastname: !isMiniView,
+          },
+        },
+        semester_course: {
+          select: {
+            course: {
+              select: {
+                courseid: true,
+                coursename: true,
+                courseslug: true,
+              },
+            },
+            teacher: !isMiniView
+              ? {
+                  select: {
+                    firstname: true,
+                    middlename: true,
+                    techid: true,
+                    teacherid: true,
+                  },
+                }
+              : false,
+            class_semester: {
+              select: {
+                isended: true,
+                isgoingon: true,
+                class: !isMiniView
+                  ? {
+                      select: {
+                        classname: true,
+                        classslug: true,
+                      },
+                    }
+                  : false,
+                semester: !isMiniView
+                  ? {
+                      select: {
+                        semestername: true,
+                        semesterslug: true,
+                      },
+                    }
+                  : false,
+              },
+            },
+          },
+        },
+        created_at: !isMiniView,
+        updated_at: !isMiniView,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+      },
+    });
+
+    if (enrollments.length <= 0) {
+      throw new HttpException(404, "No data found!.");
+    }
+
+    return enrollments;
   }
 }
 
