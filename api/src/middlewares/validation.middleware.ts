@@ -2,6 +2,7 @@ import { plainToInstance } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
 import { RequestHandler } from "express";
 import { HttpException } from "../exceptions/httpException";
+import { logger } from "../utils";
 
 /**
  * @name ValidationMiddleware
@@ -25,33 +26,31 @@ export const ValidationMiddleware = (
       forbidNonWhitelisted,
     }).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
-        const message: any = errors.map((error: ValidationError) => {
-          let objectError: any = {};
+        try {
+          const message: any = getValidationErrorMessage(errors);
 
-          // First level error
-          if (error.children && error.children.length > 0) {
-            // Second level error
-            error.children.map((error: ValidationError) => {
-              if (error.children && error.children.length > 0)
-                // Third level error
-                error.children.map(
-                  (error: ValidationError) =>
-                    (objectError[error.property] = Object.values(
-                      error.constraints
-                    ))
-                );
-              else
-                objectError[error.property] = Object.values(error.constraints);
-            });
-          } else objectError[error.property] = Object.values(error.constraints);
-
-          return objectError;
-        });
-
-        next(new HttpException(400, message));
+          next(new HttpException(400, message));
+        } catch (err) {
+          logger.error(`VALIDATION EXCEPTION: ${JSON.stringify(err)}`);
+          next(
+            new HttpException(
+              501,
+              "Something went wrong, please contact support team."
+            )
+          );
+        }
       } else {
         next();
       }
     });
   };
+};
+
+const getValidationErrorMessage = (errors: ValidationError[]) => {
+  return errors.map((error) => {
+    if (error.children && error.children.length > 0) {
+      return getValidationErrorMessage(error.children);
+    }
+    return { [error.property]: Object.values(error.constraints) };
+  });
 };
