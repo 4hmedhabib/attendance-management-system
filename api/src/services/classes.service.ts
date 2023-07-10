@@ -1,6 +1,8 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
+import { preDefined } from "../constants";
 import {
+  CreateClassSemesterCourseAttendancePayload,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   UpdateClassData,
@@ -25,6 +27,7 @@ const class_semestersDB = prisma.class_semesters;
 const semester_coursesDB = prisma.semester_courses;
 const coursesDB = prisma.courses;
 const teachersDB = prisma.teachers;
+const attendancesDB = prisma.attendances;
 
 @Service()
 class ClassService {
@@ -757,6 +760,132 @@ class ClassService {
           `Something went wrong creating class, please contact support team.`
       );
     }
+  }
+
+  public async createClassSemesterCourseAttendances(
+    classSemesterCourseAttendancesData: CreateClassSemesterCourseAttendancePayload
+  ): Promise<any> {
+    const transaction = await prisma.$transaction(async (trx) => {
+      let alreadyExits: number = 0;
+      let totalCreated: number = 0;
+      let totalErrors: number = 0;
+
+      const classAttendanceData = classSemesterCourseAttendancesData;
+
+      const classByCourse = await trx.semester_courses.findFirst({
+        where: {
+          course: {
+            courseslug: classAttendanceData.courseSlug,
+          },
+          teacher: {
+            techid: classAttendanceData.teacherId,
+          },
+          class_semester: {
+            semester: {
+              semesterslug: classAttendanceData.semesterSlug,
+            },
+            class: {
+              classslug: classAttendanceData.classSlug,
+            },
+          },
+        },
+        include: {
+          enrollments: {
+            select: {
+              studentid: true,
+              enrollment_date: true,
+              enrollment_id: true,
+            },
+          },
+          _count: {
+            select: {
+              enrollments: true,
+            },
+          },
+        },
+      });
+
+      if (classByCourse._count.enrollments <= 0) {
+        throw new HttpException(404, `Sorry!, no students found.`);
+      }
+
+      const currentDate = new Date();
+      const startDate = new Date(currentDate);
+      startDate.setHours(0, 0, 0, 0); // Set start date to the beginning of the day
+
+      const endDate = new Date(currentDate);
+      endDate.setHours(23, 59, 59, 999); // Set end date to the end of the day
+
+      await Promise.allSettled(
+        classByCourse.enrollments.map(async (enrollment) => {
+          try {
+            const findDuplicate = await attendancesDB.findFirst({
+              where: {
+                enrollmentid: enrollment.enrollment_id,
+                AND: [
+                  { enrollment: { enrollment_date: { gte: endDate } } },
+                  //   { enrollment: { enrollment_date: { lt: startDate } } },
+                ],
+              },
+              select: { attendancedate: true, attendanceid: true },
+            });
+
+            if (findDuplicate) {
+              alreadyExits++;
+              return { success: true, data: findDuplicate };
+            }
+
+            await trx.attendances.create({
+              data: {
+                attendancedate: currentDate,
+                enrollment: {
+                  connect: {
+                    enrollment_id: enrollment.enrollment_id,
+                  },
+                },
+                status: {
+                  connect: {
+                    statusslug: preDefined.attendenceStatuses.default,
+                  },
+                },
+                createdby: {
+                  connect: {
+                    username: "ahmedhabib",
+                  },
+                },
+              },
+              select: {
+                attendanceid: true,
+                attendancedate: true,
+                enrollment: {
+                  select: {
+                    enrollment_id: true,
+                    student: {
+                      select: {
+                        studentid: true,
+                        stdid: true,
+                      },
+                    },
+                  },
+                },
+              },
+            });
+
+            totalCreated++;
+          } catch (err) {
+            logger.error(JSON.stringify(err));
+
+            throw new Error("");
+          }
+        })
+      );
+
+      return results;
+    });
+
+    return {
+      transaction,
+    };
   }
 }
 
