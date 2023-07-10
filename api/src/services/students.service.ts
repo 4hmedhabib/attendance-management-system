@@ -697,6 +697,89 @@ class StudentService {
 
     return enrollments;
   }
+
+  public async findAllEnrollment(
+    isMiniView: boolean,
+    enrollmentId: number
+  ): Promise<IEnrollment> {
+    const enrollment: IEnrollment = await enrollmentsDB.findUnique({
+      where: { enrollment_id: enrollmentId },
+      select: {
+        enrollment_id: true,
+        enrollment_date: true,
+        student: {
+          select: {
+            studentid: true,
+            stdid: true,
+            firstname: !isMiniView,
+            middlename: !isMiniView,
+            lastname: !isMiniView,
+          },
+        },
+        semester_course: {
+          select: {
+            course: {
+              select: {
+                courseid: true,
+                coursename: true,
+                courseslug: true,
+              },
+            },
+            teacher: !isMiniView
+              ? {
+                  select: {
+                    firstname: true,
+                    middlename: true,
+                    techid: true,
+                    teacherid: true,
+                  },
+                }
+              : false,
+            class_semester: {
+              select: {
+                isended: true,
+                isgoingon: true,
+                class: !isMiniView
+                  ? {
+                      select: {
+                        classname: true,
+                        classslug: true,
+                      },
+                    }
+                  : false,
+                semester: !isMiniView
+                  ? {
+                      select: {
+                        semestername: true,
+                        semesterslug: true,
+                      },
+                    }
+                  : false,
+              },
+            },
+          },
+        },
+        created_at: !isMiniView,
+        updated_at: !isMiniView,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+      },
+    });
+
+    if (!enrollment) {
+      throw new HttpException(404, "No data found!.");
+    }
+
+    return enrollment;
+  }
 }
 
 export default StudentService;
