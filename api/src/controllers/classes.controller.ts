@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  CreateClassSemesterCourseAttendancesDto,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   DeleteClassBySlugDto,
@@ -203,6 +204,24 @@ class ClassController {
       res.status(200).json({
         data: findOneClassSemestersData,
         message: "Class Semesters successfully loaded",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createClassSemesterCourseAttendances = async (
+    req: Request<any, any, CreateClassSemesterCourseAttendancesDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const createClassSemesterCourseAttendancesData =
+        await this.class.createClassSemesterCourseAttendances(req.body.payload);
+
+      res.status(200).json({
+        data: createClassSemesterCourseAttendancesData,
+        message: "Course Attendances Successfully created!",
       });
     } catch (error) {
       next(error);
