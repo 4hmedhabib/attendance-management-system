@@ -58,7 +58,7 @@ class StudentRoute implements IRoutes {
     this.router.get(
       `${this.path}/enrollments/detail`,
       ValidationMiddleware(EnrollmentDetailDto),
-      this.student.createEnrollment
+      this.student.getEnrollment
     );
 
     this.router.get(
