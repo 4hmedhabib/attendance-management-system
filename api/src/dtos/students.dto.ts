@@ -338,14 +338,13 @@ export class EnrollmentsDto {
 }
 
 export class EnrollmentDetailPayloadDto {
-  @IsString({ message: "enrollment id must be a string" })
-  @MinLength(3, {
-    message: "enrollment id must be longer than or equal to 3 characters",
-  })
-  @MaxLength(15, {
-    message: "enrollment id must be shorter than or equal to 15 characters",
-  })
-  enrollmentId: string;
+  @IsInt()
+  @IsPositive()
+  enrollmentId: number;
+
+  @IsBoolean({ message: "is mini view must be a boolean" })
+  @IsNotEmpty()
+  isMiniView: boolean;
 }
 
 export class EnrollmentDetailDto {
