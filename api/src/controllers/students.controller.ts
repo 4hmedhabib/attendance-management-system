@@ -17,6 +17,7 @@ import {
   CreateBulkStudentDto,
   CreateEnrollmentDto,
   CreateEnrollmentPayload,
+  EnrollmentDetailDto,
   EnrollmentsDto,
 } from "./../dtos/students.dto";
 
@@ -196,6 +197,27 @@ class StudentController {
       res.status(200).json({
         data: findAllEnrollmentsData,
         message: "Enrollments Successfully loaded!",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getEnrollment = async (
+    req: Request<any, any, EnrollmentDetailDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const isMiniView = req.body.payload.isMiniView;
+      const enrollmentId = req.body.payload.enrollmentId;
+
+      const findAllEnrollmentData: IEnrollment =
+        await this.student.findAllEnrollment(isMiniView, enrollmentId);
+
+      res.status(200).json({
+        data: findAllEnrollmentData,
+        message: "Enrollment Successfully loaded!",
       });
     } catch (error) {
       next(error);
