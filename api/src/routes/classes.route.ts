@@ -2,6 +2,7 @@ import { Router } from "express";
 import { ClassController } from "../controllers";
 import {
   CreateClassDto,
+  CreateClassSemesterCourseAttendancesDto,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   DeleteClassBySlugDto,
@@ -76,6 +77,12 @@ class ClassRoute implements IRoutes {
       `${this.path}/detail/semesters/courses/create`,
       ValidationMiddleware(CreateClassSemesterCoursesDto),
       this.class.createClassSemesterCourses
+    );
+
+    this.router.post(
+      `${this.path}/detail/semesters/courses/attendances/create`,
+      ValidationMiddleware(CreateClassSemesterCourseAttendancesDto),
+      this.class.createClassSemesterCourseAttendances
     );
   }
 }
