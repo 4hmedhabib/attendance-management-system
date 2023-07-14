@@ -1,16 +1,26 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import async from "async";
 import { Service } from "typedi";
 import {
   BulkStudentDataPayload,
+  CreateEnrollmentPayload,
   CreateStudentPayload,
+  EnrollmentsPayloadFiltersDto,
   UpdateStudentData,
 } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
-import { IRPCreateStudentPayload, IStudent } from "../interfaces";
+import { IEnrollment, IRPCreateStudentPayload, IStudent } from "../interfaces";
 import { logger } from "../utils";
 
 const prisma = new PrismaClient();
 const studentsDB = prisma.students;
+const usersDB = prisma.users;
+const enrollmentsDB = prisma.enrollments;
+const teachersDB = prisma.teachers;
+const classesDB = prisma.classes;
+const semestersDB = prisma.semesters;
+const coursesDB = prisma.courses;
+const semester_coursesDB = prisma.semester_courses;
 
 @Service()
 class StudentService {
@@ -23,6 +33,7 @@ class StudentService {
         middlename: true,
         lastname: true,
         mobileno: !isMiniView,
+        createdat: !isMiniView,
         createdby: !isMiniView
           ? {
               select: {
@@ -161,14 +172,24 @@ class StudentService {
   public async createBulkStudents(
     studentsData: BulkStudentDataPayload
   ): Promise<any> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      let createdByUsername = "ahmedhabib";
+      const findCreatedBy = await usersDB.findUnique({
+        where: { username: createdByUsername },
+        select: { userid: true, username: true },
+      });
+
+      if (!findCreatedBy) {
+        logger.error(`This user ${createdByUsername} not found`);
+        reject(`This user ${createdByUsername} not found`);
+      }
+
       let totalErrors: number = 0;
       let totalRecords: number = studentsData.data.length;
       let errors: string[] = [];
-      let dataSaved: Prisma.studentsCreateManyInput[] = null;
 
       const prepareStudent = (studentData: CreateStudentPayload, _next: any) =>
-        new Promise(async (resolve, reject) => {
+        new Promise<Prisma.studentsCreateManyInput>(async (resolve, reject) => {
           let savedData: Prisma.studentsCreateManyInput;
 
           const findStudent = await studentsDB.findUnique({
@@ -176,20 +197,28 @@ class StudentService {
             select: { studentid: true, stdid: true },
           });
 
-          if (findStudent)
+          if (findStudent) {
+            logger.error(
+              `This student id ${studentData.studentId} already exists: ${studentData.studentId}`
+            );
             reject(
               `This student id ${studentData.studentId} already exists: ${studentData.studentId}`
             );
+          }
 
           const findMobileNo = await studentsDB.findUnique({
             where: { stdid: studentData.studentId },
             select: { studentid: true, stdid: true },
           });
 
-          if (findMobileNo)
+          if (findMobileNo) {
+            logger.error(
+              `This mobileno ${studentData.mobileNo} already exists: ${studentData.studentId}`
+            );
             reject(
               `This mobileno ${studentData.mobileNo} already exists: ${studentData.studentId}`
             );
+          }
 
           savedData = {
             ...savedData,
@@ -199,7 +228,7 @@ class StudentService {
             stdid: studentData.studentId,
             mobileno: studentData.mobileNo,
             yearofstudy: studentData.yearOfStudy,
-            createdbyid: 5,
+            createdbyid: findCreatedBy.userid,
           };
 
           resolve(savedData);
@@ -212,7 +241,39 @@ class StudentService {
             errors.push(err.message || err);
             logger.error(err.message || err);
             _next(null, null);
-          });    });
+          });
+
+      async.map<any, Prisma.studentsCreateManyInput>(
+        studentsData.data,
+        prepareStudent,
+        async (err, result) => {
+          if (err) {
+            logger.error(`ERROR NAME: ${err.name}`);
+            logger.error(`ERROR MESSAGE: ${err.message}`);
+            logger.error(`ERROR STACK: ${err.stack}`);
+            reject(err.message);
+          } else {
+            const savedData = await studentsDB.createMany({
+              data: result.filter((res) => res),
+              skipDuplicates: true,
+            });
+
+            resolve({
+              totalErrors,
+              totalRecords,
+              errors,
+              totalSaved: savedData.count,
+            });
+          }
+        }
+      );
+    })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw new HttpException(409, err.message || err);
+      });
   }
 
   public async updateStudent(
@@ -346,6 +407,378 @@ class StudentService {
     });
 
     return deleteStudentData;
+  }
+
+  public async createEnrollment(
+    enrollmentData: CreateEnrollmentPayload
+  ): Promise<any> {
+    let savedData: Prisma.enrollmentsCreateInput;
+
+    const findStudent = await studentsDB.findUnique({
+      where: { stdid: enrollmentData.studentId },
+      select: { studentid: true, stdid: true },
+    });
+
+    if (!findStudent) {
+      logger.error(`This student ${enrollmentData.studentId} not found`);
+      throw new HttpException(
+        404,
+        `This student ${enrollmentData.studentId} not found`
+      );
+    }
+
+    const findClass = await classesDB.findUnique({
+      where: { classslug: enrollmentData.classId },
+      select: { classid: true, classslug: true },
+    });
+
+    if (!findClass) {
+      logger.error(`This class ${enrollmentData.classId} not found`);
+      throw new HttpException(
+        404,
+        `This class ${enrollmentData.classId} not found`
+      );
+    }
+
+    const findSemester = await semestersDB.findUnique({
+      where: { semesterslug: enrollmentData.semesterId },
+      select: { semesterid: true, semesterslug: true },
+    });
+
+    if (!findSemester) {
+      logger.error(`This semester ${enrollmentData.semesterId} not found`);
+      throw new HttpException(
+        404,
+        `This semester ${enrollmentData.semesterId} not found`
+      );
+    }
+
+    const findCourse = await coursesDB.findUnique({
+      where: { courseslug: enrollmentData.courseId },
+      select: { courseid: true, courseslug: true },
+    });
+
+    if (!findCourse) {
+      logger.error(`This course ${enrollmentData.courseId} not found`);
+      throw new HttpException(
+        404,
+        `This course ${enrollmentData.courseId} not found`
+      );
+    }
+
+    const findTeacher = await teachersDB.findUnique({
+      where: { techid: enrollmentData.teacherId },
+      select: { teacherid: true, techid: true },
+    });
+
+    if (!findTeacher) {
+      logger.error(`This teacher ${enrollmentData.teacherId} not found`);
+      throw new HttpException(
+        404,
+        `This teacher ${enrollmentData.teacherId} not found`
+      );
+    }
+
+    const findSemesterCourse = await semester_coursesDB.findUnique({
+      where: {
+        teacherid_courseid_semesterid_classid: {
+          teacherid: findTeacher.teacherid,
+          courseid: findCourse.courseid,
+          semesterid: findSemester.semesterid,
+          classid: findClass.classid,
+        },
+      },
+      select: {
+        classid: true,
+        teacherid: true,
+        courseid: true,
+        semesterid: true,
+      },
+    });
+
+    if (!findSemesterCourse) {
+      logger.error(
+        `This semester course ${enrollmentData.semesterId} ${enrollmentData.courseId} not found`
+      );
+      throw new HttpException(
+        404,
+        `This semester course ${enrollmentData.semesterId} ${enrollmentData.courseId} not found`
+      );
+    }
+
+    const findEnrollment = await enrollmentsDB.findFirst({
+      where: {
+        semester_course: findSemesterCourse,
+        studentid: findStudent.studentid,
+      },
+      select: { enrollment_id: true },
+    });
+
+    if (findEnrollment)
+      throw new HttpException(
+        409,
+        `This enrollment ${enrollmentData.studentId} already exists`
+      );
+
+    savedData = {
+      ...savedData,
+      enrollment_date: new Date(),
+      student: {
+        connect: {
+          studentid: findStudent.studentid,
+        },
+      },
+      semester_course: {
+        connect: {
+          teacherid_courseid_semesterid_classid: findSemesterCourse,
+        },
+      },
+      createdby: {
+        connect: {
+          username: "ahmedhabib",
+        },
+      },
+    };
+
+    try {
+      const createEnrollmentData: IEnrollment = await enrollmentsDB.create({
+        data: savedData,
+        select: {
+          student: {
+            select: {
+              stdid: true,
+              firstname: true,
+              middlename: true,
+            },
+          },
+
+          _count: {
+            select: {
+              attendances: true,
+            },
+          },
+        },
+      });
+
+      return createEnrollmentData;
+    } catch (err: any) {
+      console.log(err);
+
+      logger.error(JSON.stringify(err.message) || err);
+      throw new HttpException(
+        500,
+        `Something went wrong creating student, please contact support team.`
+      );
+    }
+  }
+
+  public async findAllEnrollments(
+    isMiniView: boolean,
+    filters: EnrollmentsPayloadFiltersDto
+  ): Promise<IEnrollment[]> {
+    let enrollmentsWhere: Prisma.enrollmentsWhereInput;
+
+    if (filters.studentId.trim().length > 0) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        student: { stdid: filters.studentId },
+      };
+    }
+
+    if (filters.courseId) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        semester_course: {
+          ...(enrollmentsWhere.semester_course as any),
+          course: { courseslug: filters.courseId },
+        },
+      };
+    }
+
+    if (filters.semesterId) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        semester_course: {
+          class_semester: {
+            semester: { semesterslug: filters.semesterId },
+          },
+        },
+      };
+    }
+
+    if (filters.classId) {
+      enrollmentsWhere = {
+        ...enrollmentsWhere,
+        semester_course: {
+          ...(enrollmentsWhere.semester_course as any),
+          class_semester: {
+            ...enrollmentsWhere.semester_course.class_semester,
+            class: { classslug: filters.classId },
+          },
+        },
+      };
+    }
+
+    const enrollments: IEnrollment[] = await enrollmentsDB.findMany({
+      where: enrollmentsWhere,
+      select: {
+        enrollment_id: true,
+        enrollment_date: true,
+        student: {
+          select: {
+            studentid: true,
+            stdid: true,
+            firstname: !isMiniView,
+            middlename: !isMiniView,
+            lastname: !isMiniView,
+          },
+        },
+        semester_course: {
+          select: {
+            course: {
+              select: {
+                courseid: true,
+                coursename: true,
+                courseslug: true,
+              },
+            },
+            teacher: !isMiniView
+              ? {
+                  select: {
+                    firstname: true,
+                    middlename: true,
+                    techid: true,
+                    teacherid: true,
+                  },
+                }
+              : false,
+            class_semester: {
+              select: {
+                isended: true,
+                isgoingon: true,
+                class: !isMiniView
+                  ? {
+                      select: {
+                        classname: true,
+                        classslug: true,
+                      },
+                    }
+                  : false,
+                semester: !isMiniView
+                  ? {
+                      select: {
+                        semestername: true,
+                        semesterslug: true,
+                      },
+                    }
+                  : false,
+              },
+            },
+          },
+        },
+        created_at: !isMiniView,
+        updated_at: !isMiniView,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+      },
+    });
+
+    if (enrollments.length <= 0) {
+      throw new HttpException(404, "No data found!.");
+    }
+
+    return enrollments;
+  }
+
+  public async findAllEnrollment(
+    isMiniView: boolean,
+    enrollmentId: number
+  ): Promise<IEnrollment> {
+    const enrollment: IEnrollment = await enrollmentsDB.findUnique({
+      where: { enrollment_id: enrollmentId },
+      select: {
+        enrollment_id: true,
+        enrollment_date: true,
+        student: {
+          select: {
+            studentid: true,
+            stdid: true,
+            firstname: !isMiniView,
+            middlename: !isMiniView,
+            lastname: !isMiniView,
+          },
+        },
+        semester_course: {
+          select: {
+            course: {
+              select: {
+                courseid: true,
+                coursename: true,
+                courseslug: true,
+              },
+            },
+            teacher: !isMiniView
+              ? {
+                  select: {
+                    firstname: true,
+                    middlename: true,
+                    techid: true,
+                    teacherid: true,
+                  },
+                }
+              : false,
+            class_semester: {
+              select: {
+                isended: true,
+                isgoingon: true,
+                class: !isMiniView
+                  ? {
+                      select: {
+                        classname: true,
+                        classslug: true,
+                      },
+                    }
+                  : false,
+                semester: !isMiniView
+                  ? {
+                      select: {
+                        semestername: true,
+                        semesterslug: true,
+                      },
+                    }
+                  : false,
+              },
+            },
+          },
+        },
+        created_at: !isMiniView,
+        updated_at: !isMiniView,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+      },
+    });
+
+    if (!enrollment) {
+      throw new HttpException(404, "No data found!.");
+    }
+
+    return enrollment;
   }
 }
 

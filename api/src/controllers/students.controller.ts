@@ -6,6 +6,7 @@ import {
   UpdateStudentDto,
 } from "../dtos";
 import {
+  IEnrollment,
   IRBCreateStudent,
   IRPCreateStudentPayload,
   IStudent,
@@ -14,6 +15,10 @@ import { StudentService } from "../services";
 import {
   BulkStudentDataPayload,
   CreateBulkStudentDto,
+  CreateEnrollmentDto,
+  CreateEnrollmentPayload,
+  EnrollmentDetailDto,
+  EnrollmentsDto,
 } from "./../dtos/students.dto";
 
 class StudentController {
@@ -151,6 +156,68 @@ class StudentController {
       res.status(200).json({
         data: deleteStudentData,
         message: "Student successfully deleted",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createEnrollment = async (
+    req: Request<any, any, CreateEnrollmentDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const enrollmentData: CreateEnrollmentPayload = req.body.payload.data[0];
+
+      const createEnrollmentData: IEnrollment =
+        await this.student.createEnrollment(enrollmentData);
+
+      res.status(201).json({
+        data: createEnrollmentData,
+        message: "Enrollment successfully created",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getEnrollments = async (
+    req: Request<any, any, EnrollmentsDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const isMiniView = req.body.payload.isMiniView;
+      const filters = req.body.payload.filters;
+
+      const findAllEnrollmentsData: IEnrollment[] =
+        await this.student.findAllEnrollments(isMiniView, filters);
+
+      res.status(200).json({
+        data: findAllEnrollmentsData,
+        message: "Enrollments Successfully loaded!",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getEnrollment = async (
+    req: Request<any, any, EnrollmentDetailDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const isMiniView = req.body.payload.isMiniView;
+      const enrollmentId = req.body.payload.enrollmentId;
+
+      const findAllEnrollmentData: IEnrollment =
+        await this.student.findAllEnrollment(isMiniView, enrollmentId);
+
+      res.status(200).json({
+        data: findAllEnrollmentData,
+        message: "Enrollment Successfully loaded!",
       });
     } catch (error) {
       next(error);

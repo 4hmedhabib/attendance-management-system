@@ -319,3 +319,52 @@ export class GetClassesDto {
   @Type(() => GetClassesPayload)
   payload: GetClassesPayload;
 }
+
+export class CreateClassSemesterCourseAttendancePayload {
+  @IsString()
+  @IsNotEmpty({ message: "class slug is required" })
+  @MinLength(3, {
+    message: "class slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "class slug must be shorter than or equal to 62 characters",
+  })
+  classSlug: string;
+
+  @IsString()
+  @IsNotEmpty({ message: "semester slug is required" })
+  @MinLength(3, {
+    message: "semester slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "semester slug must be shorter than or equal to 62 characters",
+  })
+  semesterSlug: string;
+
+  @IsString({ message: "course slug must be a string" })
+  @IsNotEmpty({ message: "course slug is required" })
+  @MinLength(3, {
+    message: "course slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "course slug must be shorter than or equal to 62 characters",
+  })
+  courseSlug: string;
+
+  @IsString({ message: "teacher id must be a string" })
+  @IsNotEmpty({ message: "teacher id is required" })
+  @MinLength(3, {
+    message: "teacher id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "teacher id must be shorter than or equal to 62 characters",
+  })
+  teacherId: string;
+}
+
+export class CreateClassSemesterCourseAttendancesDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => CreateClassSemesterCourseAttendancePayload)
+  payload: CreateClassSemesterCourseAttendancePayload;
+}

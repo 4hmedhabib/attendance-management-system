@@ -2,20 +2,17 @@ import { useEffect } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
 
 // FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
-import ArgonTypography from "components/ArgonTypography";
 
 // FFU ATMS MUI example components
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
 import DetailedStatisticsCard from "examples/Cards/StatisticsCards/DetailedStatisticsCard";
-import Table from "examples/Tables/Table";
+import Footer from "examples/Footer";
+import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import FacultiesList from "examples/Lists/FacultiesList";
-import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import Table from "examples/Tables/Table";
 
 // FFU ATMS MUI base styles
 import typography from "assets/theme/base/typography";
@@ -24,7 +21,7 @@ import typography from "assets/theme/base/typography";
 import Slider from "layouts/dashboards/default/components/Slider";
 
 // Data
-import gradientLineChartData from "layouts/dashboards/default/data/gradientLineChartData";
+import Calendar from "examples/Calendar";
 import classesTableData from "layouts/dashboards/default/data/classesTableData";
 import facultiesListData from "layouts/dashboards/default/data/facultiesListData";
 
@@ -75,8 +72,8 @@ function Default() {
         </Grid>
         <Grid container spacing={3} mb={3}>
           <Grid item xs={12} lg={7}>
-            <GradientLineChart
-              title="Sales Overview"
+            {/* <GradientLineChart
+              title="Attandance Overview"
               description={
                 <ArgonBox display="flex" alignItems="center">
                   <ArgonBox fontSize={size.lg} color="success" mb={0.3} mr={0.5} lineHeight={0}>
@@ -91,7 +88,8 @@ function Default() {
                 </ArgonBox>
               }
               chart={gradientLineChartData}
-            />
+            /> */}
+            <Calendar />
           </Grid>
           <Grid item xs={12} lg={5}>
             <Slider />

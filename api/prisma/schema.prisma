@@ -249,9 +249,9 @@ model semester_courses {
     assignedby   users @relation(fields: [assignedbyid], references: [userid])
     assignedbyid Int
 
-    semester   class_semesters @relation(fields: [classid, semesterid], references: [classid, semesterid])
-    classid    Int
-    semesterid Int
+    class_semester class_semesters @relation(fields: [classid, semesterid], references: [classid, semesterid])
+    classid        Int
+    semesterid     Int
 
     enrollments enrollments[]
 
