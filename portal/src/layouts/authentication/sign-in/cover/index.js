@@ -9,14 +9,12 @@ import Switch from "@mui/material/Switch";
 
 // FFU ATMS MUI components
 import ArgonBox from "components/ArgonBox";
-import ArgonTypography from "components/ArgonTypography";
-import ArgonInput from "components/ArgonInput";
 import ArgonButton from "components/ArgonButton";
+import ArgonInput from "components/ArgonInput";
+import ArgonTypography from "components/ArgonTypography";
 
 // Authentication layout components
 import CoverLayout from "layouts/authentication/components/CoverLayout";
-import Socials from "layouts/authentication/components/Socials";
-import Separator from "layouts/authentication/components/Separator";
 
 // Images
 const bgImage =
@@ -29,8 +27,8 @@ function Cover() {
 
   return (
     <CoverLayout
-      title="Welcome!"
-      description="Use these awesome forms to login or create new account in your project for free."
+      title="FFU ATMS"
+      description="Frantz Fanon University Management System"
       image={bgImage}
     >
       <Card>

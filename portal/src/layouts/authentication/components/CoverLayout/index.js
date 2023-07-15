@@ -9,31 +9,15 @@ import ArgonBox from "components/ArgonBox";
 import ArgonTypography from "components/ArgonTypography";
 
 // FFU ATMS MUI example components
-import DefaultNavbar from "examples/Navbars/DefaultNavbar";
 import PageLayout from "examples/LayoutContainers/PageLayout";
 
 // Authentication layout components
-import Footer from "layouts/authentication/components/Footer";
 
 // FFU ATMS MUI page layout routes
-import pageRoutes from "page.routes";
 
 function CoverLayout({ title, description, image, imgPosition, button, children }) {
   return (
     <PageLayout>
-      <ArgonBox mt={1}>
-        <DefaultNavbar
-          routes={pageRoutes}
-          action={{
-            type: "external",
-            route: "https://creative-tim.com/product/argon-dashboard-pro-material-ui",
-            label: "Buy Now",
-            ...button,
-          }}
-          transparent
-          light
-        />
-      </ArgonBox>
       <ArgonBox
         width="calc(100% - 2rem)"
         minHeight="50vh"
@@ -77,7 +61,6 @@ function CoverLayout({ title, description, image, imgPosition, button, children 
           </Grid>
         </Grid>
       </ArgonBox>
-      <Footer />
     </PageLayout>
   );
 }
