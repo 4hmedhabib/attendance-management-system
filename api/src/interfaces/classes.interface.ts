@@ -39,3 +39,14 @@ export interface IRPCreateClassPayload {
 export interface IRBCreateClass {
   payload: IRPCreateClassPayload;
 }
+
+export interface IAttendances {
+  attendanceid?: number;
+  enrollmentid?: number;
+}
+
+export interface IAttendanceStatus {
+  statusid?: number;
+  statusname?: string;
+  statusslug?: string;
+}
