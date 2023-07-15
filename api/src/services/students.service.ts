@@ -181,7 +181,7 @@ class StudentService {
 
       if (!findCreatedBy) {
         logger.error(`This user ${createdByUsername} not found`);
-        reject(`This user ${createdByUsername} not found`);
+        return reject(`This user ${createdByUsername} not found`);
       }
 
       let totalErrors: number = 0;
@@ -201,7 +201,7 @@ class StudentService {
             logger.error(
               `This student id ${studentData.studentId} already exists: ${studentData.studentId}`
             );
-            reject(
+            return reject(
               `This student id ${studentData.studentId} already exists: ${studentData.studentId}`
             );
           }
@@ -215,7 +215,7 @@ class StudentService {
             logger.error(
               `This mobileno ${studentData.mobileNo} already exists: ${studentData.studentId}`
             );
-            reject(
+            return reject(
               `This mobileno ${studentData.mobileNo} already exists: ${studentData.studentId}`
             );
           }
@@ -251,7 +251,7 @@ class StudentService {
             logger.error(`ERROR NAME: ${err.name}`);
             logger.error(`ERROR MESSAGE: ${err.message}`);
             logger.error(`ERROR STACK: ${err.stack}`);
-            reject(err.message);
+            return reject(err.message);
           } else {
             const savedData = await studentsDB.createMany({
               data: result.filter((res) => res),
@@ -409,167 +409,184 @@ class StudentService {
     return deleteStudentData;
   }
 
-  public async createEnrollment(
-    enrollmentData: CreateEnrollmentPayload
-  ): Promise<any> {
-    let savedData: Prisma.enrollmentsCreateInput;
-
-    const findStudent = await studentsDB.findUnique({
-      where: { stdid: enrollmentData.studentId },
-      select: { studentid: true, stdid: true },
-    });
-
-    if (!findStudent) {
-      logger.error(`This student ${enrollmentData.studentId} not found`);
-      throw new HttpException(
-        404,
-        `This student ${enrollmentData.studentId} not found`
-      );
-    }
-
-    const findClass = await classesDB.findUnique({
-      where: { classslug: enrollmentData.classId },
-      select: { classid: true, classslug: true },
-    });
-
-    if (!findClass) {
-      logger.error(`This class ${enrollmentData.classId} not found`);
-      throw new HttpException(
-        404,
-        `This class ${enrollmentData.classId} not found`
-      );
-    }
-
-    const findSemester = await semestersDB.findUnique({
-      where: { semesterslug: enrollmentData.semesterId },
-      select: { semesterid: true, semesterslug: true },
-    });
-
-    if (!findSemester) {
-      logger.error(`This semester ${enrollmentData.semesterId} not found`);
-      throw new HttpException(
-        404,
-        `This semester ${enrollmentData.semesterId} not found`
-      );
-    }
-
-    const findCourse = await coursesDB.findUnique({
-      where: { courseslug: enrollmentData.courseId },
-      select: { courseid: true, courseslug: true },
-    });
-
-    if (!findCourse) {
-      logger.error(`This course ${enrollmentData.courseId} not found`);
-      throw new HttpException(
-        404,
-        `This course ${enrollmentData.courseId} not found`
-      );
-    }
-
-    const findTeacher = await teachersDB.findUnique({
-      where: { techid: enrollmentData.teacherId },
-      select: { teacherid: true, techid: true },
-    });
-
-    if (!findTeacher) {
-      logger.error(`This teacher ${enrollmentData.teacherId} not found`);
-      throw new HttpException(
-        404,
-        `This teacher ${enrollmentData.teacherId} not found`
-      );
-    }
-
-    const findSemesterCourse = await semester_coursesDB.findUnique({
-      where: {
-        teacherid_courseid_semesterid_classid: {
-          teacherid: findTeacher.teacherid,
-          courseid: findCourse.courseid,
-          semesterid: findSemester.semesterid,
-          classid: findClass.classid,
-        },
-      },
-      select: {
-        classid: true,
-        teacherid: true,
-        courseid: true,
-        semesterid: true,
-      },
-    });
-
-    if (!findSemesterCourse) {
-      logger.error(
-        `This semester course ${enrollmentData.semesterId} ${enrollmentData.courseId} not found`
-      );
-      throw new HttpException(
-        404,
-        `This semester course ${enrollmentData.semesterId} ${enrollmentData.courseId} not found`
-      );
-    }
-
-    const findEnrollment = await enrollmentsDB.findFirst({
-      where: {
-        semester_course: findSemesterCourse,
-        studentid: findStudent.studentid,
-      },
-      select: { enrollment_id: true },
-    });
-
-    if (findEnrollment)
-      throw new HttpException(
-        409,
-        `This enrollment ${enrollmentData.studentId} already exists`
-      );
-
-    savedData = {
-      ...savedData,
-      enrollment_date: new Date(),
-      student: {
-        connect: {
-          studentid: findStudent.studentid,
-        },
-      },
-      semester_course: {
-        connect: {
-          teacherid_courseid_semesterid_classid: findSemesterCourse,
-        },
-      },
-      createdby: {
-        connect: {
-          username: "ahmedhabib",
-        },
-      },
-    };
-
-    try {
-      const createEnrollmentData: IEnrollment = await enrollmentsDB.create({
-        data: savedData,
-        select: {
-          student: {
-            select: {
-              stdid: true,
-              firstname: true,
-              middlename: true,
-            },
-          },
-
-          _count: {
-            select: {
-              attendances: true,
-            },
-          },
-        },
+  public async createEnrollment(enrollmentsData: CreateEnrollmentPayload[]) {
+    return new Promise(async (resolve, reject) => {
+      let createdByUsername = "ahmedhabib";
+      const findCreatedBy = await usersDB.findUnique({
+        where: { username: createdByUsername },
+        select: { userid: true, username: true },
       });
 
-      return createEnrollmentData;
-    } catch (err: any) {
-      console.log(err);
+      if (!findCreatedBy) {
+        logger.error(`This user ${createdByUsername} not found`);
+        return reject(`This user ${createdByUsername} not found`);
+      }
 
-      logger.error(JSON.stringify(err.message) || err);
-      throw new HttpException(
-        500,
-        `Something went wrong creating student, please contact support team.`
+      let totalErrors: number = 0;
+      let totalAlreadyExits: number = 0;
+      let totalRecords: number = enrollmentsData.length;
+      let errors: string[] = [];
+
+      const createEnrollment = (
+        enrollmentData: CreateEnrollmentPayload,
+        _next: any
+      ) => {
+        return new Promise(async (resolve, reject) => {
+          let savedData: Prisma.enrollmentsCreateManyInput;
+
+          const findStudent = await studentsDB.findUnique({
+            where: { stdid: enrollmentData.studentId },
+            select: { studentid: true, stdid: true },
+          });
+
+          if (!findStudent) {
+            logger.error(`This student ${enrollmentData.studentId} not found`);
+
+            return reject(`This student ${enrollmentData.studentId} not found`);
+          }
+
+          const findClass = await classesDB.findUnique({
+            where: { classslug: enrollmentData.classId },
+            select: { classid: true, classslug: true },
+          });
+
+          if (!findClass) {
+            logger.error(`This class ${enrollmentData.classId} not found`);
+
+            return reject(`This class ${enrollmentData.classId} not found`);
+          }
+
+          const findSemester = await semestersDB.findUnique({
+            where: { semesterslug: enrollmentData.semesterId },
+            select: { semesterid: true, semesterslug: true },
+          });
+
+          if (!findSemester) {
+            logger.error(
+              `This semester ${enrollmentData.semesterId} not found`
+            );
+            return reject(
+              `This semester ${enrollmentData.semesterId} not found`
+            );
+          }
+
+          const findCourse = await coursesDB.findUnique({
+            where: { courseslug: enrollmentData.courseId },
+            select: { courseid: true, courseslug: true },
+          });
+
+          if (!findCourse) {
+            logger.error(`This course ${enrollmentData.courseId} not found`);
+
+            return reject(`This course ${enrollmentData.courseId} not found`);
+          }
+
+          const findTeacher = await teachersDB.findUnique({
+            where: { techid: enrollmentData.teacherId },
+            select: { teacherid: true, techid: true },
+          });
+
+          if (!findTeacher) {
+            logger.error(`This teacher ${enrollmentData.teacherId} not found`);
+            return reject(`This teacher ${enrollmentData.teacherId} not found`);
+          }
+
+          const findSemesterCourse = await semester_coursesDB.findUnique({
+            where: {
+              teacherid_courseid_semesterid_classid: {
+                teacherid: findTeacher.teacherid,
+                courseid: findCourse.courseid,
+                semesterid: findSemester.semesterid,
+                classid: findClass.classid,
+              },
+            },
+            select: {
+              classid: true,
+              teacherid: true,
+              courseid: true,
+              semesterid: true,
+            },
+          });
+
+          if (!findSemesterCourse) {
+            logger.error(
+              `This semester course ${enrollmentData.semesterId} ${enrollmentData.courseId} not found`
+            );
+
+            return reject(
+              `This semester course ${enrollmentData.semesterId} ${enrollmentData.courseId} not found`
+            );
+          }
+
+          const findEnrollment = await enrollmentsDB.findFirst({
+            where: {
+              semester_course: findSemesterCourse,
+              studentid: findStudent.studentid,
+            },
+            select: { enrollment_id: true },
+          });
+
+          if (findEnrollment) {
+            totalAlreadyExits++;
+
+            logger.error(
+              `This enrollment id ${enrollmentData.studentId} already exists: ${enrollmentData.studentId}`
+            );
+            return reject(
+              `This enrollment id ${enrollmentData.studentId} already exists: ${enrollmentData.studentId}`
+            );
+          }
+
+          savedData = {
+            ...savedData,
+            enrollment_date: new Date(),
+            studentid: findStudent.studentid,
+            classid: findClass.classid,
+            semesterid: findSemester.semesterid,
+            courseid: findCourse.courseid,
+            teacherid: findTeacher.teacherid,
+            createdbyid: findCreatedBy.userid,
+          };
+
+          resolve(savedData);
+        })
+          .then((res) => {
+            _next(null, res);
+          })
+          .catch((err) => {
+            totalErrors++;
+            errors.push(err.message || err);
+            logger.error(err.message || err);
+            _next(null, null);
+          });
+      };
+
+      async.map<any, Prisma.enrollmentsCreateManyInput>(
+        enrollmentsData,
+        createEnrollment,
+        async (err, result) => {
+          if (err) {
+            logger.error(`ERROR NAME: ${err.name}`);
+            logger.error(`ERROR MESSAGE: ${err.message}`);
+            logger.error(`ERROR STACK: ${err.stack}`);
+            return reject(err.message);
+          } else {
+            const savedData = await enrollmentsDB.createMany({
+              data: result.filter((res) => res),
+              skipDuplicates: true,
+            });
+
+            resolve({
+              totalErrors,
+              totalAlreadyExits,
+              totalRecords,
+              errors,
+              totalSaved: savedData.count,
+            });
+          }
+        }
       );
-    }
+    });
   }
 
   public async findAllEnrollments(
