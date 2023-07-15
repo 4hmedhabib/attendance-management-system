@@ -1,7 +1,9 @@
-import React from "react";
+import App from "App";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import App from "App";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 // Soft UI Context Provider
 import { ArgonControllerProvider } from "context";
@@ -19,6 +21,18 @@ root.render(
   <BrowserRouter>
     <ArgonControllerProvider>
       <PerfectScrollbar>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <App />
       </PerfectScrollbar>
     </ArgonControllerProvider>
