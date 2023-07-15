@@ -63,7 +63,8 @@ model users {
 
     assignedstudentclasses student_classes[]
 
-    attendaces attendances[]
+    createdattendaces attendances[] @relation("CREATED_ATTENDANCES")
+    updatedattendaces attendances[] @relation("UPDATED_ATTENDANCES")
 
     group_permissions group_permissions[]
 
@@ -306,8 +307,11 @@ model attendances {
 
     // RELATIONS
     // =========
-    createdby   users @relation(fields: [createdbyid], references: [userid])
+    createdby   users @relation("CREATED_ATTENDANCES", fields: [createdbyid], references: [userid])
     createdbyid Int
+
+    updatedby   users? @relation("UPDATED_ATTENDANCES", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
 
     status   attendacestatuses @relation(fields: [statusid], references: [statusid])
     statusid Int
