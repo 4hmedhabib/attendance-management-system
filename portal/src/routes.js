@@ -171,6 +171,15 @@ const routes = [
     component: <Faculties />,
     noCollapse: true,
   },
+  {
+    type: "collapse",
+    name: "Administrations",
+    key: "administrations",
+    icon: <ArgonBox component="i" color="warning" fontSize="14px" className="ni ni-settings" />,
+    route: "/administrations",
+    component: <Faculties />,
+    noCollapse: true,
+  },
 ];
 
 export default routes;
