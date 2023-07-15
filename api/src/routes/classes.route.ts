@@ -7,10 +7,12 @@ import {
   CreateClassSemesterDto,
   DeleteClassBySlugDto,
   GetClassBySlugDto,
+  GetClassSemesterCourseAttendancesDto,
   GetClassSemesterCoursesBySlugDto,
   GetClassSemestersBySlugDto,
   GetClassesDto,
   UpdateClassDto,
+  UpdateClassSemesterCourseAttendancesDto,
 } from "../dtos";
 import { IRoutes } from "../interfaces/";
 import { ValidationMiddleware } from "../middlewares/validation.middleware";
@@ -83,6 +85,18 @@ class ClassRoute implements IRoutes {
       `${this.path}/detail/semesters/courses/attendances/create`,
       ValidationMiddleware(CreateClassSemesterCourseAttendancesDto),
       this.class.createClassSemesterCourseAttendances
+    );
+
+    this.router.get(
+      `${this.path}/detail/semesters/courses/attendances/`,
+      ValidationMiddleware(GetClassSemesterCourseAttendancesDto),
+      this.class.getClassSemesterCourseAttendances
+    );
+
+    this.router.put(
+      `${this.path}/detail/semesters/courses/attendances/update`,
+      ValidationMiddleware(UpdateClassSemesterCourseAttendancesDto),
+      this.class.updateClassSemesterCourseAttendances
     );
   }
 }
