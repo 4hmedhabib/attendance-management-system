@@ -168,7 +168,7 @@ class StudentController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const enrollmentData: CreateEnrollmentPayload = req.body.payload.data[0];
+      const enrollmentData: CreateEnrollmentPayload[] = req.body.payload.data;
 
       const createEnrollmentData: IEnrollment =
         await this.student.createEnrollment(enrollmentData);
