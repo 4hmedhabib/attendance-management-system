@@ -20,20 +20,20 @@ class FacultyRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
+    this.router.post(
       `${this.path}`,
       ValidationMiddleware(GetFacultiesDto),
       this.faculty.getFaculties
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetFacultyBySlugDto),
       this.faculty.getFacultyBySlug
     );
 
     this.router.post(
-      `${this.path}`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateFacultyDto),
       this.faculty.createFaculty
     );
