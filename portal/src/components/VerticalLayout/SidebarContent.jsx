@@ -10,10 +10,10 @@ import { Link, useLocation } from "react-router-dom";
 import withRouter from "../Common/withRouter";
 
 //i18n
-import { withTranslation } from "react-i18next";
 import { useCallback } from "react";
+import { withTranslation } from "react-i18next";
 
-const SidebarContent = props => {
+const SidebarContent = (props) => {
   const ref = useRef();
   const activateParentDropdown = useCallback((item) => {
     item.classList.add("active");
@@ -126,7 +126,7 @@ const SidebarContent = props => {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     activeMenu();
   }, [activeMenu]);
 
@@ -141,79 +141,78 @@ const SidebarContent = props => {
 
   return (
     <React.Fragment>
-    <SimpleBar className="h-100" ref={ref}>
-      <div id="sidebar-menu">
-        <ul className="metismenu list-unstyled" id="side-menu">
-          <li className="menu-title">{props.t("Menu")} </li>
-          <li>
-            <Link to="/dashboard">
-              <i className="bx bx-home-circle"></i>
-              <span>{props.t("Dashboards")}</span>
-            </Link>
-          
-          </li>
+      <SimpleBar className="h-100" ref={ref}>
+        <div id="sidebar-menu">
+          <ul className="metismenu list-unstyled" id="side-menu">
+            <li className="menu-title">{props.t("Menu")} </li>
+            <li>
+              <Link to="/dashboard">
+                <i className="bx bx-home-circle"></i>
+                <span>{props.t("Dashboards")}</span>
+              </Link>
+            </li>
 
-          <li className="menu-title">{props.t("Pages")}</li>
+            <li className="menu-title">{props.t("Pages")}</li>
 
-          <li>
-            <Link to="/faculties" >
-              <i className="bx bx-chalkboard"></i>
-              <span>{props.t("Faculties")}</span>
-            </Link>
-          </li>
+            <li>
+              <Link to="/faculties">
+                <i className="bx bx-chalkboard"></i>
+                <span>{props.t("Faculties")}</span>
+              </Link>
+            </li>
 
-          <li>
-            <Link to="#" >
-              <i className="bx bx-calendar"></i>
-              <span>{props.t("Shifts")}</span>
-            </Link>
-          </li>
+            <li>
+              <Link to="/shifts">
+                <i className="bx bx-brightness-half"></i>
+                <span>{props.t("Shifts")}</span>
+              </Link>
+            </li>
 
-          <li>
-            <Link to="#" >
-              <i className="bx bx-buildings"></i>
-              <span>{props.t("Classes")}</span>
-            </Link>
-          </li>
+            <li>
+              <Link to="/classes">
+                <i className="bx bx-buildings"></i>
+                <span>{props.t("Classes")}</span>
+              </Link>
+            </li>
 
-          <li>
-            <Link to="#" >
-              <i className="bx bxs-book"></i>
-              <span>{props.t("Courses")}</span>
-            </Link>
-          </li>
+            <li>
+              <Link to="/courses">
+                <i className="bx bxs-book"></i>
+                <span>{props.t("Courses")}</span>
+              </Link>
+            </li>
 
-          <li>
-            <Link to="#" >
-              <i className="bx bxs-user-voice"></i>
-              <span>{props.t("Teachers")}</span>
-            </Link>
-          </li>
+            <li>
+              <Link to="/teachers">
+                <i className="bx bxs-user-voice"></i>
+                <span>{props.t("Teachers")}</span>
+              </Link>
+            </li>
 
-          <li>
-            <Link to="#" >
-              <i className="bx bxs-graduation"></i>
-              <span>{props.t("Students")}</span>
-            </Link>
-          </li>
+            <li>
+              <Link to="/students">
+                <i className="bx bxs-graduation"></i>
+                <span>{props.t("Students")}</span>
+              </Link>
+            </li>
 
-          <li>
-            <Link to="#" >
-              <i className="bx bxs-pen"></i>
-              <span>{props.t("Enrollments")}</span>
-            </Link>
-          </li>
+            <li>
+              <Link to="/enrollments">
+                <i className="bx bxs-pen"></i>
+                <span>{props.t("Enrollments")}</span>
+              </Link>
+            </li>
 
-          <li>
-            <Link to="#" >
-              <i className="bx bx-command"></i>
-              <span>{props.t("Administrations")}</span>
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </SimpleBar>
-  </React.Fragment>
+            <li>
+              <Link to="/administrations">
+                <i className="bx bx-command"></i>
+                <span>{props.t("Administrations")}</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </SimpleBar>
+    </React.Fragment>
   );
 };
 
