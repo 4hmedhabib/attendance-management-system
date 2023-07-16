@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 30
+    },
+    "auditLog": "/Users/ahmedhabib/Documents/Development/Web Development/Projects/attendance-management-system/api/src/utils/debug/.3c9764acefd6c56b4ea501b0a53dc659dad60fa4-audit.json",
+    "files": [
+        {
+            "date": 1689517950665,
+            "name": "/Users/ahmedhabib/Documents/Development/Web Development/Projects/attendance-management-system/api/src/utils/debug/2023-07-16.log",
+            "hash": "c65f2b78dc46d6e36b2bb94fe3f812a7f844d4d4d3d69e9993344dafbcf6d4a7"
+        }
+    ],
+    "hashType": "sha256"
+}
