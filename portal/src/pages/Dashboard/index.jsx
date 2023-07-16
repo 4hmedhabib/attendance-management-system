@@ -1,16 +1,13 @@
 import React from "react";
-import {
-  Container
-} from "reactstrap";
+import { Container } from "reactstrap";
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 //i18n
 import { withTranslation } from "react-i18next";
-const Dashboard = props => {
-
+const Dashboard = (props) => {
   //meta title
-  document.title = "Dashboard | Skote - React Admin & Dashboard Template";
+  document.title = "Dashboard | FFU - ATMS & Dashboard Template";
 
   return (
     <React.Fragment>
@@ -21,11 +18,10 @@ const Dashboard = props => {
             title={props.t("Dashboards")}
             breadcrumbItem={props.t("Dashboard")}
           />
-          </Container>
-          </div>
+        </Container>
+      </div>
     </React.Fragment>
   );
 };
-
 
 export default withTranslation()(Dashboard);
