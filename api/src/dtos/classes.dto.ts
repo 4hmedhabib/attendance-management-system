@@ -7,6 +7,7 @@ import {
   IsDateString,
   IsNotEmpty,
   IsNotEmptyObject,
+  IsNumber,
   IsString,
   MaxLength,
   MinLength,
@@ -367,4 +368,88 @@ export class CreateClassSemesterCourseAttendancesDto {
   @ValidateNested()
   @Type(() => CreateClassSemesterCourseAttendancePayload)
   payload: CreateClassSemesterCourseAttendancePayload;
+}
+
+export class GetClassSemesterCourseAttendancePayload {
+  @IsBoolean({ message: "Is min view must be a boolean" })
+  @IsNotEmpty({ message: "Is min view is required" })
+  isMiniView: boolean;
+
+  @IsString()
+  @IsNotEmpty({ message: "class slug is required" })
+  @MinLength(3, {
+    message: "class slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "class slug must be shorter than or equal to 62 characters",
+  })
+  classSlug: string;
+
+  @IsString()
+  @IsNotEmpty({ message: "semester slug is required" })
+  @MinLength(3, {
+    message: "semester slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "semester slug must be shorter than or equal to 62 characters",
+  })
+  semesterSlug: string;
+
+  @IsString({ message: "course slug must be a string" })
+  @IsNotEmpty({ message: "course slug is required" })
+  @MinLength(3, {
+    message: "course slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "course slug must be shorter than or equal to 62 characters",
+  })
+  courseSlug: string;
+
+  @IsString({ message: "teacher id must be a string" })
+  @IsNotEmpty({ message: "teacher id is required" })
+  @MinLength(3, {
+    message: "teacher id must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "teacher id must be shorter than or equal to 62 characters",
+  })
+  teacherId: string;
+
+  @IsDateString({}, { message: "start date must be a date" })
+  @IsNotEmpty({ message: "start date is required" })
+  startDate: string;
+
+  @IsDateString({}, { message: "end date must be a date" })
+  @IsNotEmpty({ message: "end date is required" })
+  endDate: string;
+}
+
+export class GetClassSemesterCourseAttendancesDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => GetClassSemesterCourseAttendancePayload)
+  payload: GetClassSemesterCourseAttendancePayload;
+}
+
+export class UpdateClassSemesterCourseAttendancePayload {
+  @IsNumber({}, { message: "attendance id must be a number" })
+  @IsNotEmpty({ message: "attendance id is required" })
+  attendanceId: number;
+
+  @IsString({ message: "status slug must be a string" })
+  @IsNotEmpty({ message: "status slug is required" })
+  @MinLength(3, {
+    message: "status slug must be longer than or equal to 3 characters",
+  })
+  @MaxLength(62, {
+    message: "status slug must be shorter than or equal to 62 characters",
+  })
+  statusSlug: string;
+}
+
+export class UpdateClassSemesterCourseAttendancesDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => UpdateClassSemesterCourseAttendancePayload)
+  payload: UpdateClassSemesterCourseAttendancePayload;
 }

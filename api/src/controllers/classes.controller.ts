@@ -5,12 +5,16 @@ import {
   CreateClassSemesterDto,
   DeleteClassBySlugDto,
   GetClassBySlugDto,
+  GetClassSemesterCourseAttendancesDto,
   GetClassSemesterCoursesBySlugDto,
   GetClassSemestersBySlugDto,
   GetClassesDto,
   UpdateClassDto,
+  UpdateClassSemesterCourseAttendancePayload,
+  UpdateClassSemesterCourseAttendancesDto,
 } from "../dtos";
 import {
+  IAttendances,
   IClass,
   IClassSemester,
   IRBCreateClass,
@@ -222,6 +226,51 @@ class ClassController {
       res.status(200).json({
         data: createClassSemesterCourseAttendancesData,
         message: "Course Attendances Successfully created!",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getClassSemesterCourseAttendances = async (
+    req: Request<any, any, GetClassSemesterCourseAttendancesDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const payload = req.body.payload;
+      const isMiniView = req.body.payload.isMiniView;
+
+      const findOneClassSemestersData: IAttendances[] =
+        await this.class.findClassSemesterCoursesAttendances(
+          payload,
+          isMiniView
+        );
+
+      res.status(200).json({
+        data: findOneClassSemestersData,
+        message: "Class Semesters successfully loaded",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateClassSemesterCourseAttendances = async (
+    req: Request<any, any, UpdateClassSemesterCourseAttendancesDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const payload: UpdateClassSemesterCourseAttendancePayload =
+        req.body.payload;
+
+      const updateClassSemesterCoursesAttendanceData =
+        await this.class.updateClassSemesterCoursesAttendance(payload);
+
+      res.status(200).json({
+        data: updateClassSemesterCoursesAttendanceData,
+        message: "Attendance Successfully updated!",
       });
     } catch (error) {
       next(error);

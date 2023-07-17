@@ -20,6 +20,7 @@ export const ValidationMiddleware = (
   forbidNonWhitelisted = true
 ): RequestHandler => {
   return (req, res, next) => {
+    console.log(req.body);
     validate(plainToInstance(type, req[value]), {
       skipMissingProperties,
       whitelist,

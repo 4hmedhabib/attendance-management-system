@@ -5,17 +5,22 @@ import {
   CreateClassSemesterCourseAttendancePayload,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
+  GetClassSemesterCourseAttendancePayload,
   UpdateClassData,
+  UpdateClassSemesterCourseAttendancePayload,
 } from "../dtos/classes.dto";
 import { HttpException } from "../exceptions/httpException";
 import {
+  IAttendanceStatus,
+  IAttendances,
   IClass,
   IClassSemester,
   IClassSemesterCourses,
+  IEnrollment,
   IRPCreateClassPayload,
   IShift,
 } from "../interfaces";
-import { logger } from "../utils";
+import { logger, setEndDay, setStartDay } from "../utils";
 import { IFaculty } from "./../interfaces/faculties.interface";
 
 const prisma = new PrismaClient();
@@ -28,6 +33,9 @@ const semester_coursesDB = prisma.semester_courses;
 const coursesDB = prisma.courses;
 const teachersDB = prisma.teachers;
 const attendancesDB = prisma.attendances;
+const enrollmentsDB = prisma.enrollments;
+const attendancestatusesDB = prisma.attendacestatuses;
+const usersDB = prisma.users;
 
 @Service()
 class ClassService {
@@ -765,7 +773,7 @@ class ClassService {
   public async createClassSemesterCourseAttendances(
     classSemesterCourseAttendancesData: CreateClassSemesterCourseAttendancePayload
   ): Promise<any> {
-    const transaction = await prisma.$transaction(async (trx) => {
+    const results = await prisma.$transaction(async (trx) => {
       let alreadyExits: number = 0;
       let totalCreated: number = 0;
       let totalErrors: number = 0;
@@ -810,11 +818,8 @@ class ClassService {
       }
 
       const currentDate = new Date();
-      const startDate = new Date(currentDate);
-      startDate.setHours(0, 0, 0, 0); // Set start date to the beginning of the day
-
-      const endDate = new Date(currentDate);
-      endDate.setHours(23, 59, 59, 999); // Set end date to the end of the day
+      const startDate = setStartDay(currentDate);
+      const endDate = setEndDay(currentDate);
 
       await Promise.allSettled(
         classByCourse.enrollments.map(async (enrollment) => {
@@ -823,8 +828,8 @@ class ClassService {
               where: {
                 enrollmentid: enrollment.enrollment_id,
                 AND: [
-                  { enrollment: { enrollment_date: { gte: endDate } } },
-                  //   { enrollment: { enrollment_date: { lt: startDate } } },
+                  { attendancedate: { gte: startDate } },
+                  { attendancedate: { lte: endDate } },
                 ],
               },
               select: { attendancedate: true, attendanceid: true },
@@ -875,17 +880,238 @@ class ClassService {
           } catch (err) {
             logger.error(JSON.stringify(err));
 
-            throw new Error("");
+            throw new Error(
+              err.message || "Something went wrong please contact support team"
+            );
           }
         })
       );
 
-      return results;
+      return {
+        totalStudents: classByCourse._count.enrollments,
+        totalCreated,
+        alreadyExits,
+        totalErrors,
+      };
     });
 
-    return {
-      transaction,
-    };
+    return results;
+  }
+
+  public async findClassSemesterCoursesAttendances(
+    payload: GetClassSemesterCourseAttendancePayload,
+    isMiniView: boolean
+  ): Promise<IAttendances[]> {
+    let { classSlug, courseSlug, semesterSlug, teacherId } = payload;
+
+    try {
+      const findClass = await classesDB.findUnique({
+        where: { classslug: classSlug },
+        select: { classid: true, classslug: true, classname: true },
+      });
+
+      if (!findClass)
+        throw new HttpException(409, `This class ${classSlug} not found`);
+
+      let findSemester: { semesterid: number } = await semestersDB.findUnique({
+        where: { semesterslug: semesterSlug || "" },
+        select: { semesterid: true },
+      });
+
+      if (!findSemester)
+        throw new HttpException(409, `semester ${semesterSlug} not found`);
+
+      let findCourse: { courseid: number } = await coursesDB.findUnique({
+        where: { courseslug: courseSlug || "" },
+        select: { courseid: true },
+      });
+
+      if (!findCourse)
+        throw new HttpException(409, `course ${courseSlug} not found`);
+
+      let findTeacher: { teacherid: number } = await teachersDB.findUnique({
+        where: { techid: teacherId || "" },
+        select: { teacherid: true },
+      });
+
+      if (!findTeacher)
+        throw new HttpException(409, `teacher ${teacherId} not found`);
+
+      const enrollments: IEnrollment[] = await enrollmentsDB.findMany({
+        where: {
+          courseid: findCourse.courseid,
+          classid: findClass.classid,
+          teacherid: findTeacher.teacherid,
+          semesterid: findSemester.semesterid,
+        },
+        select: { enrollment_id: true },
+      });
+
+      if (enrollments.length <= 0) {
+        throw new HttpException(404, `Sorry!, no students found.`);
+      }
+
+      const startDate = setStartDay(payload.startDate);
+      const endDate = setEndDay(payload.endDate);
+
+      const classSemesterCoursesAttendances: IClassSemesterCourses[] =
+        await attendancesDB.findMany({
+          where: {
+            enrollmentid: {
+              in: enrollments.map((enrollment) => enrollment.enrollment_id),
+            },
+            AND: [
+              { createddate: { gte: startDate ? startDate : undefined } },
+              { createddate: { lte: endDate ? endDate : undefined } },
+            ],
+          },
+          select: {
+            attendanceid: true,
+            attendancedate: true,
+            enrollment: {
+              select: {
+                enrollment_id: true,
+                student: {
+                  select: {
+                    firstname: true,
+                    middlename: true,
+                    lastname: true,
+                    stdid: true,
+                  },
+                },
+                semester_course: !isMiniView
+                  ? {
+                      select: {
+                        course: {
+                          select: {
+                            coursename: true,
+                            courseslug: true,
+                          },
+                        },
+                        teacher: {
+                          select: {
+                            firstname: true,
+                            middlename: true,
+                            lastname: true,
+                            techid: true,
+                          },
+                        },
+                        class_semester: {
+                          select: {
+                            class: {
+                              select: {
+                                classname: true,
+                                classslug: true,
+                              },
+                            },
+                            semester: {
+                              select: {
+                                semestername: true,
+                                semesterslug: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    }
+                  : false,
+              },
+            },
+            status: { select: { statusname: true, statusslug: true } },
+            createdby: !isMiniView
+              ? {
+                  select: {
+                    username: !isMiniView,
+                    firstname: !isMiniView,
+                    middlename: !isMiniView,
+                    lastname: !isMiniView,
+                  },
+                }
+              : false,
+          },
+        });
+
+      return classSemesterCoursesAttendances;
+    } catch (err: any) {
+      logger.error(JSON.stringify(err.message) || err);
+      throw new HttpException(
+        500,
+        err.message ||
+          `Something went wrong creating class, please contact support team.`
+      );
+    }
+  }
+
+  public async updateClassSemesterCoursesAttendance(
+    payload: UpdateClassSemesterCourseAttendancePayload
+  ): Promise<any> {
+    const findUpdatedBy = await usersDB.findUnique({
+      where: {
+        username: "ahmedhabib",
+      },
+      select: {
+        userid: true,
+      },
+    });
+
+    if (!findUpdatedBy) throw new HttpException(409, "User doesn't exist");
+
+    const findAttendance: IAttendances = await attendancesDB.findUnique({
+      where: {
+        attendanceid: payload.attendanceId,
+      },
+      select: {
+        attendanceid: true,
+      },
+    });
+
+    if (!findAttendance)
+      throw new HttpException(409, "Attendance doesn't exist");
+
+    const findStatus: IAttendanceStatus = await attendancestatusesDB.findUnique(
+      {
+        where: {
+          statusslug: payload.statusSlug,
+        },
+        select: {
+          statusid: true,
+          statusslug: true,
+          statusname: true,
+        },
+      }
+    );
+
+    if (!findStatus) throw new HttpException(409, "Status doesn't exist");
+
+    const updateAttendaceData: IAttendances = await attendancesDB.update({
+      where: {
+        attendanceid: findAttendance.attendanceid,
+      },
+      data: {
+        status: { connect: { statusid: findStatus.statusid } },
+        updatedby: { connect: { userid: findUpdatedBy.userid } },
+      },
+      select: {
+        attendanceid: true,
+        attendancedate: true,
+        enrollment: {
+          select: {
+            enrollment_id: true,
+            student: {
+              select: {
+                firstname: true,
+                middlename: true,
+                lastname: true,
+                stdid: true,
+              },
+            },
+          },
+        },
+        status: { select: { statusname: true, statusslug: true } },
+      },
+    });
+
+    return updateAttendaceData;
   }
 }
 
