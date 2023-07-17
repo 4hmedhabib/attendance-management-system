@@ -1,41 +1,4 @@
 /** Product 1 */
-import product1 from "../../assets/images/product/img-1.png";
-import product7 from "../../assets/images/product/Pro-1a.png";
-import product8 from "../../assets/images/product/Pro-1b.png";
-
-/** Product 2 */
-import product2a from "../../assets/images/product/img-2.png";
-import product2b from "../../assets/images/product/Pro-2a.png";
-import product2c from "../../assets/images/product/Pro-2b.png";
-
-/** Product 3 */
-import product3a from "../../assets/images/product/img-3.png";
-import product3b from "../../assets/images/product/Pro-4.png";
-import product3c from "../../assets/images/product/Pro-4a.png";
-
-/** Product 4 */
-import product4a from "../../assets/images/product/img-4.png";
-import product4b from "../../assets/images/product/Pro-12a.png";
-import product4c from "../../assets/images/product/Pro-12b.png";
-
-/** Product 5 */
-import product5a from "../../assets/images/product/img-5.png";
-import product5b from "../../assets/images/product/Pro-8a.png";
-import product5c from "../../assets/images/product/Pro-8b.png";
-
-/** Product 6 */
-import product6a from "../../assets/images/product/img-6.png";
-import product6b from "../../assets/images/product/Pro-17.png";
-import product6c from "../../assets/images/product/Pro-17a.png";
-
-//Import Product Images
-import img1 from "../../assets/images/product/img-1.png";
-import img2 from "../../assets/images/product/img-2.png";
-import img3 from "../../assets/images/product/img-3.png";
-import img4 from "../../assets/images/product/img-4.png";
-import img5 from "../../assets/images/product/img-5.png";
-import img6 from "../../assets/images/product/img-6.png";
-
 
 const productsData = [
   {
@@ -50,7 +13,7 @@ const productsData = [
     isOffer: true,
     offer: 25,
     reviews: 0,
-    subImage: [product1, product7, product8],
+    // subImage: [product1, product7, product8],
     specification: [
       { type: "Category", value: "T-shirt" },
       { type: "Brand", value: "Levis" },
@@ -88,7 +51,7 @@ const productsData = [
     newPrice: 175,
     isOffer: false,
     reviews: 0,
-    subImage: [product2a, product2b, product2c],
+    // subImage: [product2a, product2b, product2c],
     specification: [
       { type: "Category", value: "T-shirt" },
       { type: "Brand", value: "Levis" },
@@ -126,7 +89,7 @@ const productsData = [
     isOffer: true,
     offer: 20,
     reviews: 0,
-    subImage: [product3a, product3b, product3c],
+    // subImage: [product3a, product3b, product3c],
     specification: [
       { type: "Category", value: "T-shirt" },
       { type: "Brand", value: "Levis" },
@@ -162,7 +125,7 @@ const productsData = [
     oldPrice: 150,
     newPrice: 145,
     reviews: 0,
-    subImage: [product4a, product4b, product4c],
+    // subImage: [product4a, product4b, product4c],
     specification: [
       { type: "Category", value: "T-shirt" },
       { type: "Brand", value: "Levis" },
@@ -200,7 +163,7 @@ const productsData = [
     isOffer: true,
     offer: 22,
     reviews: 5,
-    subImage: [product5a, product5b, product5c],
+    // subImage: [product5a, product5b, product5c],
     specification: [
       { type: "Size", value: "S" },
       { type: "Color", value: "Coral" },
@@ -236,7 +199,7 @@ const productsData = [
     isOffer: true,
     offer: 28,
     reviews: 10,
-    subImage: [product6a, product6b, product6c],
+    // subImage: [product6a, product6b, product6c],
     specification: [
       { type: "Category", value: "T-shirt" },
       { type: "Brand", value: "Levis" },
@@ -810,7 +773,7 @@ const productComments = [
 const productListvar = [
   {
     id: 1,
-    img: img1,
+    // img: img1,
     name: "Half sleeve T-shirt",
     color: "Maroon",
     price: "450",
@@ -819,7 +782,7 @@ const productListvar = [
   },
   {
     id: 2,
-    img: img2,
+    // img: img2,
     name: "Light blue T-shirt",
     color: "Light blue",
     price: "225",
@@ -828,7 +791,7 @@ const productListvar = [
   },
   {
     id: 3,
-    img: img3,
+    // img: img3,
     name: "Black Color T-shirt",
     color: "Black",
     price: "152",
@@ -837,7 +800,7 @@ const productListvar = [
   },
   {
     id: 4,
-    img: img4,
+    // img: img4,
     name: "Hoodie (Blue)",
     color: "Blue",
     price: "145",
@@ -846,7 +809,7 @@ const productListvar = [
   },
   {
     id: 5,
-    img: img5,
+    // img: img5,
     name: "Half sleeve T-Shirt",
     color: "Light orange",
     price: "138",
@@ -855,7 +818,7 @@ const productListvar = [
   },
   {
     id: 6,
-    img: img6,
+    // img: img6,
     name: "Green color T-shirt",
     color: "Green",
     price: "152",
@@ -865,14 +828,14 @@ const productListvar = [
 ];
 
 export {
-  productsData,
-  recentProducts,
+  cartData,
   comments,
+  customerData,
   discountData,
   orders,
-  shops,
-  customerData,
-  cartData,
   productComments,
-  productListvar
+  productListvar,
+  productsData,
+  recentProducts,
+  shops,
 };
