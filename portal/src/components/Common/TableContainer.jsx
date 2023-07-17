@@ -1,16 +1,16 @@
-import React, { Fragment } from "react";
 import PropTypes from "prop-types";
+import React, { Fragment } from "react";
 import {
-  useTable,
-  useGlobalFilter,
   useAsyncDebounce,
-  useSortBy,
-  useFilters,
   useExpanded,
+  useFilters,
+  useGlobalFilter,
   usePagination,
+  useSortBy,
+  useTable,
 } from "react-table";
-import { Table, Row, Col, Button, Input } from "reactstrap";
-import { Filter, DefaultColumnFilter } from "./filters";
+import { Button, Col, Input, Row, Table } from "reactstrap";
+import { DefaultColumnFilter } from "./filters";
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -57,7 +57,7 @@ const TableContainer = ({
   isGlobalFilter,
   isAddOptions,
   isAddUserList,
-  handleOrderClicks,
+  handleFacultyClicks,
   handleUserClick,
   handleCustomerClick,
   isAddCustList,
@@ -126,79 +126,41 @@ const TableContainer = ({
             value={pageSize}
             onChange={onChangeInSelect}
           >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
+            {[50, 100, 150, 200, 250].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 Show {pageSize}
               </option>
             ))}
           </select>
         </Col>
-        {/* {isGlobalFilter && (
-          <GlobalFilter
-            preGlobalFilteredRows={preGlobalFilteredRows}
-            globalFilter={state.globalFilter}
-            setGlobalFilter={setGlobalFilter}
-          />
-        )} */}
-        {isAddOptions && (
-          <Col sm="11">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="success"
-                className="btn-rounded  mb-2 me-2"
-                onClick={handleOrderClicks}
-              >
-                <i className="mdi mdi-plus me-1" />
-                Add New Order
-              </Button>
-            </div>
-          </Col>
-        )}
-        {isAddUserList && (
-          <Col sm="11">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="primary"
-                className="btn mb-2 me-2"
-                onClick={handleUserClick}
-              >
-                <i className="mdi mdi-plus-circle-outline me-1" />
-                Create New User
-              </Button>
-            </div>
-          </Col>
-        )}
-        {isAddCustList && (
-          <Col sm="11">
-            <div className="text-sm-end">
-              <Button
-                type="button"
-                color="success"
-                className="btn-rounded mb-2 me-2"
-                onClick={handleCustomerClick}
-              >
-                <i className="mdi mdi-plus me-1" />
-                New Customers
-              </Button>
-            </div>
-          </Col>
-        )}
+
+        <Col sm="11">
+          <div className="text-sm-end">
+            <Button
+              type="button"
+              color="success"
+              className="btn-rounded  mb-2 me-2"
+              onClick={handleFacultyClicks}
+            >
+              <i className="mdi mdi-plus me-1" />
+              Add New Faculty
+            </Button>
+          </div>
+        </Col>
       </Row>
 
-      <div className="table-responsive react-table">
+      <div className="table-responsive react-table overflow-x-auto">
         <Table bordered hover {...getTableProps()} className={className}>
           <thead className="table-light table-nowrap">
             {headerGroups.map((headerGroup) => (
               <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th key={column.id}>
-                    <div className="mb-2" {...column.getSortByToggleProps()}>
-                      {column.render("Header")}
-                      {generateSortingIndicator(column)}
-                    </div>
-                    <Filter column={column} />
+                  <th className="pt-2" key={column.id}>
+                    {/* <div className="m-0 p-0" {...column.getSortByToggleProps()}> */}
+                    {column.render("Header")}
+                    {/* {generateSortingIndicator(column)} */}
+                    {/* </div> */}
+                    {/* <Filter column={column} /> */}
                   </th>
                 ))}
               </tr>
