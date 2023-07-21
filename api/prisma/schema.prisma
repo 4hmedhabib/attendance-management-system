@@ -23,6 +23,7 @@ model users {
     lastchangepwd  DateTime?
     isstudent      Boolean   @default(false)
     isteacher      Boolean   @default(false)
+    isadmin        Boolean   @default(false)
     createdat      DateTime  @default(now())
     updatedat      DateTime  @updatedAt
 
@@ -53,8 +54,8 @@ model users {
     createdcourses courses[] @relation("CREATED_COURSES")
     updatedcourses courses[] @relation("UPDATED_COURSES")
 
-    facultymanager faculties? @relation("FACULTY_MANAGER")
-    facultydeputy  faculties? @relation("FACULTY_DEPUTY")
+    facultymanager faculties[] @relation("FACULTY_MANAGER")
+    facultydeputy  faculties[] @relation("FACULTY_DEPUTY")
 
     assignedcoursesemesters semester_courses[]
 
@@ -97,10 +98,10 @@ model faculties {
 
     // RELATIONS
     manager   users @relation("FACULTY_MANAGER", fields: [managerid], references: [userid])
-    managerid Int   @unique
+    managerid Int
 
     deputy   users? @relation("FACULTY_DEPUTY", fields: [deputyid], references: [userid])
-    deputyid Int?   @unique // relation scalar field (used in the `@relation` attribute above)
+    deputyid Int? // relation scalar field (used in the `@relation` attribute above)
 
     createdby   users @relation("CREATED_FACULTIES", fields: [createdbyid], references: [userid])
     createdbyid Int
