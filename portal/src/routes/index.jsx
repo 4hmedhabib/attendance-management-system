@@ -12,7 +12,7 @@ import Register from "../pages/Authentication/Register";
 
 // Dashboard
 import Dashboard from "../pages/Dashboard/index";
-import Faculties, { CreateFaculty } from "../pages/Faculties";
+import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
 import Shifts from "../pages/Shifts";
 
 const authProtectedRoutes = [
@@ -21,7 +21,7 @@ const authProtectedRoutes = [
   { path: "/classes", component: <Dashboard /> },
   { path: "/faculties", component: <Faculties /> },
   { path: "/faculties/create", component: <CreateFaculty /> },
-  { path: "/faculties/detail", component: <CreateFaculty /> },
+  { path: "/faculties/detail", component: <FacultyDetail /> },
   { path: "/courses", component: <Dashboard /> },
   { path: "/teachers", component: <Dashboard /> },
   { path: "/students", component: <Dashboard /> },
