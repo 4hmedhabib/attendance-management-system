@@ -35,7 +35,7 @@ const useApiCall = (key = "repoData", resourceUrl, _data, enabled = true) => {
     return response.data;
   };
 
-  const { data, isLoading, isError } = useQuery([key], fetchAll, {
+  const { data, isLoading, isError, refetch } = useQuery([key], fetchAll, {
     enabled: enabled,
   });
 
@@ -68,6 +68,7 @@ const useApiCall = (key = "repoData", resourceUrl, _data, enabled = true) => {
     create: createMutation.mutateAsync,
     update: updateMutation.mutateAsync,
     remove: removeMutation.mutateAsync,
+    refetch,
   };
 };
 
