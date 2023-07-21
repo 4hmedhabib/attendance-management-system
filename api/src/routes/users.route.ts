@@ -3,8 +3,8 @@ import { UserController } from "../controllers";
 import {
   CreateUserDto,
   DeleteUserBySlugDto,
-  GetFacultiesDto,
   GetUserBySlugDto,
+  GetUsersDto,
   UpdateUserDto,
 } from "../dtos";
 import { IRoutes } from "../interfaces/";
@@ -20,20 +20,20 @@ class UserRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
-      ValidationMiddleware(GetFacultiesDto),
+    this.router.post(
+      `${this.path}/list`,
+      ValidationMiddleware(GetUsersDto),
       this.user.getUsers
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetUserBySlugDto),
       this.user.getUserBySlug
     );
 
     this.router.post(
-      `${this.path}`,
+      `${this.path}/detail`,
       ValidationMiddleware(CreateUserDto),
       this.user.createUser
     );
