@@ -1,9 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardBody, Table } from "reactstrap";
+import { Card, CardBody, Col, Spinner, Table } from "reactstrap";
+import ResError from "../../../components/Common/ResError";
 
-const Classes = ({ facultySlug }) => {
+const Classes = ({
+  classesData,
+  classesErrMsg,
+  classesIsLoading,
+  classesIsErr,
+}) => {
   const [classes, setClasses] = useState([]);
+
+  useEffect(() => {
+    if (classesData) {
+      setClasses(classesData.data);
+    }
+  }, [classesData]);
+
+  if (classesIsLoading) {
+    return (
+      <div className="page-content ">
+        <Col lg={12} className="text-center mt-5">
+          <Spinner />
+        </Col>
+      </div>
+    );
+  } else if (classesIsErr) {
+    <ResError error={classesErrMsg} />;
+  }
 
   return (
     <Card>
@@ -21,19 +45,21 @@ const Classes = ({ facultySlug }) => {
               </tr>
             </thead>
             <tbody>
-              {classes.map((asset, key) => (
-                <tr key={key}>
+              {classes?.map((classDetail, idx) => (
+                <tr key={idx}>
                   <th scope="row">
                     <div className="d-flex align-items-center">
-                      <span>{asset.title}</span>
+                      <span>{classDetail?.classname}</span>
                     </div>
                   </th>
                   <td>
-                    <h5 className="font-size-14 mb-1">{asset.title}</h5>
+                    <h5 className="font-size-14 mb-1">
+                      {classDetail?.shift?.shiftname}
+                    </h5>
                   </td>
                   <td>
                     <h5 className="font-size-14 mb-1">
-                      {parseInt(asset.loansRate * 100)}
+                      {classDetail?._count?.students}
                     </h5>
                   </td>
                   <td style={{ width: "120px" }}>
