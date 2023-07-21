@@ -6,6 +6,7 @@ import {
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   GetClassSemesterCourseAttendancePayload,
+  GetClassesFilters,
   UpdateClassData,
   UpdateClassSemesterCourseAttendancePayload,
 } from "../dtos/classes.dto";
@@ -39,8 +40,16 @@ const usersDB = prisma.users;
 
 @Service()
 class ClassService {
-  public async findAllClass(isMiniView: boolean): Promise<IClass[]> {
+  public async findAllClass(
+    isMiniView: boolean,
+    filters: GetClassesFilters
+  ): Promise<IClass[]> {
     const classes: IClass[] = await classesDB.findMany({
+      where: {
+        faculty: {
+          facultyslug: filters.facultySlug ?? undefined,
+        },
+      },
       select: {
         classid: true,
         classname: true,
@@ -55,14 +64,12 @@ class ClassService {
               },
             }
           : false,
-        shift: !isMiniView
-          ? {
-              select: {
-                shiftslug: !isMiniView,
-                shiftname: !isMiniView,
-              },
-            }
-          : false,
+        shift: {
+          select: {
+            shiftslug: true,
+            shiftname: true,
+          },
+        },
         faculty: !isMiniView
           ? {
               select: {
@@ -71,14 +78,12 @@ class ClassService {
               },
             }
           : false,
-        _count: !isMiniView
-          ? {
-              select: {
-                semesters: true,
-                students: true,
-              },
-            }
-          : false,
+        _count: {
+          select: {
+            semesters: true,
+            students: true,
+          },
+        },
       },
     });
 

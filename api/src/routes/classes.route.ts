@@ -27,25 +27,25 @@ class ClassRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
+    this.router.post(
+      `${this.path}/list`,
       ValidationMiddleware(GetClassesDto),
       this.class.getClasses
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetClassBySlugDto),
       this.class.getClassBySlug
     );
 
     this.router.post(
-      `${this.path}`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateClassDto),
       this.class.createClass
     );
 
-    this.router.put(
+    this.router.post(
       `${this.path}/update`,
       ValidationMiddleware(UpdateClassDto),
       this.class.updateClass
