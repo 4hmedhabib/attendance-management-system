@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Fragment } from "react";
 import {
-  useAsyncDebounce,
   useExpanded,
   useFilters,
   useGlobalFilter,
@@ -9,61 +8,17 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
-import { Button, Col, Input, Row, Table } from "reactstrap";
+import { Button, Col, Input, Row, Spinner, Table } from "reactstrap";
 import { DefaultColumnFilter } from "./filters";
-
-// Define a default UI for filtering
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-}) {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = React.useState(globalFilter);
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 200);
-
-  return (
-    <Col sm={4}>
-      <div className="search-box me-2 mb-2 d-inline-block">
-        <div className="position-relative">
-          <label htmlFor="search-bar-0" className="search-label">
-            <span id="search-bar-0-label" className="sr-only">
-              Search this table
-            </span>
-            <input
-              onChange={(e) => {
-                setValue(e.target.value);
-                onChange(e.target.value);
-              }}
-              id="search-bar-0"
-              type="text"
-              className="form-control"
-              placeholder={`${count} records...`}
-              value={value || ""}
-            />
-          </label>
-          <i className="bx bx-search-alt search-icon"></i>
-        </div>
-      </div>
-    </Col>
-  );
-}
 
 const TableContainer = ({
   columns,
   data,
-  isGlobalFilter,
-  isAddOptions,
-  isAddUserList,
   handleFacultyClicks,
-  handleUserClick,
-  handleCustomerClick,
-  isAddCustList,
   customPageSize,
   className,
   customPageSizeOptions,
+  isLoading,
 }) => {
   const {
     getTableProps,
@@ -79,9 +34,6 @@ const TableContainer = ({
     nextPage,
     previousPage,
     setPageSize,
-    state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -105,10 +57,6 @@ const TableContainer = ({
     usePagination
   );
 
-  const generateSortingIndicator = (column) => {
-    return column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : "";
-  };
-
   const onChangeInSelect = (event) => {
     setPageSize(Number(event.target.value));
   };
@@ -120,7 +68,11 @@ const TableContainer = ({
   return (
     <Fragment>
       <Row className="mb-2">
-        <Col md={customPageSizeOptions ? 2 : 1}>
+        <Col
+          xs="6"
+          sm={customPageSizeOptions ? 3 : 3}
+          md={customPageSizeOptions ? 3 : 2}
+        >
           <select
             className="form-select"
             value={pageSize}
@@ -134,7 +86,7 @@ const TableContainer = ({
           </select>
         </Col>
 
-        <Col sm="11">
+        <Col xs="6" sm="9" md="10">
           <div className="text-sm-end">
             <Button
               type="button"
@@ -150,42 +102,48 @@ const TableContainer = ({
       </Row>
 
       <div className="table-responsive react-table overflow-x-auto">
-        <Table bordered hover {...getTableProps()} className={className}>
-          <thead className="table-light table-nowrap">
-            {headerGroups.map((headerGroup) => (
-              <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th className="pt-2" key={column.id}>
-                    {/* <div className="m-0 p-0" {...column.getSortByToggleProps()}> */}
-                    {column.render("Header")}
-                    {/* {generateSortingIndicator(column)} */}
-                    {/* </div> */}
-                    {/* <Filter column={column} /> */}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
+        {isLoading ? (
+          <div className="d-flex justify-content-center my-5">
+            <Spinner />
+          </div>
+        ) : (
+          <Table ç hover {...getTableProps()} className={className}>
+            <thead className="table-light table-nowrap">
+              {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th className="pt-2" key={column.id}>
+                      {/* <div className="m-0 p-0" {...column.getSortByToggleProps()}> */}
+                      {column.render("Header")}
+                      {/* {generateSortingIndicator(column)} */}
+                      {/* </div> */}
+                      {/* <Filter column={column} /> */}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
 
-          <tbody {...getTableBodyProps()}>
-            {page.map((row) => {
-              prepareRow(row);
-              return (
-                <Fragment key={row.getRowProps().key}>
-                  <tr>
-                    {row.cells.map((cell) => {
-                      return (
-                        <td key={cell.id} {...cell.getCellProps()}>
-                          {cell.render("Cell")}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                </Fragment>
-              );
-            })}
-          </tbody>
-        </Table>
+            <tbody {...getTableBodyProps()}>
+              {page.map((row) => {
+                prepareRow(row);
+                return (
+                  <Fragment key={row.getRowProps().key}>
+                    <tr>
+                      {row.cells.map((cell) => {
+                        return (
+                          <td key={cell.id} {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
+        )}
       </div>
 
       <Row className="justify-content-md-end justify-content-center align-items-center">
