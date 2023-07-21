@@ -37,7 +37,7 @@ const CreateFaculty = () => {
     data: usersData,
     isError: usersIsErr,
     isLoading: usersIsLoading,
-  } = useApiCall(urls.users(), {
+  } = useApiCall("USERS_FACULTY_CREATE", urls.users(), {
     payload: {
       isMiniView: true,
       filters: {
@@ -50,12 +50,12 @@ const CreateFaculty = () => {
     create: createFaculty,
     isError: facultiesIsErr,
     isLoading: facultiesIsLoading,
-  } = useApiCall(urls.createFaculty(), {}, false);
+  } = useApiCall("CREATE_FACULTY", urls.createFaculty(), {}, false);
 
   const formik = useFormik({
     initialValues: {
-      facultyName: "Business Administrator",
-      description: "Lorem ipsum dolor sit amet.",
+      facultyName: "",
+      description: "",
       manager: undefined,
       deputy: undefined,
     },
