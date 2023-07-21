@@ -6,7 +6,7 @@ import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
 import "reflect-metadata";
-import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from "./config";
+import { LOG_FORMAT, NODE_ENV, PORT } from "./config";
 import { IRoutes } from "./interfaces";
 import { ErrorMiddleware } from "./middlewares";
 import { logger, stream } from "./utils";
@@ -39,9 +39,14 @@ export class App {
     return this.app;
   }
 
+  // Set up a specific CORS policy
+  corsOptions = {
+    origin: "*",
+  };
+
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT!, { stream }));
-    this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
+    this.app.use(cors(this.corsOptions));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
