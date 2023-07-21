@@ -15,7 +15,6 @@ export default {
   deleteFaculty: function () {
     return `${this.api}/faculties/delete`;
   },
-
   users: function () {
     return `${this.api}/users/list`;
   },
@@ -46,5 +45,21 @@ export default {
   },
   deleteShift: function () {
     return `${this.api}/shifts/delete`;
+  },
+
+  classes: function () {
+    return `${this.api}/classes/list`;
+  },
+  classDetail: function () {
+    return `${this.api}/classes/detail`;
+  },
+  createClass: function () {
+    return `${this.api}/classes/create`;
+  },
+  updateClass: function () {
+    return `${this.api}/classes/update`;
+  },
+  deleteClass: function () {
+    return `${this.api}/classes/delete`;
   },
 };
