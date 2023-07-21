@@ -128,10 +128,13 @@ class GetFacultyBySlugPayload {
   isMiniView: boolean;
 }
 
+
 export class GetFacultiesBySlugPayload {
   @IsBoolean({ message: "Is min view must be a boolean" })
   @IsNotEmpty({ message: "Is min view is required" })
   isMiniView: boolean;
+
+
 }
 
 export class GetFacultiesDto {
