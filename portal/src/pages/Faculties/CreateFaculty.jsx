@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Select from "react-select";
 import {
@@ -24,6 +24,7 @@ import urls from "../../api/urls";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import useApiCall from "../../hooks/apiHook";
 import { createFacultySchema } from "../../validations/faculties";
+import ResError from "../../components/Common/ResError";
 
 const CreateFaculty = () => {
   //meta title
@@ -37,19 +38,36 @@ const CreateFaculty = () => {
     data: usersData,
     isError: usersIsErr,
     isLoading: usersIsLoading,
-  } = useApiCall("USERS_FACULTY_CREATE", urls.users(), {
-    payload: {
-      isMiniView: true,
-      filters: {
-        isAdmin: true,
+    refetch: usersRefetch,
+  } = useApiCall(
+    "USERS_FACULTY_CREATE",
+    urls.users(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          isAdmin: true,
+        },
       },
     },
-  });
+    false
+  );
+
+  const onRefresh = useCallback(() => {
+    usersRefetch({
+      payload: { isMiniView: false },
+    });
+  }, []);
+
+  useEffect(() => {
+    onRefresh();
+  }, [onRefresh]);
 
   const {
     create: createFaculty,
     isError: facultiesIsErr,
     isLoading: facultiesIsLoading,
+    errMsg: userErrMsg,
   } = useApiCall("CREATE_FACULTY", urls.createFaculty(), {}, false);
 
   const formik = useFormik({
