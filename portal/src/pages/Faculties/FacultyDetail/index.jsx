@@ -1,9 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, CardBody, Col, Container, Row, Spinner } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Modal,
+  Row,
+  Spinner,
+} from "reactstrap";
 
 //import images
 import { useFormik } from "formik";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import slugify from "slugify";
 import urls from "../../../api/urls";
@@ -30,10 +38,14 @@ const FacultyDetail = () => {
     );
   }
 
+  const navigate = useNavigate();
+
   const [faculty, setFaculty] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [error, setErrors] = useState(null);
+  const [modal_backdrop, setDeleteModal] = useState(false);
 
   const {
     data: facultyData,
@@ -102,6 +114,20 @@ const FacultyDetail = () => {
     false
   );
 
+  const { remove: deleteFaculty } = useApiCall(
+    "DELETE_SHIFT",
+    urls.deleteFaculty(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          shiftSlug: state.shiftSlug,
+        },
+      },
+    },
+    false
+  );
+
   useEffect(() => {
     if (facultyData) {
       setFaculty(facultyData.data);
@@ -133,6 +159,15 @@ const FacultyDetail = () => {
     });
   }, []);
 
+  function removeBodyCss() {
+    document.body.classList.add("no_padding");
+  }
+
+  const toggleDeleteModal = () => {
+    setDeleteModal(!modal_backdrop);
+    removeBodyCss();
+  };
+
   useEffect(() => {
     let subscribed = true;
     if (subscribed) {
@@ -142,7 +177,7 @@ const FacultyDetail = () => {
     () => {
       subscribed = false;
     };
-  }, [onRefresh]);
+  }, []);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -212,6 +247,44 @@ const FacultyDetail = () => {
     setIsEdit(!isEdit);
   };
 
+  const onDelete = async () => {
+    toast.loading("Please wait a few minutes...", {
+      toastId: "deleteFaculty",
+    });
+
+    setIsDeleting(true);
+    await deleteFaculty({
+      payload: { facultySlug: faculty.facultyslug },
+    })
+      .then((res) => {
+        setErrors(null);
+
+        toast.update("deleteFaculty", {
+          isLoading: false,
+          type: "success",
+          render: "Successfully Faculty Deleted: " + faculty?.facultyname,
+          autoClose: 3000,
+          closeOnClick: true,
+        });
+        setDeleteModal(false);
+        navigate("/faculties");
+        setIsDeleting(false);
+      })
+      .catch((err) => {
+        toast.update("deleteFaculty", {
+          isLoading: false,
+          type: "error",
+          autoClose: 5000,
+          render: err?.response?.data?.message ?? "Something went wrong!",
+          closeOnClick: true,
+        });
+        console.log(err.response.data.message);
+        setErrors(err?.response?.data?.message ?? err.message);
+        setDeleteModal(false);
+        setIsDeleting(false);
+      });
+  };
+
   if (facultyIsLoading) {
     return (
       <div className="page-content ">
@@ -242,6 +315,7 @@ const FacultyDetail = () => {
           <Row>
             <Col lg={12}>
               {error && <ResError error={error} />}
+              {facultyIsErr && <ResError error={facultyErrMsg} />}
               <Card className="mx-n4 mt-n4 bg-info bg-white">
                 <CardBody>
                   <div className="text-center mb-4">
@@ -258,6 +332,17 @@ const FacultyDetail = () => {
                       >
                         <i className="mdi mdi-reload align-baseline me-1"></i>
                         Refresh
+                      </button>
+                      <button
+                        className="btn btn-danger d-flex justify-content-center align-items-center"
+                        type="button"
+                        onClick={() => {
+                          toggleDeleteModal();
+                        }}
+                        data-toggle="modal"
+                      >
+                        <i className="bx bx-trash align-baseline me-1"></i>
+                        Delete
                       </button>
                       <button
                         type="button"
@@ -312,6 +397,52 @@ const FacultyDetail = () => {
           </Row>
         </Container>
       </div>
+
+      <Modal
+        isOpen={modal_backdrop}
+        toggle={() => {
+          toggleDeleteModal();
+        }}
+        backdrop={"static"}
+        id="staticBackdrop"
+      >
+        <div className="modal-header">
+          <h5 className="modal-title" id="deleteBackdropLabel">
+            Are you sure?
+          </h5>
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => {
+              setDeleteModal(false);
+            }}
+            aria-label="Close"
+          ></button>
+        </div>
+        <div className="modal-body">
+          <p>
+            Do you really want to delete these record{" "}
+            <span className="fw-bold fs-6 text-primary">
+              {faculty?.facultyname}{" "}
+            </span>
+            ? This process can't be undone.
+          </p>
+        </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => {
+              setDeleteModal(false);
+            }}
+          >
+            Cancel
+          </button>
+          <button onClick={onDelete} type="button" className="btn btn-danger">
+            {isDeleting ? <Spinner size={"sm"} /> : "Delete"}
+          </button>
+        </div>
+      </Modal>
     </React.Fragment>
   );
 };
