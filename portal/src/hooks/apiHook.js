@@ -31,7 +31,7 @@ const useApiCall = (key = "repoData", resourceUrl, _data, enabled = true) => {
   };
 
   const remove = async (data) => {
-    const response = await apiClient.delete(resourceUrl, data);
+    const response = await apiClient.post(resourceUrl, data);
     return response.data;
   };
 
