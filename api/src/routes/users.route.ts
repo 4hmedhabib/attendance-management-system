@@ -33,7 +33,7 @@ class UserRoute implements IRoutes {
     );
 
     this.router.post(
-      `${this.path}/detail`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateUserDto),
       this.user.createUser
     );
