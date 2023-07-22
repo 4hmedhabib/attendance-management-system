@@ -26,7 +26,7 @@ const Classes = ({
       </div>
     );
   } else if (classesIsErr) {
-    <ResError error={classesErrMsg} />;
+    return <ResError error={classesErrMsg} />;
   }
 
   return (
