@@ -13,11 +13,13 @@ import Register from "../pages/Authentication/Register";
 // Dashboard
 import Dashboard from "../pages/Dashboard/index";
 import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
-import Shifts from "../pages/Shifts";
+import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
   { path: "/shifts", component: <Shifts /> },
+  { path: "/shifts/create", component: <CreateShift /> },
+  { path: "/shifts/detail", component: <ShiftDetail /> },
   { path: "/classes", component: <Dashboard /> },
   { path: "/faculties", component: <Faculties /> },
   { path: "/faculties/create", component: <CreateFaculty /> },
