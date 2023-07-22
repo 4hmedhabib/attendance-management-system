@@ -49,6 +49,9 @@ class ClassService {
         faculty: {
           facultyslug: filters.facultySlug ?? undefined,
         },
+        shift: {
+          shiftslug: filters.shiftSlug ?? undefined,
+        },
       },
       select: {
         classid: true,
