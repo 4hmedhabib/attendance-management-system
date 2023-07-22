@@ -44,7 +44,7 @@ class UserRoute implements IRoutes {
       this.user.updateUser
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteUserBySlugDto),
       this.user.deleteUser

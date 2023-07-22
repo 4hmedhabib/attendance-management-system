@@ -51,7 +51,7 @@ class ClassRoute implements IRoutes {
       this.class.updateClass
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteClassBySlugDto),
       this.class.deleteClass

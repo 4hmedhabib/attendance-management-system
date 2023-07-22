@@ -44,7 +44,7 @@ class TeacherRoute implements IRoutes {
       this.teacher.updateTeacher
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteTeacherBySlugDto),
       this.teacher.deleteTeacher

@@ -20,20 +20,20 @@ class ShiftRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
+    this.router.post(
+      `${this.path}/list`,
       ValidationMiddleware(GetShiftsDto),
       this.faculty.getShifts
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetShiftBySlugDto),
       this.faculty.getShiftBySlug
     );
 
     this.router.post(
-      `${this.path}`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateShiftDto),
       this.faculty.createShift
     );
@@ -44,7 +44,7 @@ class ShiftRoute implements IRoutes {
       this.faculty.updateShift
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteShiftBySlugDto),
       this.faculty.deleteShift

@@ -44,7 +44,7 @@ class FacultyRoute implements IRoutes {
       this.faculty.updateFaculty
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteFacultyBySlugDto),
       this.faculty.deleteFaculty

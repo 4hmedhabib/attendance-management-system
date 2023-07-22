@@ -44,7 +44,7 @@ class CourseRoute implements IRoutes {
       this.course.updateCourse
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteCourseBySlugDto),
       this.course.deleteCourse

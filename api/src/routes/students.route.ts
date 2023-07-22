@@ -73,7 +73,7 @@ class StudentRoute implements IRoutes {
       this.student.updateStudent
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteStudentBySlugDto),
       this.student.deleteStudent

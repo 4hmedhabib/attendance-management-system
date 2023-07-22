@@ -44,7 +44,7 @@ class SemesterRoute implements IRoutes {
       this.semester.updateSemester
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteSemesterBySlugDto),
       this.semester.deleteSemester
