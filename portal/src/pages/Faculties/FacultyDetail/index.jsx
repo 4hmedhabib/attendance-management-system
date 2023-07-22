@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardBody, Col, Container, Row, Spinner } from "reactstrap";
 
 //import images
@@ -53,42 +53,96 @@ const FacultyDetail = () => {
     isError: classesIsErr,
     isLoading: classesIsLoading,
     errMsg: classesErrMsg,
-  } = useApiCall("CLASSES_FACULTY_DETAIL", urls.classes(), {
-    payload: {
-      isMiniView: true,
-      filters: {
-        facultySlug: state.facultySlug,
+    refetch: classesRefetch,
+  } = useApiCall(
+    "CLASSES_FACULTY_DETAIL",
+    urls.classes(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          facultySlug: state.facultySlug,
+        },
       },
     },
-  });
+    false
+  );
 
   const {
     data: usersData,
     isError: usersIsErr,
     isLoading: usersIsLoading,
     errMsg: usersErrMsg,
-  } = useApiCall("USERS_FACULTY_DETAIL", urls.users(), {
-    payload: {
-      isMiniView: true,
-      filters: {
-        isAdmin: true,
+    refetch: usersRefetch,
+  } = useApiCall(
+    "USERS_FACULTY_DETAIL",
+    urls.users(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          isAdmin: true,
+        },
       },
     },
-  });
+    false
+  );
 
   const { update: updateFaculty } = useApiCall(
     "UPDATE_FACULTY",
     urls.updateFaculty(),
-    {},
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          facultySlug: state.facultySlug,
+        },
+      },
+    },
     false
   );
 
   useEffect(() => {
     if (facultyData) {
       setFaculty(facultyData.data);
-      console.log(facultyData, "UPDATD");
     }
   }, [facultyData]);
+
+  const onRefresh = useCallback(() => {
+    facultyRefetch({
+      payload: {
+        isMiniView: false,
+        facultySlug: state.facultySlug,
+      },
+    });
+    usersRefetch({
+      payload: {
+        isMiniView: true,
+        filters: {
+          isAdmin: true,
+        },
+      },
+    });
+    classesRefetch({
+      payload: {
+        isMiniView: true,
+        filters: {
+          facultySlug: state.facultySlug,
+        },
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    let subscribed = true;
+    if (subscribed) {
+      onRefresh();
+    }
+
+    () => {
+      subscribed = false;
+    };
+  }, [onRefresh]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -158,15 +212,6 @@ const FacultyDetail = () => {
     setIsEdit(!isEdit);
   };
 
-  const onRefresh = () => {
-    facultyRefetch({
-      payload: {
-        isMiniView: false,
-        facultySlug: state.facultySlug,
-      },
-    });
-  };
-
   if (facultyIsLoading) {
     return (
       <div className="page-content ">
@@ -176,7 +221,7 @@ const FacultyDetail = () => {
       </div>
     );
   } else if (facultyIsErr) {
-    <ResError error={facultyErrMsg} />;
+    return <ResError error={facultyErrMsg} />;
   }
 
   if (!faculty) {
