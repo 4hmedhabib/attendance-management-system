@@ -313,6 +313,10 @@ export class GetClassesFilters {
   @IsString({ message: "faculty slug must be a string" })
   @IsOptional({ message: "faculty slug is required" })
   facultySlug?: string;
+
+  @IsString({ message: "shift slug must be a string" })
+  @IsOptional({ message: "shift slug is required" })
+  shiftSlug?: string;
 }
 
 export class GetClassesPayload {
