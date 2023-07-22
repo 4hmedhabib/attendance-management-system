@@ -14,11 +14,13 @@ import { DefaultColumnFilter } from "./filters";
 const TableContainer = ({
   columns,
   data,
-  handleFacultyClicks,
+  handleClick,
   customPageSize,
   className,
   customPageSizeOptions,
   isLoading,
+  onRefresh = () => {},
+  title = "",
 }) => {
   const {
     getTableProps,
@@ -86,18 +88,30 @@ const TableContainer = ({
           </select>
         </Col>
 
-        <Col xs="6" sm="9" md="10">
-          <div className="text-sm-end">
-            <Button
-              type="button"
-              color="success"
-              className="btn-rounded  mb-2 me-2"
-              onClick={handleFacultyClicks}
-            >
-              <i className="mdi mdi-plus me-1" />
-              Add New Faculty
-            </Button>
-          </div>
+        <Col
+          xs="6"
+          sm="9"
+          md="10"
+          className="d-flex mb-2 justify-content-end align-items-center"
+        >
+          <Button
+            type="button"
+            color="info"
+            className="btn-rounded  mb-0 me-2"
+            onClick={onRefresh}
+          >
+            <i className="mdi mdi-reload me-1" />
+            Refresh
+          </Button>
+          <Button
+            type="button"
+            color="success"
+            className="btn-rounded  mb-0 me-2"
+            onClick={handleClick}
+          >
+            <i className="mdi mdi-plus me-1" />
+            {title}
+          </Button>
         </Col>
       </Row>
 

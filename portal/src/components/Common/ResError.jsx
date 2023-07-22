@@ -6,17 +6,17 @@ const ResError = ({ error }) => {
       isArray(error) ? (
         error.map((err, idx) => {
           return (
-            <div className="bg-danger-subtle text-danger text-center py-1 my-1 rounded">
-              <span key={idx}>
-                {`${Object.keys(err)[0]}: ${Object.values(err)}`}
-              </span>
+            <div
+              key={idx}
+              className="bg-danger-subtle text-danger text-center py-1 my-1 rounded"
+            >
+              <span>{`${Object.keys(err)[0]}: ${Object.values(err)}`}</span>
             </div>
           );
         })
       ) : (
         <div className="bg-danger-subtle text-danger text-center py-1 my-1 rounded">
           {Object.keys(error).map((key, idx) => {
-            console.log(error, "err");
             return (
               <span key={idx}>
                 `${key}: ${error[key]}`
