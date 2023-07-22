@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import dayjs from "dayjs";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import TableContainer from "../../components/Common/TableContainer";
 
 //import components
@@ -18,12 +18,19 @@ function Faculty() {
 
   const [faculties, setFaculties] = useState([]);
 
-  const { data, isError, isLoading, errMsg } = useApiCall(
+  const {
+    data,
+    isError,
+    isLoading,
+    errMsg,
+    refetch: facultiesRefetch,
+  } = useApiCall(
     "FACULTY_LIST",
     urls.faculties(),
     {
       payload: { isMiniView: false },
-    }
+    },
+    false
   );
 
   const navigate = useNavigate();
@@ -37,6 +44,16 @@ function Faculty() {
       setFaculties(data.data);
     }
   }, [data]);
+
+  const onRefresh = useCallback(() => {
+    facultiesRefetch({
+      payload: { isMiniView: false },
+    });
+  }, []);
+
+  useEffect(() => {
+    onRefresh();
+  }, [onRefresh]);
 
   const columns = useMemo(
     () => [
@@ -120,10 +137,12 @@ function Faculty() {
                     data={faculties || []}
                     isGlobalFilter={false}
                     isAddOptions={true}
-                    handleFacultyClicks={handleFacultyClicks}
+                    handleClick={handleFacultyClicks}
                     customPageSize={50}
                     className="custom-header-css"
                     isLoading={isLoading && !isError}
+                    onRefresh={onRefresh}
+                    title="Add New Faculty"
                   />
                 </CardBody>
               </Card>
