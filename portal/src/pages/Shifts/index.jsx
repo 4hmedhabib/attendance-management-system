@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import TableContainer from "../../components/Common/TableContainer";
 
 //import components
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -11,22 +10,23 @@ import { Button, Card, CardBody, Col, Row } from "reactstrap";
 import urls from "../../api/urls";
 import ResError from "../../components/Common/ResError";
 import useApiCall from "../../hooks/apiHook";
+import TableContainer from "../../components/Common/TableContainer";
 
-function Faculty() {
+function Shift() {
   //meta title
-  document.title = "Faculties | FFU - ATMS";
+  document.title = "Shifts | FFU - ATMS";
 
-  const [faculties, setFaculties] = useState([]);
+  const [shifts, setShifts] = useState([]);
 
   const {
     data,
     isError,
     isLoading,
     errMsg,
-    refetch: facultiesRefetch,
+    refetch: shiftsRefetch,
   } = useApiCall(
-    "FACULTY_LIST",
-    urls.faculties(),
+    "SHIFT_LIST",
+    urls.shifts(),
     {
       payload: { isMiniView: false },
     },
@@ -35,18 +35,18 @@ function Faculty() {
 
   const navigate = useNavigate();
 
-  const handleFacultyClicks = () => {
+  const handleShiftClicks = () => {
     navigate("create");
   };
 
   useEffect(() => {
     if (data) {
-      setFaculties(data.data);
+      setShifts(data.data);
     }
   }, [data]);
 
   const onRefresh = useCallback(() => {
-    facultiesRefetch({
+    shiftsRefetch({
       payload: { isMiniView: false },
     });
   }, []);
@@ -59,7 +59,7 @@ function Faculty() {
     () => [
       {
         Header: "ID",
-        accessor: "facultyid",
+        accessor: "shiftid",
         style: {
           textAlign: "center",
           width: "10%",
@@ -70,8 +70,8 @@ function Faculty() {
         },
       },
       {
-        Header: "Faculty Name",
-        accessor: "facultyname",
+        Header: "Shift Name",
+        accessor: "shiftname",
         Cell: ({ cell }) => {
           return cell?.value;
         },
@@ -99,7 +99,7 @@ function Faculty() {
       },
       {
         Header: "View",
-        accessor: "facultyslug",
+        accessor: "shiftslug",
         disableFilters: true,
         Cell: ({ cell }) => {
           return (
@@ -108,7 +108,7 @@ function Faculty() {
               color="primary"
               className="btn-sm btn-rounded"
               onClick={() =>
-                navigate("detail", { state: { facultySlug: cell?.value } })
+                navigate("detail", { state: { shiftSlug: cell?.value } })
               }
             >
               View
@@ -124,7 +124,7 @@ function Faculty() {
     <React.Fragment>
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Faculties" breadcrumbItem="Faculties List" />
+          <Breadcrumbs title="Shifts" breadcrumbItem="Shifts List" />
 
           {isError && <ResError error={errMsg} />}
 
@@ -134,15 +134,15 @@ function Faculty() {
                 <CardBody>
                   <TableContainer
                     columns={columns}
-                    data={faculties || []}
+                    data={shifts || []}
                     isGlobalFilter={false}
                     isAddOptions={true}
-                    handleClick={handleFacultyClicks}
+                    handleClick={handleShiftClicks}
                     customPageSize={50}
                     className="custom-header-css"
                     isLoading={isLoading && !isError}
                     onRefresh={onRefresh}
-                    title="Add New Faculty"
+                    title="Add New Shift"
                   />
                 </CardBody>
               </Card>
@@ -154,6 +154,6 @@ function Faculty() {
   );
 }
 
-export default Faculty;
-export { default as CreateFaculty } from "./CreateFaculty";
-export { default as FacultyDetail } from "./FacultyDetail";
+export default Shift;
+export { default as CreateShift } from "./CreateShift";
+export { default as ShiftDetail } from "./ShiftDetail";
