@@ -15,6 +15,8 @@ import Dashboard from "../pages/Dashboard/index";
 import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
 import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
 import Classes, { ClassDetail, CreateClass } from "../pages/Classes";
+import Courses, { CourseDetail, CreateCourse } from "../pages/Courses";
+import Teachers, { TeacherDetail, CreateTeacher } from "../pages/Teachers";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -31,9 +33,13 @@ const authProtectedRoutes = [
   { path: "/faculties/create", component: <CreateFaculty /> },
   { path: "/faculties/detail", component: <FacultyDetail /> },
 
-  { path: "/courses", component: <Dashboard /> },
+  { path: "/courses", component: <Courses /> },
+  { path: "/courses/create", component: <CreateCourse /> },
+  { path: "/courses/detail", component: <CourseDetail /> },
 
-  { path: "/teachers", component: <Dashboard /> },
+  { path: "/teachers", component: <Teachers /> },
+  { path: "/teachers/create", component: <CreateTeacher /> },
+  { path: "/teachers/detail", component: <TeacherDetail /> },
 
   { path: "/students", component: <Dashboard /> },
 
