@@ -12,8 +12,7 @@ export interface ICourse {
   manager?: IUser;
   deputy?: IUser | null;
   _count?: {
-    courses?: number;
-    classes?: number;
+    semesters?: number;
   };
 }
 
