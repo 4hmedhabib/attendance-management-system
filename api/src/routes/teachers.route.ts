@@ -20,20 +20,20 @@ class TeacherRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
+    this.router.post(
+      `${this.path}/list`,
       ValidationMiddleware(GetFacultiesDto),
       this.teacher.getTeachers
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetTeacherBySlugDto),
       this.teacher.getTeacherBySlug
     );
 
     this.router.post(
-      `${this.path}`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateTeacherDto),
       this.teacher.createTeacher
     );
