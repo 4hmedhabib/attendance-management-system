@@ -1,53 +1,65 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import TableContainer from "../../../components/Common/TableContainer";
+import TableContainer from "../../components/Common/TableContainer";
 
 //import components
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 import { useNavigate } from "react-router-dom";
 import { Button, Card, CardBody, Col, Row } from "reactstrap";
-import urls from "../../../api/urls";
-import ResError from "../../../components/Common/ResError";
-import useApiCall from "../../../hooks/apiHook";
+import urls from "../../api/urls";
+import ResError from "../../components/Common/ResError";
+import useApiCall from "../../hooks/apiHook";
 
-function Shift() {
+function Class() {
   //meta title
-  document.title = "Shifts | FFU - ATMS";
+  document.title = "Classes | FFU - ATMS";
 
-  const [shifts, setShifts] = useState([]);
+  const [classes, setClasses] = useState([]);
 
   const {
     data,
     isError,
     isLoading,
     errMsg,
-    refetch: shiftsRefetch,
+    refetch: classesRefetch,
   } = useApiCall(
-    "SHIFT_LIST",
-    urls.shifts(),
+    "CLASS_LIST",
+    urls.classes(),
     {
-      payload: { isMiniView: false },
+      payload: {
+        isMiniView: false,
+        filters: {
+          facultySlug: null,
+          shiftSlug: null,
+        },
+      },
     },
     false
   );
 
   const navigate = useNavigate();
 
-  const handleShiftClicks = () => {
+  const handleClassClicks = () => {
     navigate("create");
   };
 
   useEffect(() => {
     if (data) {
-      setShifts(data.data);
+      setClasses(data.data);
     }
   }, [data]);
 
   const onRefresh = useCallback(() => {
-    shiftsRefetch({
-      payload: { isMiniView: false },
+    classesRefetch({
+      payload: {
+        isMiniView: false,
+        filters: {
+          facultySlug: null,
+          shiftSlug: null,
+        },
+      },
     });
   }, []);
 
@@ -59,7 +71,7 @@ function Shift() {
     () => [
       {
         Header: "ID",
-        accessor: "shiftid",
+        accessor: "classid",
         style: {
           textAlign: "center",
           width: "10%",
@@ -70,8 +82,8 @@ function Shift() {
         },
       },
       {
-        Header: "Shift Name",
-        accessor: "shiftname",
+        Header: "Class Name",
+        accessor: "classname",
         Cell: ({ cell }) => {
           return cell?.value;
         },
@@ -84,8 +96,8 @@ function Shift() {
         },
       },
       {
-        Header: "Classes",
-        accessor: "_count.classes",
+        Header: "Students",
+        accessor: "_count.students",
         Cell: ({ cell }) => {
           return cell?.value;
         },
@@ -99,7 +111,7 @@ function Shift() {
       },
       {
         Header: "View",
-        accessor: "shiftslug",
+        accessor: "classslug",
         disableFilters: true,
         Cell: ({ cell }) => {
           return (
@@ -108,7 +120,7 @@ function Shift() {
               color="primary"
               className="btn-sm btn-rounded"
               onClick={() =>
-                navigate("detail", { state: { shiftSlug: cell?.value } })
+                navigate("detail", { state: { classSlug: cell?.value } })
               }
             >
               View
@@ -124,7 +136,7 @@ function Shift() {
     <React.Fragment>
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Shifts" breadcrumbItem="Shifts List" />
+          <Breadcrumbs title="Classes" breadcrumbItem="Classes List" />
 
           {isError && <ResError error={errMsg} />}
 
@@ -134,15 +146,15 @@ function Shift() {
                 <CardBody>
                   <TableContainer
                     columns={columns}
-                    data={shifts || []}
+                    data={classes || []}
                     isGlobalFilter={false}
                     isAddOptions={true}
-                    handleClick={handleShiftClicks}
+                    handleClick={handleClassClicks}
                     customPageSize={50}
                     className="custom-header-css"
                     isLoading={isLoading && !isError}
                     onRefresh={onRefresh}
-                    title="Add New Shift"
+                    title="Add New Class"
                   />
                 </CardBody>
               </Card>
@@ -154,6 +166,6 @@ function Shift() {
   );
 }
 
-export default Shift;
-export { default as CreateShift } from "./CreateShift";
-export { default as ShiftDetail } from "./ShiftDetail";
+export default Class;
+export { default as CreateClass } from "./CreateClass";
+export { default as ClassDetail } from "./ClassDetail";
