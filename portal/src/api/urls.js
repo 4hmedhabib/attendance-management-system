@@ -63,6 +63,38 @@ export default {
     return `${this.api}/classes/delete`;
   },
 
+  courses: function () {
+    return `${this.api}/courses/list`;
+  },
+  courseDetail: function () {
+    return `${this.api}/courses/detail`;
+  },
+  createCourse: function () {
+    return `${this.api}/courses/create`;
+  },
+  updateCourse: function () {
+    return `${this.api}/courses/update`;
+  },
+  deleteCourse: function () {
+    return `${this.api}/courses/delete`;
+  },
+
+  teachers: function () {
+    return `${this.api}/teachers/list`;
+  },
+  teacherDetail: function () {
+    return `${this.api}/teachers/detail`;
+  },
+  createTeacher: function () {
+    return `${this.api}/teachers/create`;
+  },
+  updateTeacher: function () {
+    return `${this.api}/teachers/update`;
+  },
+  deleteTeacher: function () {
+    return `${this.api}/teachers/delete`;
+  },
+
   students: function () {
     return `${this.api}/students/list`;
   },
