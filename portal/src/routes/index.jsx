@@ -14,20 +14,31 @@ import Register from "../pages/Authentication/Register";
 import Dashboard from "../pages/Dashboard/index";
 import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
 import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
+import Classes, { ClassDetail, CreateClass } from "../pages/Classes";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
+
   { path: "/shifts", component: <Shifts /> },
   { path: "/shifts/create", component: <CreateShift /> },
   { path: "/shifts/detail", component: <ShiftDetail /> },
-  { path: "/classes", component: <Dashboard /> },
+
+  { path: "/classes", component: <Classes /> },
+  { path: "/classes/create", component: <CreateClass /> },
+  { path: "/classes/detail", component: <ClassDetail /> },
+
   { path: "/faculties", component: <Faculties /> },
   { path: "/faculties/create", component: <CreateFaculty /> },
   { path: "/faculties/detail", component: <FacultyDetail /> },
+
   { path: "/courses", component: <Dashboard /> },
+
   { path: "/teachers", component: <Dashboard /> },
+
   { path: "/students", component: <Dashboard /> },
+
   { path: "/enrollments", component: <Dashboard /> },
+
   { path: "/administrations", component: <Dashboard /> },
 
   // //profile
