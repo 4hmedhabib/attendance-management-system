@@ -45,7 +45,7 @@ class ClassRoute implements IRoutes {
       this.class.createClass
     );
 
-    this.router.post(
+    this.router.put(
       `${this.path}/update`,
       ValidationMiddleware(UpdateClassDto),
       this.class.updateClass
