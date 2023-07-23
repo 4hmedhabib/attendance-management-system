@@ -18,9 +18,14 @@ const ResError = ({ error }) => {
         <div className="bg-danger-subtle text-danger text-center py-1 my-1 rounded">
           {Object.keys(error).map((key, idx) => {
             return (
-              <span key={idx}>
-                `${key}: ${error[key]}`
-              </span>
+              <div
+                key={idx}
+                className="bg-danger-subtle text-danger text-center py-1 my-1 rounded"
+              >
+                <span>
+                  `${key}: ${error[key]}`
+                </span>
+              </div>
             );
           })}
         </div>
