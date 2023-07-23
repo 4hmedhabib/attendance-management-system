@@ -61,10 +61,6 @@ class CreateTeacherPayload {
   })
   @IsNotEmpty({ message: "mobileno is required" })
   mobileNo: string;
-
-  @IsInt({ message: "year of study must be a number" })
-  @IsPositive({ message: "year of study must be a positive number" })
-  yearOfStudy: number;
 }
 
 export class CreateTeacherDto {
@@ -124,10 +120,6 @@ export class UpdateTeacherData {
   })
   @IsNotEmpty({ message: "mobileno is required" })
   mobileNo: string;
-
-  @IsInt({ message: "year of study must be a number" })
-  @IsPositive({ message: "year of study must be a positive number" })
-  yearOfStudy: number;
 }
 
 class UpdateTeacherPayload {
