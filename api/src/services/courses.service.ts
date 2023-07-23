@@ -30,7 +30,7 @@ class CourseService {
           : false,
         _count: !isMiniView
           ? {
-              select: {},
+              select: { semesters: true },
             }
           : false,
       },
@@ -75,6 +75,11 @@ class CourseService {
                   middlename: !isMiniView,
                   lastname: !isMiniView,
                 },
+              }
+            : false,
+          _count: !isMiniView
+            ? {
+                select: { semesters: true },
               }
             : false,
         },
