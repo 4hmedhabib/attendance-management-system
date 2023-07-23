@@ -275,7 +275,7 @@ model courses {
     updatedby   users? @relation("UPDATED_COURSES", fields: [updatedbyid], references: [userid])
     updatedbyid Int?
 
-    courses semester_courses[]
+    semesters semester_courses[]
 }
 
 model teachers {
