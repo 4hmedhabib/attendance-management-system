@@ -94,7 +94,6 @@ const CreateFaculty = () => {
 
       await createFaculty({ payload })
         .then((res) => {
-          console.log(res);
           toast.update("createFaculty", {
             isLoading: false,
             type: "success",
