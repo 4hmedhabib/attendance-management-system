@@ -62,4 +62,20 @@ export default {
   deleteClass: function () {
     return `${this.api}/classes/delete`;
   },
+
+  students: function () {
+    return `${this.api}/students/list`;
+  },
+  studentDetail: function () {
+    return `${this.api}/students/detail`;
+  },
+  createStudent: function () {
+    return `${this.api}/students/create`;
+  },
+  updateStudent: function () {
+    return `${this.api}/students/update`;
+  },
+  deleteStudent: function () {
+    return `${this.api}/students/delete`;
+  },
 };
