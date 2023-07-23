@@ -12,8 +12,8 @@ import {
   Row,
   Spinner,
 } from "reactstrap";
-import NotFound from "../../../../components/Common/NotFound";
-import ResError from "../../../../components/Common/ResError";
+import NotFound from "../../../components/Common/NotFound";
+import ResError from "../../../components/Common/ResError";
 import Classes from "./Classes";
 
 //import images

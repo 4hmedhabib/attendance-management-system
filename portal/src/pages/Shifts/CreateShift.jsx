@@ -90,7 +90,6 @@ const CreateShift = () => {
 
       await createShift({ payload })
         .then((res) => {
-          console.log(res);
           toast.update("createShift", {
             isLoading: false,
             type: "success",
