@@ -33,6 +33,7 @@ class StudentService {
         middlename: true,
         lastname: true,
         mobileno: !isMiniView,
+        yearofstudy: !isMiniView,
         createdat: !isMiniView,
         createdby: !isMiniView
           ? {
@@ -68,6 +69,7 @@ class StudentService {
           middlename: true,
           lastname: true,
           mobileno: !isMiniView,
+          yearofstudy: !isMiniView,
           createdat: !isMiniView,
           updatedat: !isMiniView,
           createdby: !isMiniView
