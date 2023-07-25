@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
   Button,
@@ -13,7 +13,6 @@ import {
   Row,
   Spinner,
 } from "reactstrap";
-import slugify from "slugify";
 
 //Import Breadcrumb
 import { useFormik } from "formik";
@@ -33,7 +32,7 @@ const CreateTeacher = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { create: createTeacher } = useApiCall(
-    "CREATE_teacher",
+    "CREATE_TEACHER",
     urls.createTeacher(),
     {},
     false
@@ -75,7 +74,7 @@ const CreateTeacher = () => {
           formik.resetForm();
           setIsSubmitting(false);
           navigate("/teachers/detail", {
-            state: { teacherSlug: res?.data?.teacherslug },
+            state: { teacherSlug: res?.data?.techid },
           });
         })
         .catch((err) => {
