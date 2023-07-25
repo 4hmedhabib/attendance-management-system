@@ -11,12 +11,13 @@ import Logout from "../pages/Authentication/Logout";
 import Register from "../pages/Authentication/Register";
 
 // Dashboard
+import Classes, { ClassDetail, CreateClass } from "../pages/Classes";
+import Courses, { CourseDetail, CreateCourse } from "../pages/Courses";
 import Dashboard from "../pages/Dashboard/index";
 import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
 import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
-import Classes, { ClassDetail, CreateClass } from "../pages/Classes";
-import Courses, { CourseDetail, CreateCourse } from "../pages/Courses";
-import Teachers, { TeacherDetail, CreateTeacher } from "../pages/Teachers";
+import Students, { CreateStudent, StudentDetail } from "../pages/Students";
+import Teachers, { CreateTeacher, TeacherDetail } from "../pages/Teachers";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -41,7 +42,9 @@ const authProtectedRoutes = [
   { path: "/teachers/create", component: <CreateTeacher /> },
   { path: "/teachers/detail", component: <TeacherDetail /> },
 
-  { path: "/students", component: <Dashboard /> },
+  { path: "/students", component: <Students /> },
+  { path: "/students/create", component: <CreateStudent /> },
+  { path: "/students/detail", component: <StudentDetail /> },
 
   { path: "/enrollments", component: <Dashboard /> },
 
