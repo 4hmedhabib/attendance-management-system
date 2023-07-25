@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
   Button,
@@ -33,7 +33,7 @@ const CreateCourse = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { create: createCourse } = useApiCall(
-    "CREATE_SHIFT",
+    "CREATE_COURSE",
     urls.createCourse(),
     {},
     false
@@ -41,7 +41,7 @@ const CreateCourse = () => {
 
   const formik = useFormik({
     initialValues: {
-      shiftName: "",
+      courseName: "",
       description: "",
     },
     validationSchema: createCourseSchema,
@@ -52,8 +52,8 @@ const CreateCourse = () => {
 
       setIsSubmitting(true);
       const payload = {
-        shiftName: values.shiftName,
-        shiftSlug: slugify(values.shiftName?.toLowerCase(), "_"),
+        courseName: values.courseName,
+        courseSlug: slugify(values.courseName?.toLowerCase(), "_"),
         description: values.description,
       };
 
@@ -62,7 +62,7 @@ const CreateCourse = () => {
           toast.update("createCourse", {
             isLoading: false,
             type: "success",
-            render: "Successfully Course Created: " + values.shiftName,
+            render: "Successfully Course Created: " + values.courseName,
             autoClose: 3000,
             closeOnClick: true,
           });
@@ -70,7 +70,7 @@ const CreateCourse = () => {
           formik.resetForm();
           setIsSubmitting(false);
           navigate("/courses/detail", {
-            state: { shiftSlug: res?.data?.courseslug },
+            state: { courseSlug: res?.data?.courseslug },
           });
         })
         .catch((err) => {
@@ -108,22 +108,22 @@ const CreateCourse = () => {
                     <Row>
                       <Col sm="6">
                         <div className="mb-3">
-                          <Label htmlFor="shiftName">Course Name</Label>
+                          <Label htmlFor="courseName">Course Name</Label>
                           <Input
-                            id="shiftName"
-                            name="shiftName"
+                            id="courseName"
+                            name="courseName"
                             type="text"
                             className="form-control"
                             placeholder="Course Name"
-                            value={formik.values.shiftName}
+                            value={formik.values.courseName}
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             disabled={isSubmitting}
                           />
-                          {formik.touched.shiftName &&
-                          Boolean(formik.errors.shiftName) ? (
+                          {formik.touched.courseName &&
+                          Boolean(formik.errors.courseName) ? (
                             <span className="text-danger">
-                              {formik.errors.shiftName}
+                              {formik.errors.courseName}
                             </span>
                           ) : null}
                         </div>
