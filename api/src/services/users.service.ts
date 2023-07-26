@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
-import { UpdateUserData } from "../dtos";
+import { GetUsersBySlugFilters, UpdateUserData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
 import { IRPCreateUserPayload, IUser } from "../interfaces";
 import { logger } from "../utils";
@@ -10,8 +10,14 @@ const usersDB = prisma.users;
 
 @Service()
 class UserService {
-  public async findAllUser(isMiniView: boolean): Promise<IUser[]> {
+  public async findAllUser(
+    isMiniView: boolean,
+    filters: GetUsersBySlugFilters
+  ): Promise<IUser[]> {
     const users: IUser[] = await usersDB.findMany({
+      where: {
+        isadmin: filters.isAdmin ?? undefined,
+      },
       select: {
         userid: true,
         username: true,

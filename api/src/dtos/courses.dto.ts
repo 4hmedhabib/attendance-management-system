@@ -35,16 +35,6 @@ class CreateCoursePayload {
     message: "description must be shorter than or equal to 500 characters",
   })
   description?: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(3)
-  @MaxLength(32)
-  manager: string;
-
-  @IsString()
-  @MaxLength(32)
-  deputy: string;
 }
 
 export class CreateCourseDto {

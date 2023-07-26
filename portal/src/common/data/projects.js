@@ -5,12 +5,6 @@ import avatar4 from "../../assets/images/users/avatar-4.jpg";
 import avatar5 from "../../assets/images/users/avatar-5.jpg";
 import avatar6 from "../../assets/images/users/avatar-6.jpg";
 import avatar8 from "../../assets/images/users/avatar-8.jpg";
-import companies01 from "../../assets/images/companies/img-1.png";
-import companies02 from "../../assets/images/companies/img-2.png";
-import companies03 from "../../assets/images/companies/img-3.png";
-import companies04 from "../../assets/images/companies/img-4.png";
-import companies05 from "../../assets/images/companies/img-5.png";
-import companies06 from "../../assets/images/companies/img-6.png";
 
 const projects = [
   {
@@ -24,21 +18,32 @@ const projects = [
     commentsCount: 214,
     team: [
       {
-        id: 1, img: "avatar4", fullname: "Janice Cole", skills: [
+        id: 1,
+        img: "avatar4",
+        fullname: "Janice Cole",
+        skills: [
           { id: 1, name: "Frontend" },
           { id: 2, name: "UI" },
         ],
       },
       {
-        id: 2, img: "avatar5", fullname: "Steve Foster",
+        id: 2,
+        img: "avatar5",
+        fullname: "Steve Foster",
         skills: [{ id: 1, name: "UI/UX" }],
       },
       {
-        id: 3, img: "Null", name: "A", color: "success", fullname: "Aeffrey Walker",
+        id: 3,
+        img: "Null",
+        name: "A",
+        color: "success",
+        fullname: "Aeffrey Walker",
         skills: [{ id: 1, name: "Backend" }],
       },
       {
-        id: 4, img: "avatar2", fullname: "Daniel Candles",
+        id: 4,
+        img: "avatar2",
+        fullname: "Daniel Candles",
         skills: [
           { id: 1, name: "Frontend" },
           { id: 2, name: "UI" },
@@ -148,8 +153,14 @@ const projects = [
     dueDate: "13 Oct, 19",
     commentsCount: 175,
     team: [
-      { id: 1, img: "Null", name: "K", color: "info", fullname: "Kony Brafford" },
-      { id: 2, img: "avatar2", fullname: "Daniel Candles" }
+      {
+        id: 1,
+        img: "Null",
+        name: "K",
+        color: "info",
+        fullname: "Kony Brafford",
+      },
+      { id: 2, img: "avatar2", fullname: "Daniel Candles" },
     ],
     startDate: "08 Sept, 2019",
     projectDetails: {
@@ -363,7 +374,13 @@ const projects = [
     commentsCount: 214,
     team: [
       { id: 1, img: "avatar5", fullname: "Steve Foster" },
-      { id: 3, img: "Null", name: "R", color: "warning", fullname: "Rony Candles" },
+      {
+        id: 3,
+        img: "Null",
+        name: "R",
+        color: "warning",
+        fullname: "Rony Candles",
+      },
     ],
   },
   {
@@ -431,7 +448,13 @@ const projects = [
     team: [
       { id: 1, img: "avatar4", fullname: "Janice Cole" },
       { id: 2, img: "avatar5", fullname: "Steve Foster" },
-      { id: 3, img: "Null", name: "A", color: "success", fullname: "Aeffrey Walker" },
+      {
+        id: 3,
+        img: "Null",
+        name: "A",
+        color: "success",
+        fullname: "Aeffrey Walker",
+      },
       { id: 3, img: "avatar2", fullname: "Daniel Candles" },
     ],
     startDate: "08 Sept, 2019",
@@ -533,7 +556,7 @@ const series = [
 const projectListData = [
   {
     id: 1,
-    img: companies01,
+    // img: companies01,
     name: "New admin Design",
     description: "It will be as simple as Occidental",
     dueDate: "15 Oct, 19",
@@ -543,22 +566,27 @@ const projectListData = [
 
     team: [
       {
-        id: 1, img: avatar4
+        id: 1,
+        img: avatar4,
       },
       {
-        id: 2, img: avatar5
+        id: 2,
+        img: avatar5,
       },
       {
-        id: 3, profile: "A", profileColor: "success",
+        id: 3,
+        profile: "A",
+        profileColor: "success",
       },
       {
-        id: 4, img: avatar2
+        id: 4,
+        img: avatar2,
       },
     ],
   },
   {
     id: 2,
-    img: companies02,
+    // img: companies02,
     name: "Brand logo design",
     description: "To achieve it would be necessary",
     dueDate: "22 Oct, 19",
@@ -571,7 +599,7 @@ const projectListData = [
   },
   {
     id: 3,
-    img: companies03,
+    // img: companies03,
     name: "New Landing Design",
     description: "For science, music, sport, etc",
     dueDate: "13 Oct, 19",
@@ -585,7 +613,7 @@ const projectListData = [
   },
   {
     id: 4,
-    img: companies04,
+    // img: companies04,
     name: "Redesign - Landing page",
     description: "If several languages coalesce",
     dueDate: "14 Oct, 19",
@@ -594,14 +622,16 @@ const projectListData = [
     team: [
       { id: 1, img: avatar5 },
       {
-        id: 2, profile: "R", profileColor: "warning",
+        id: 2,
+        profile: "R",
+        profileColor: "warning",
       },
       { id: 3, img: avatar2 },
     ],
   },
   {
     id: 5,
-    img: companies05,
+    // img: companies05,
     name: "Skote Dashboard UI",
     description: "Separate existence is a myth",
     dueDate: "22 Oct, 19",
@@ -614,7 +644,7 @@ const projectListData = [
   },
   {
     id: 6,
-    img: companies06,
+    // img: companies06,
     name: "Blog Template UI",
     description: "For science, music, sport, etc",
     dueDate: "24 Oct, 19",
@@ -622,14 +652,16 @@ const projectListData = [
     color: "warning",
     team: [
       {
-        id: 1, profile: "A", profileColor: "danger",
+        id: 1,
+        profile: "A",
+        profileColor: "danger",
       },
       { id: 2, img: avatar2 },
     ],
   },
   {
     id: 7,
-    img: companies03,
+    // img: companies03,
     name: "Multipurpose Landing",
     description: "It will be as simple as Occidental",
     dueDate: "15 Oct, 19",
@@ -678,4 +710,4 @@ const OverviewTeamMember = [
   },
 ];
 
-export { projects, options, series, projectListData, OverviewTeamMember };
+export { OverviewTeamMember, options, projectListData, projects, series };

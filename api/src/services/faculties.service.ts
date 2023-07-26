@@ -28,6 +28,7 @@ class FacultyService {
               },
             }
           : false,
+        createdat: true,
         _count: !isMiniView
           ? {
               select: {

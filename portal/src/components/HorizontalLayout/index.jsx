@@ -1,24 +1,24 @@
+import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import withRouter from "../Common/withRouter";
-import PropTypes from "prop-types";
 
 //actions
 import {
   changeLayout,
-  changeTopbarTheme,
   changeLayoutWidth,
+  changeTopbarTheme,
   showRightSidebarAction,
 } from "../../store/actions";
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 //components
-import Navbar from "./Navbar";
-import Header from "./Header";
-import Footer from "./Footer";
-import RightSidebar from "../CommonForBoth/RightSidebar";
 import { useLocation } from "react-router-dom";
+import RightSidebar from "../CommonForBoth/RightSidebar";
+import Footer from "./Footer";
+import Header from "./Header";
+import Navbar from "./Navbar";
 const Layout = (props) => {
   const dispatch = useDispatch();
 
@@ -40,8 +40,7 @@ const Layout = (props) => {
     const title = pathName.pathname;
     let currentage = title.charAt(1).toUpperCase() + title.slice(2);
 
-    document.title =
-      currentage + " | Skote - Vite React Admin & Dashboard Template";
+    document.title = currentage + " | FFU - ATMS";
   }, [pathName.pathname]);
 
   useEffect(() => {

@@ -211,10 +211,21 @@ class GetUserBySlugPayload {
   isMiniView: boolean;
 }
 
+export class GetUsersBySlugFilters {
+  @IsBoolean({ message: "is admin must be a boolean" })
+  @IsNotEmpty({ message: "is admin is required" })
+  isAdmin: boolean;
+}
+
 export class GetUsersBySlugPayload {
   @IsBoolean({ message: "Is min view must be a boolean" })
   @IsNotEmpty({ message: "Is min view is required" })
   isMiniView: boolean;
+
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => GetUsersBySlugFilters)
+  filters: GetUsersBySlugFilters;
 }
 
 export class GetUsersDto {

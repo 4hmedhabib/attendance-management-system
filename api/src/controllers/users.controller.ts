@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import {
   DeleteUserBySlugDto,
-  GetFacultiesDto,
   GetUserBySlugDto,
+  GetUsersDto,
   UpdateUserDto,
 } from "../dtos";
 import { IRBCreateUser, IRPCreateUserPayload, IUser } from "../interfaces/";
@@ -12,14 +12,18 @@ class UserController {
   public user = new UserService();
 
   public getUsers = async (
-    req: Request<any, any, GetFacultiesDto>,
+    req: Request<any, any, GetUsersDto>,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     try {
       const isMiniView = req.body.payload.isMiniView;
+      const filters = req.body.payload.filters;
 
-      const findAllUsersData: IUser[] = await this.user.findAllUser(isMiniView);
+      const findAllUsersData: IUser[] = await this.user.findAllUser(
+        isMiniView,
+        filters
+      );
 
       res.status(200).json({
         data: findAllUsersData,

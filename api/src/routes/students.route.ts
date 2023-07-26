@@ -24,13 +24,13 @@ class StudentRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
+    this.router.post(
+      `${this.path}/list`,
       ValidationMiddleware(GetFacultiesDto),
       this.student.getStudents
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetStudentBySlugDto),
       this.student.getStudentBySlug
@@ -38,7 +38,7 @@ class StudentRoute implements IRoutes {
 
     // create student in specific class
     this.router.post(
-      `${this.path}`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateStudentDto),
       this.student.createStudent
     );
@@ -73,7 +73,7 @@ class StudentRoute implements IRoutes {
       this.student.updateStudent
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteStudentBySlugDto),
       this.student.deleteStudent

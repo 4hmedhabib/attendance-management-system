@@ -1,38 +1,37 @@
 import PropTypes from "prop-types";
 import React from "react";
 import {
-  Row,
-  Col,
   Alert,
   Card,
   CardBody,
+  Col,
   Container,
+  Form,
   FormFeedback,
   Input,
   Label,
-  Form,
+  Row,
 } from "reactstrap";
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
 
 // Formik Validation
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 // action
 import { userForgetPassword } from "../../store/actions";
 
 // import images
-import profile from "../../assets/images/profile-img.png";
 import logo from "../../assets/images/logo.svg";
+import profile from "../../assets/images/profile-img.png";
 
 const ForgetPasswordPage = (props) => {
   //meta title
-  document.title =
-    "Forget Password | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Forget Password | FFU - ATMS";
   const dispatch = useDispatch();
 
   const validation = useFormik({

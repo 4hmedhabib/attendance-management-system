@@ -20,7 +20,6 @@ export const ValidationMiddleware = (
   forbidNonWhitelisted = true
 ): RequestHandler => {
   return (req, res, next) => {
-    console.log(req.body);
     validate(plainToInstance(type, req[value]), {
       skipMissingProperties,
       whitelist,
@@ -48,10 +47,15 @@ export const ValidationMiddleware = (
 };
 
 const getValidationErrorMessage = (errors: ValidationError[]) => {
-  return errors.map((error) => {
+  let _errors = [];
+
+  errors.map((error) => {
     if (error.children && error.children.length > 0) {
-      return getValidationErrorMessage(error.children);
+      _errors = [..._errors, ...getValidationErrorMessage(error.children)];
+      return;
     }
-    return { [error.property]: Object.values(error.constraints) };
+    _errors.push({ [error.property]: Object.values(error.constraints) });
   });
+
+  return _errors;
 };

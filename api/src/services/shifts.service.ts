@@ -19,6 +19,8 @@ class ShiftService {
         shiftname: true,
         shiftslug: true,
         description: !isMiniView,
+        createdat: !isMiniView,
+        updatedat: !isMiniView,
         createdby: !isMiniView
           ? {
               select: {
@@ -29,13 +31,11 @@ class ShiftService {
               },
             }
           : false,
-        _count: !isMiniView
-          ? {
-              select: {
-                classes: true,
-              },
-            }
-          : false,
+        _count: {
+          select: {
+            classes: true,
+          },
+        },
       },
     });
 

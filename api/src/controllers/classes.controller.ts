@@ -32,9 +32,11 @@ class ClassController {
   ): Promise<void> => {
     try {
       const isMiniView = req.body.payload.isMiniView;
+      const filters = req.body.payload.filters;
 
       const findAllClassesData: IClass[] = await this.class.findAllClass(
-        isMiniView
+        isMiniView,
+        filters
       );
 
       res.status(200).json({

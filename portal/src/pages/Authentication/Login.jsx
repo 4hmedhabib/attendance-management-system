@@ -1,38 +1,38 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Formik validation
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import {
-  Row,
-  Col,
-  CardBody,
-  Card,
   Alert,
+  Card,
+  CardBody,
+  Col,
   Container,
   Form,
-  Input,
   FormFeedback,
+  Input,
   Label,
+  Row,
 } from "reactstrap";
 
 // actions
 import { loginUser } from "../../store/actions";
 
 // import images
-import profile from "../../assets/images/profile-img.png";
 import logo from "../../assets/images/logo.svg";
+import profile from "../../assets/images/profile-img.png";
 
 const Login = (props) => {
   //meta title
-  document.title = "Login | Skote - Vite React Admin & Dashboard Template";
+  document.title = "Login | FFU - ATMS";
   const dispatch = useDispatch();
 
   const validation = useFormik({

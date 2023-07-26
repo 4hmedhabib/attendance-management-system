@@ -20,20 +20,20 @@ class CourseRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
+    this.router.post(
+      `${this.path}/list`,
       ValidationMiddleware(GetCoursesDto),
       this.course.getCourses
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetCourseBySlugDto),
       this.course.getCourseBySlug
     );
 
     this.router.post(
-      `${this.path}`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateCourseDto),
       this.course.createCourse
     );
@@ -44,7 +44,7 @@ class CourseRoute implements IRoutes {
       this.course.updateCourse
     );
 
-    this.router.delete(
+    this.router.post(
       `${this.path}/delete`,
       ValidationMiddleware(DeleteCourseBySlugDto),
       this.course.deleteCourse

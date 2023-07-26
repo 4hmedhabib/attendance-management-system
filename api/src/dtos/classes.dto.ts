@@ -8,6 +8,7 @@ import {
   IsNotEmpty,
   IsNotEmptyObject,
   IsNumber,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -308,10 +309,25 @@ export class DeleteClassBySlugDto {
   payload: DeleteClassBySlugPayload;
 }
 
+export class GetClassesFilters {
+  @IsString({ message: "faculty slug must be a string" })
+  @IsOptional({ message: "faculty slug is required" })
+  facultySlug?: string;
+
+  @IsString({ message: "shift slug must be a string" })
+  @IsOptional({ message: "shift slug is required" })
+  shiftSlug?: string;
+}
+
 export class GetClassesPayload {
   @IsBoolean({ message: "Is mini view must be a boolean" })
   @IsNotEmpty({ message: "Is mini view is required" })
   isMiniView: boolean;
+
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => GetClassesFilters)
+  filters: GetClassesFilters;
 }
 
 export class GetClassesDto {

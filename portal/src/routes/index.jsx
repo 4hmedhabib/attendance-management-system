@@ -11,19 +11,43 @@ import Logout from "../pages/Authentication/Logout";
 import Register from "../pages/Authentication/Register";
 
 // Dashboard
+import Classes, { ClassDetail, CreateClass } from "../pages/Classes";
+import Courses, { CourseDetail, CreateCourse } from "../pages/Courses";
 import Dashboard from "../pages/Dashboard/index";
-import Faculties from "../pages/Faculties";
-import Shifts from "../pages/Shifts";
+import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
+import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
+import Students, { CreateStudent, StudentDetail } from "../pages/Students";
+import Teachers, { CreateTeacher, TeacherDetail } from "../pages/Teachers";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
+
   { path: "/shifts", component: <Shifts /> },
-  { path: "/classes", component: <Dashboard /> },
+  { path: "/shifts/create", component: <CreateShift /> },
+  { path: "/shifts/detail", component: <ShiftDetail /> },
+
+  { path: "/classes", component: <Classes /> },
+  { path: "/classes/create", component: <CreateClass /> },
+  { path: "/classes/detail", component: <ClassDetail /> },
+
   { path: "/faculties", component: <Faculties /> },
-  { path: "/courses", component: <Dashboard /> },
-  { path: "/teachers", component: <Dashboard /> },
-  { path: "/students", component: <Dashboard /> },
+  { path: "/faculties/create", component: <CreateFaculty /> },
+  { path: "/faculties/detail", component: <FacultyDetail /> },
+
+  { path: "/courses", component: <Courses /> },
+  { path: "/courses/create", component: <CreateCourse /> },
+  { path: "/courses/detail", component: <CourseDetail /> },
+
+  { path: "/teachers", component: <Teachers /> },
+  { path: "/teachers/create", component: <CreateTeacher /> },
+  { path: "/teachers/detail", component: <TeacherDetail /> },
+
+  { path: "/students", component: <Students /> },
+  { path: "/students/create", component: <CreateStudent /> },
+  { path: "/students/detail", component: <StudentDetail /> },
+
   { path: "/enrollments", component: <Dashboard /> },
+
   { path: "/administrations", component: <Dashboard /> },
 
   // //profile
