@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
-import { UpdateCourseData } from "../dtos";
+import { GetCoursesBySlugFilters, UpdateCourseData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
 import { ICourse, IRPCreateCoursePayload } from "../interfaces";
 import { logger } from "../utils";
@@ -11,8 +11,25 @@ const usersDB = prisma.users;
 
 @Service()
 class CourseService {
-  public async findAllCourse(isMiniView: boolean): Promise<ICourse[]> {
+  public async findAllCourse(
+    isMiniView: boolean,
+    filters: GetCoursesBySlugFilters
+  ): Promise<ICourse[]> {
     const courses: ICourse[] = await coursesDB.findMany({
+      where: {
+        semesters: {
+          some: {
+            class_semester: {
+              class: {
+                classslug: filters?.classSlug || undefined,
+              },
+              semester: {
+                semesterslug: filters?.semesterSlug || undefined,
+              },
+            },
+          },
+        },
+      },
       select: {
         courseid: true,
         coursename: true,
