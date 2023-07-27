@@ -19,6 +19,7 @@ const users = [
     password: "admin1234",
     isteacher: true,
     isstudent: false,
+    isadmin: true,
   },
 ].map(
   (user): Prisma.usersCreateManyInput => ({
@@ -31,6 +32,7 @@ const users = [
     password: user.password,
     isteacher: user.isteacher,
     isstudent: user.isstudent,
+    isadmin: user.isadmin,
   })
 );
 
