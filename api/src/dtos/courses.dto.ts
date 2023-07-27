@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNotEmptyObject,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -108,10 +109,31 @@ class GetCourseBySlugPayload {
   isMiniView: boolean;
 }
 
+export class GetCoursesBySlugFilters {
+  @IsString({ message: "class slug must be a string" })
+  @IsOptional()
+  @MaxLength(50, {
+    message: "class slug must be shorter than or equal to 50 characters",
+  })
+  classSlug?: string;
+
+  @IsString({ message: "semester slug must be a string" })
+  @IsOptional()
+  @MaxLength(50, {
+    message: "semester slug must be shorter than or equal to 50 characters",
+  })
+  semesterSlug?: string;
+}
+
 export class GetCoursesBySlugPayload {
   @IsBoolean({ message: "Is min view must be a boolean" })
   @IsNotEmpty({ message: "Is min view is required" })
   isMiniView: boolean;
+
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => GetCoursesBySlugFilters)
+  filters: GetCoursesBySlugFilters;
 }
 
 export class GetCoursesDto {
