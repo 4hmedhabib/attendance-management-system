@@ -200,7 +200,9 @@ const StudentDetail = () => {
         toast.update("deleteStudent", {
           isLoading: false,
           type: "success",
-          render: "Successfully Student Deleted: " + student?.studentname,
+          render:
+            "Successfully Student Deleted: " +
+            `${student?.firstname} ${student?.middlename} - ${student.stdid}`,
           autoClose: 3000,
           closeOnClick: true,
         });
@@ -353,7 +355,7 @@ const StudentDetail = () => {
           <p>
             Do you really want to delete these record{" "}
             <span className="fw-bold fs-6 text-primary">
-              {student?.studentname}{" "}
+              {`${student?.firstname} ${student?.middlename} - ${student.stdid}`}
             </span>
             ? This process can't be undone.
           </p>
