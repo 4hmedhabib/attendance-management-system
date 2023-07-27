@@ -13,14 +13,13 @@ import {
 import { useFormik } from "formik";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import slugify from "slugify";
+import urls from "../../../api/urls";
 import NotFound from "../../../components/Common/NotFound";
 import ResError from "../../../components/Common/ResError";
 import useApiCall from "../../../hooks/apiHook";
 import { updateTeacherSchema } from "../../../validations/teachers";
 import Sidebar from "./Sidebar";
 import UpdateForm from "./UpdateForm";
-import urls from "../../../api/urls";
 
 const TeacherDetail = () => {
   document.title = "Teacher Detail | FFU ATMS";
@@ -354,7 +353,7 @@ const TeacherDetail = () => {
           <p>
             Do you really want to delete these record{" "}
             <span className="fw-bold fs-6 text-primary">
-              {teacher?.teachername}{" "}
+              {`${teacher?.firstname} ${teacher?.middlename} - ${teacher.techid}`}
             </span>
             ? This process can't be undone.
           </p>
