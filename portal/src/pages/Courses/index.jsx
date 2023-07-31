@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, Card, CardBody, Col, Row } from "reactstrap";
 import urls from "../../api/urls";
 import ResError from "../../components/Common/ResError";
-import useApiCall from "../../hooks/apiHook";
 import TableContainer from "../../components/Common/TableContainer";
+import useApiCall from "../../hooks/apiHook";
 
 function Course() {
   //meta title
@@ -28,7 +28,13 @@ function Course() {
     "COURSE_LIST",
     urls.courses(),
     {
-      payload: { isMiniView: false },
+      payload: {
+        isMiniView: false,
+        filters: {
+          semesterSlug: null,
+          classSlug: null,
+        },
+      },
     },
     false
   );
@@ -47,7 +53,13 @@ function Course() {
 
   const onRefresh = useCallback(() => {
     coursesRefetch({
-      payload: { isMiniView: false },
+      payload: {
+        isMiniView: false,
+        filters: {
+          semesterSlug: "semester_1",
+          classSlug: null,
+        },
+      },
     });
   }, []);
 
@@ -155,5 +167,5 @@ function Course() {
 }
 
 export default Course;
-export { default as CreateCourse } from "./CreateCourse";
 export { default as CourseDetail } from "./CourseDetail";
+export { default as CreateCourse } from "./CreateCourse";
