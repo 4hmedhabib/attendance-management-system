@@ -26,6 +26,8 @@ const EnrollmentDetail = () => {
 
   const { state } = useLocation();
 
+  console.log(state);
+
   if (!state?.enrollmentId) {
     return (
       <NotFound>
@@ -45,6 +47,7 @@ const EnrollmentDetail = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setErrors] = useState(null);
   const [modal_backdrop, setDeleteModal] = useState(false);
+  const [isGetStudent, setIsGetStudent] = useState(false);
 
   const {
     data: enrollmentData,
@@ -58,6 +61,42 @@ const EnrollmentDetail = () => {
       enrollmentId: state.enrollmentId,
     },
   });
+
+  const {
+    data: semestersData,
+    isError: semestersIsErr,
+    isLoading: semestersIsLoading,
+    refetch: semestersRefetch,
+  } = useApiCall(
+    "SEMESTERS_ENROLLMENT_CREATE",
+    urls.semesters(),
+    {
+      payload: {
+        isMiniView: true,
+      },
+    },
+    false
+  );
+
+  const {
+    data: classesData,
+    isError: classesIsErr,
+    isLoading: classesIsLoading,
+    refetch: classesRefetch,
+  } = useApiCall(
+    "CLASSES_ENROLLMENT_CREATE",
+    urls.classes(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          facultySlug: null,
+          shiftSlug: null,
+        },
+      },
+    },
+    false
+  );
 
   const { update: updateEnrollment } = useApiCall(
     "UPDATE_ENROLLMENT",
@@ -89,7 +128,7 @@ const EnrollmentDetail = () => {
 
   useEffect(() => {
     if (enrollmentData) {
-      setEnrollment(enrollmentData.data);
+      setEnrollment(enrollmentData?.data);
     }
   }, [enrollmentData]);
 
@@ -125,11 +164,14 @@ const EnrollmentDetail = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      firstName: enrollment?.firstname ?? "",
-      middleName: enrollment?.middlename ?? "",
-      lastName: enrollment?.lastname ?? "",
-      mobileNo: enrollment?.mobileno?.toString() ?? "",
-      enrollmentId: enrollment?.techid?.toUpperCase() ?? "",
+      studentId: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      class: undefined,
+      semester: undefined,
+      course: undefined,
+      teacher: undefined,
     },
     validationSchema: updateEnrollmentSchema,
     onSubmit: async (values) => {
@@ -180,6 +222,46 @@ const EnrollmentDetail = () => {
         });
     },
   });
+
+  let { semester, class: _class, studentId } = formik.values;
+
+  const {
+    data: studentData,
+    isError: studentIsErr,
+    isLoading: studentIsLoading,
+    errMsg: studentErrMsg,
+    refetch: studentRefetch,
+  } = useApiCall(
+    "STUDENT_DETAIL",
+    urls.studentDetail(),
+    {
+      payload: {
+        isMiniView: true,
+        studentId: studentId || "",
+      },
+    },
+    false
+  );
+
+  const {
+    data: coursesData,
+    isError: coursesIsErr,
+    isLoading: coursesIsLoading,
+    refetch: coursesRefetch,
+  } = useApiCall(
+    "COURSES_ENROLLMENT_CREATE",
+    urls.courses(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          classSlug: _class?.value ?? "",
+          semesterSlug: semester?.value ?? "",
+        },
+      },
+    },
+    false
+  );
 
   const onEdit = () => {
     setIsEdit(!isEdit);
@@ -247,6 +329,11 @@ const EnrollmentDetail = () => {
       </NotFound>
     );
   }
+
+  const getStudentData = () => {
+    studentRefetch();
+    setIsGetStudent(true);
+  };
 
   return (
     <React.Fragment>
@@ -325,6 +412,14 @@ const EnrollmentDetail = () => {
               isEdit={isEdit}
               formik={formik}
               isSubmitting={isSubmitting}
+              semestersData={semestersData}
+              classesData={classesData}
+              coursesData={coursesData}
+              studentData={studentData}
+              isGetStudent={isGetStudent}
+              coursesIsLoading={coursesIsLoading}
+              classesIsLoading={classesIsLoading}
+              semestersIsLoading={semestersIsLoading}
             />
           </Row>
         </Container>

@@ -67,7 +67,7 @@ function Enrollment() {
     () => [
       {
         Header: "ID",
-        accessor: "enrollmentid",
+        accessor: "enrollment_id",
         style: {
           textAlign: "center",
           width: "10%",
@@ -79,41 +79,41 @@ function Enrollment() {
       },
       {
         Header: "Enrollment ID",
-        accessor: "stdid",
+        accessor: "student.stdid",
         Cell: ({ cell }) => {
           console.log(cell);
           return `${cell?.value?.toUpperCase()}`;
         },
       },
       {
-        Header: "First Name",
-        accessor: "firstname",
+        Header: "Semester",
+        accessor: "semester_course.class_semester.semester.semestername",
         Cell: ({ cell }) => {
           console.log(cell);
           return `${cell?.value}`;
         },
       },
       {
-        Header: "Middle Name",
-        accessor: "middlename",
+        Header: "Class",
+        accessor: "semester_course.class_semester.class.classname",
         Cell: ({ cell }) => {
           console.log(cell);
           return `${cell?.value}`;
         },
       },
       {
-        Header: "Last Name",
-        accessor: "lastname",
+        Header: "Course",
+        accessor: "semester_course.course.coursename",
         Cell: ({ cell }) => {
           console.log(cell);
           return `${cell?.value}`;
         },
       },
       {
-        Header: "Mobile No",
-        accessor: "mobileno",
+        Header: "Teacher",
+        accessor: "semester_course.teacher",
         Cell: ({ cell }) => {
-          return cell?.value;
+          return `${cell?.value.firstname} ${cell?.value.middlename}`;
         },
       },
       {
@@ -125,15 +125,15 @@ function Enrollment() {
       },
       {
         Header: "Date",
-        accessor: "createdat",
+        accessor: "enrollmentdate",
         Cell: ({ cell }) => {
           return dayjs(cell?.value).format("YYYY-MM-DD");
         },
       },
       {
         Header: "View",
-        accessor: "stdid",
-        id: "Viewstdid",
+        accessor: "enrollment_id",
+        id: "ViewEnrollmentId",
         disableFilters: true,
         Cell: ({ cell }) => {
           return (

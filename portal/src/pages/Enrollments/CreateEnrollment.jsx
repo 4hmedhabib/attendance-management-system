@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import Select from "react-select";
 import {
   Button,
   Card,
@@ -14,7 +15,6 @@ import {
   Row,
   Spinner,
 } from "reactstrap";
-import Select from "react-select";
 
 //Import Breadcrumb
 import { useFormik } from "formik";
@@ -32,6 +32,7 @@ const CreateEnrollment = () => {
   const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGetStudent, setIsGetStudent] = useState(false);
 
   const { create: createEnrollment } = useApiCall(
     "CREATE_STUDENT",
@@ -76,6 +77,68 @@ const CreateEnrollment = () => {
     false
   );
 
+  const formik = useFormik({
+    initialValues: {
+      studentId: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      class: undefined,
+      semester: undefined,
+      course: undefined,
+      teacher: undefined,
+    },
+    validationSchema: createEnrollmentSchema,
+    onSubmit: async (values) => {
+      toast.loading("Please wait a few minutes...", {
+        toastId: "createEnrollment",
+      });
+
+      setIsSubmitting(true);
+      const payload = {
+        data: [
+          {
+            studentId: values.studentId,
+            classId: values.class?.value,
+            teacherId: values.teacher?.value,
+            courseId: values.course?.value,
+            semesterId: values.semester?.value,
+          },
+        ],
+      };
+
+      await createEnrollment({ payload })
+        .then((res) => {
+          toast.update("createEnrollment", {
+            isLoading: false,
+            type: "success",
+            render: "Successfully Enrollment Created: " + values.firstName,
+            autoClose: 3000,
+            closeOnClick: true,
+          });
+
+          formik.resetForm();
+          setIsSubmitting(false);
+          navigate("/enrollments/detail", {
+            state: { enrollmentId: res?.data?.enrollmentid },
+          });
+        })
+        .catch((err) => {
+          toast.update("createEnrollment", {
+            isLoading: false,
+            type: "error",
+            autoClose: 5000,
+            render: err.message || err || "Something went wrong!",
+            closeOnClick: true,
+          });
+
+          setIsSubmitting(false);
+        });
+    },
+  });
+
+  let { semester, class: _class, course, studentId } = formik.values;
+
   const {
     data: coursesData,
     isError: coursesIsErr,
@@ -88,9 +151,27 @@ const CreateEnrollment = () => {
       payload: {
         isMiniView: true,
         filters: {
-          classSlug: null,
-          semesterSlug: null,
+          classSlug: _class?.value ?? "",
+          semesterSlug: semester?.value ?? "",
         },
+      },
+    },
+    false
+  );
+
+  const {
+    data: studentData,
+    isError: studentIsErr,
+    isLoading: studentIsLoading,
+    errMsg: studentErrMsg,
+    refetch: studentRefetch,
+  } = useApiCall(
+    "STUDENT_DETAIL",
+    urls.studentDetail(),
+    {
+      payload: {
+        isMiniView: true,
+        studentId: studentId || "",
       },
     },
     false
@@ -113,66 +194,52 @@ const CreateEnrollment = () => {
   }, []);
 
   useEffect(() => {
+    if (semester && _class) {
+      coursesRefetch({
+        payload: {
+          isMiniView: true,
+          filters: {
+            semesterSlug: semester?.value ?? "",
+            classSlug: _class?.value ?? "",
+          },
+        },
+      });
+    }
+  }, [semester, _class]);
+
+  useEffect(() => {
     onRefresh();
   }, [onRefresh]);
 
-  const formik = useFormik({
-    initialValues: {
-      studentId: "",
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      class: undefined,
-      semester: undefined,
-      course: undefined,
-      teacher: undefined,
-    },
-    validationSchema: createEnrollmentSchema,
-    onSubmit: async (values) => {
-      toast.loading("Please wait a few minutes...", {
-        toastId: "createEnrollment",
-      });
+  useEffect(() => {
+    if (studentData?.data && isGetStudent) {
+      formik.setFieldValue("firstName", studentData?.data?.firstname);
+      formik.setFieldValue("middleName", studentData?.data?.middlename);
+      formik.setFieldValue("lastName", studentData?.data?.lastname);
+      setIsGetStudent(false);
+    }
+  }, [isGetStudent, studentData]);
 
-      setIsSubmitting(true);
-      const payload = {
-        enrollmentId: values.enrollmentId,
-        firstName: values.firstName,
-        middleName: values.middleName,
-        lastName: values.lastName,
-        mobileNo: values.mobileNo?.toString(),
-        yearOfStudy: values.yearOfStudy,
+  const getTeacherData = () => {
+    let _course = coursesData?.data?.find(
+      (course) => course?.classslug === course?.value
+    );
+
+    if (_course && _course.semesters[0]?.teacher) {
+      let teacher = {
+        label: `${_course?.semesters[0]?.teacher?.firstname} ${_course?.semesters[0]?.teacher?.middlename} ${_course?.semesters[0]?.teacher?.lastname}`,
+        value: coursesData?.data?.find(
+          (course) => course?.courseslug === formik.values?.course?.value
+        )?.semesters[0]?.teacher?.techid,
       };
+      formik.setFieldValue("teacher", teacher);
+    }
+  };
 
-      await createEnrollment({ payload })
-        .then((res) => {
-          toast.update("createEnrollment", {
-            isLoading: false,
-            type: "success",
-            render: "Successfully Enrollment Created: " + values.firstName,
-            autoClose: 3000,
-            closeOnClick: true,
-          });
-
-          formik.resetForm();
-          setIsSubmitting(false);
-          navigate("/enrollments/detail", {
-            state: { enrollmentId: res?.data?.stdid },
-          });
-        })
-        .catch((err) => {
-          toast.update("createEnrollment", {
-            isLoading: false,
-            type: "error",
-            autoClose: 5000,
-            render:
-              err?.response?.data?.message ??
-              (err.message || err || "Something went wrong!"),
-            closeOnClick: true,
-          });
-        });
-      setIsSubmitting(false);
-    },
-  });
+  const getStudentData = () => {
+    studentRefetch();
+    setIsGetStudent(true);
+  };
 
   return (
     <React.Fragment>
@@ -207,7 +274,12 @@ const CreateEnrollment = () => {
                             disabled={isSubmitting}
                           />
                           <div className="input-group-prepend">
-                            <button type="button" className="btn btn-primary">
+                            <button
+                              // disabled={isSubmitting || studentIsLoading}
+                              onClick={() => getStudentData()}
+                              type="button"
+                              className="btn btn-primary"
+                            >
                               Get Data
                             </button>
                           </div>
@@ -251,10 +323,10 @@ const CreateEnrollment = () => {
                             onChange={formik.handleChange}
                             disabled={isSubmitting}
                           />
-                          {formik.touched.middleName &&
-                          Boolean(formik.errors.middleName) ? (
+                          {formik.touched?.middleName &&
+                          Boolean(formik.errors?.middleName) ? (
                             <span className="text-danger">
-                              {formik.errors.middleName}
+                              {formik.errors?.middleName}
                             </span>
                           ) : null}
                         </div>
@@ -274,10 +346,10 @@ const CreateEnrollment = () => {
                             onChange={formik.handleChange}
                             disabled={isSubmitting}
                           />
-                          {formik.touched.lastName &&
-                          Boolean(formik.errors.lastName) ? (
+                          {formik.touched?.lastName &&
+                          Boolean(formik.errors?.lastName) ? (
                             <span className="text-danger">
-                              {formik.errors.lastName}
+                              {formik.errors?.lastName}
                             </span>
                           ) : null}
                         </div>
@@ -294,9 +366,9 @@ const CreateEnrollment = () => {
                             title="Semester"
                             options={semestersData?.data?.map((semester) => ({
                               label: `${semester?.semestername}`,
-                              value: semester.semesterslug,
+                              value: semester?.semesterslug,
                             }))}
-                            value={formik.values.semester}
+                            value={formik.values?.semester}
                             onBlur={formik.handleBlur}
                             onChange={(newValue) => {
                               formik.setFieldValue("semester", newValue);
@@ -304,11 +376,11 @@ const CreateEnrollment = () => {
                             isLoading={semestersIsLoading}
                             isDisabled={isSubmitting}
                           />
-                          {formik.touched.semester &&
-                          Boolean(formik.errors.semester) ? (
+                          {formik.touched?.semester &&
+                          Boolean(formik.errors?.semester) ? (
                             <span semesterName="text-danger">
-                              {formik.errors.semester?.label ||
-                                formik.errors.semester?.value}
+                              {formik.errors?.semester?.label ||
+                                formik.errors?.semester?.value}
                             </span>
                           ) : null}
                         </div>
@@ -325,7 +397,7 @@ const CreateEnrollment = () => {
                             title="Class"
                             options={classesData?.data?.map((_class) => ({
                               label: `${_class?.classname}`,
-                              value: _class.classname,
+                              value: _class?.classslug,
                             }))}
                             value={formik.values.class}
                             onBlur={formik.handleBlur}
@@ -337,8 +409,8 @@ const CreateEnrollment = () => {
                           {formik.touched.class &&
                           Boolean(formik.errors.class) ? (
                             <span className="text-danger">
-                              {formik.errors.class?.label ||
-                                formik.errors.class?.value}
+                              {formik.errors?.class?.label ||
+                                formik.errors?.class?.value}
                             </span>
                           ) : null}
                         </div>
@@ -348,32 +420,35 @@ const CreateEnrollment = () => {
                           <Label className="control-label">Course</Label>
                           <InputGroup className="mb-3 d-flex align-items-center">
                             <Select
-                              // isLoading={coursesIsLoading}
-                              id="class"
-                              name="class"
+                              isLoading={coursesIsLoading}
+                              id="course"
+                              name="course"
                               classNamePrefix="select2-selection"
                               placeholder="Choose..."
                               className="flex-grow-1"
                               title="Course"
-                              // options={coursesData?.data
-                              //   ?.filter(
-                              //     (course) =>
-                              //       course.courseslug !== formik.values?.course?.value
-                              //   )
-                              //   .map((course) => ({
-                              //     label: `${course?.coursename}`,
-                              //     value: course.courseslug,
-                              //   }))}
-                              value={formik.values.class}
+                              options={coursesData?.data?.map((course) => ({
+                                label: `${course?.coursename}`,
+                                value: course?.courseslug,
+                              }))}
+                              value={formik.values?.course}
                               onBlur={formik.handleBlur}
                               onChange={(newValue) => {
-                                formik.setFieldValue("class", newValue);
+                                formik.setFieldValue("course", newValue);
                               }}
-                              isDisabled={false}
-                              // coursesIsLoading || coursesIsErr || isSubmitting
+                              isDisabled={isSubmitting}
                             />
                             <div className="input-group-prepend">
-                              <button type="button" className="btn btn-primary">
+                              <button
+                                disabled={
+                                  isSubmitting ||
+                                  coursesIsLoading ||
+                                  coursesData?.data?.length <= 0
+                                }
+                                onClick={getTeacherData}
+                                type="button"
+                                className="btn btn-primary"
+                              >
                                 Get Data
                               </button>
                             </div>
@@ -397,15 +472,15 @@ const CreateEnrollment = () => {
                             className="form-control"
                             placeholder="Teacher"
                             readOnly
-                            value={formik.values.teacher}
+                            value={formik.values?.teacher?.label || ""}
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             disabled={isSubmitting}
                           />
                           {formik.touched.teacher &&
-                          Boolean(formik.errors.teacher) ? (
+                          Boolean(formik.errors?.teacher?.label) ? (
                             <span className="text-danger">
-                              {formik.errors.teacher}
+                              {formik.errors?.teacher?.label}
                             </span>
                           ) : null}
                         </div>
