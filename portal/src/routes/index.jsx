@@ -14,14 +14,15 @@ import Register from "../pages/Authentication/Register";
 import Classes, { ClassDetail, CreateClass } from "../pages/Classes";
 import Courses, { CourseDetail, CreateCourse } from "../pages/Courses";
 import Dashboard from "../pages/Dashboard/index";
-import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
-import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
-import Students, { CreateStudent, StudentDetail } from "../pages/Students";
-import Teachers, { CreateTeacher, TeacherDetail } from "../pages/Teachers";
 import Enrollments, {
   CreateEnrollment,
   EnrollmentDetail,
 } from "../pages/Enrollments";
+import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
+import Semesters, { CreateSemester, SemesterDetail } from "../pages/Semesters";
+import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
+import Students, { CreateStudent, StudentDetail } from "../pages/Students";
+import Teachers, { CreateTeacher, TeacherDetail } from "../pages/Teachers";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -37,6 +38,10 @@ const authProtectedRoutes = [
   { path: "/faculties", component: <Faculties /> },
   { path: "/faculties/create", component: <CreateFaculty /> },
   { path: "/faculties/detail", component: <FacultyDetail /> },
+
+  { path: "/semesters", component: <Semesters /> },
+  { path: "/semesters/create", component: <CreateSemester /> },
+  { path: "/semesters/detail", component: <SemesterDetail /> },
 
   { path: "/courses", component: <Courses /> },
   { path: "/courses/create", component: <CreateCourse /> },
