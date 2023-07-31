@@ -17,23 +17,39 @@ class CourseService {
   ): Promise<ICourse[]> {
     const courses: ICourse[] = await coursesDB.findMany({
       where: {
-        semesters: {
-          some: {
-            class_semester: {
-              class: {
-                classslug: filters?.classSlug || undefined,
-              },
-              semester: {
-                semesterslug: filters?.semesterSlug || undefined,
+        AND: [
+          {
+            semesters: {
+              some: {
+                class_semester: {
+                  class: {
+                    classslug: filters?.classSlug ?? undefined,
+                  },
+                  semester: {
+                    semesterslug: filters?.semesterSlug ?? undefined,
+                  },
+                },
               },
             },
           },
-        },
+        ],
       },
       select: {
         courseid: true,
         coursename: true,
         courseslug: true,
+        semesters: {
+          select: {
+            teacher: {
+              select: {
+                techid: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            },
+          },
+        },
         description: !isMiniView,
         createdby: !isMiniView
           ? {
