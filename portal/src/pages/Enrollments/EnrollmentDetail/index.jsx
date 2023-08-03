@@ -17,21 +17,23 @@ import urls from "../../../api/urls";
 import NotFound from "../../../components/Common/NotFound";
 import ResError from "../../../components/Common/ResError";
 import useApiCall from "../../../hooks/apiHook";
-import { updateTeacherSchema } from "../../../validations/teachers";
+import { updateEnrollmentSchema } from "../../../validations/enrollments";
 import Sidebar from "./Sidebar";
 import UpdateForm from "./UpdateForm";
 
-const TeacherDetail = () => {
-  document.title = "Teacher Detail | FFU ATMS";
+const EnrollmentDetail = () => {
+  document.title = "Enrollment Detail | FFU ATMS";
 
   const { state } = useLocation();
 
-  if (!state?.teacherId) {
+  console.log(state);
+
+  if (!state?.enrollmentId) {
     return (
       <NotFound>
-        <h3>Sorry!, Teacher Id Not Found</h3>
-        <Link className="btn btn-outline-info mt-3" to={"/teachers"}>
-          Go All Teachers
+        <h3>Sorry!, Enrollment Id Not Found</h3>
+        <Link className="btn btn-outline-info mt-3" to={"/enrollments"}>
+          Go All Enrollments
         </Link>
       </NotFound>
     );
@@ -39,48 +41,85 @@ const TeacherDetail = () => {
 
   const navigate = useNavigate();
 
-  const [teacher, setTeacher] = useState(null);
+  const [enrollment, setEnrollment] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setErrors] = useState(null);
   const [modal_backdrop, setDeleteModal] = useState(false);
+  const [isGetStudent, setIsGetStudent] = useState(false);
 
   const {
-    data: teacherData,
-    isError: teacherIsErr,
-    isLoading: teacherIsLoading,
-    errMsg: teacherErrMsg,
-    refetch: teacherRefetch,
-  } = useApiCall("TEACHER_DETAIL", urls.teacherDetail(), {
+    data: enrollmentData,
+    isError: enrollmentIsErr,
+    isLoading: enrollmentIsLoading,
+    errMsg: enrollmentErrMsg,
+    refetch: enrollmentRefetch,
+  } = useApiCall("ENROLLMENT_DETAIL", urls.enrollmentDetail(), {
     payload: {
       isMiniView: false,
-      teacherId: state.teacherId,
+      enrollmentId: state.enrollmentId,
     },
   });
 
-  const { update: updateTeacher } = useApiCall(
-    "UPDATE_TEACHER",
-    urls.updateTeacher(),
+  const {
+    data: semestersData,
+    isError: semestersIsErr,
+    isLoading: semestersIsLoading,
+    refetch: semestersRefetch,
+  } = useApiCall(
+    "SEMESTERS_ENROLLMENT_CREATE",
+    urls.semesters(),
+    {
+      payload: {
+        isMiniView: true,
+      },
+    },
+    false
+  );
+
+  const {
+    data: classesData,
+    isError: classesIsErr,
+    isLoading: classesIsLoading,
+    refetch: classesRefetch,
+  } = useApiCall(
+    "CLASSES_ENROLLMENT_CREATE",
+    urls.classes(),
     {
       payload: {
         isMiniView: true,
         filters: {
-          teacherId: state.teacherId,
+          facultySlug: null,
+          shiftSlug: null,
         },
       },
     },
     false
   );
 
-  const { remove: deleteTeacher } = useApiCall(
-    "DELETE_TEACHER",
-    urls.deleteTeacher(),
+  const { update: updateEnrollment } = useApiCall(
+    "UPDATE_ENROLLMENT",
+    urls.updateEnrollment(),
     {
       payload: {
         isMiniView: true,
         filters: {
-          teacherId: state.teacherId,
+          enrollmentId: state.enrollmentId,
+        },
+      },
+    },
+    false
+  );
+
+  const { remove: deleteEnrollment } = useApiCall(
+    "DELETE_ENROLLMENT",
+    urls.deleteEnrollment(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          enrollmentId: state.enrollmentId,
         },
       },
     },
@@ -88,16 +127,16 @@ const TeacherDetail = () => {
   );
 
   useEffect(() => {
-    if (teacherData) {
-      setTeacher(teacherData.data);
+    if (enrollmentData) {
+      setEnrollment(enrollmentData?.data);
     }
-  }, [teacherData]);
+  }, [enrollmentData]);
 
   const onRefresh = useCallback(() => {
-    teacherRefetch({
+    enrollmentRefetch({
       payload: {
         isMiniView: false,
-        teacherId: state.teacherId,
+        enrollmentId: state.enrollmentId,
       },
     });
   }, []);
@@ -125,39 +164,42 @@ const TeacherDetail = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      firstName: teacher?.firstname ?? "",
-      middleName: teacher?.middlename ?? "",
-      lastName: teacher?.lastname ?? "",
-      mobileNo: teacher?.mobileno?.toString() ?? "",
-      teacherId: teacher?.techid?.toUpperCase() ?? "",
+      studentId: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      class: undefined,
+      semester: undefined,
+      course: undefined,
+      teacher: undefined,
     },
-    validationSchema: updateTeacherSchema,
+    validationSchema: updateEnrollmentSchema,
     onSubmit: async (values) => {
       setErrors(null);
       setIsSubmitting(true);
       toast.loading("Please wait a few minutes...", {
-        toastId: "updateTeacher",
+        toastId: "updateEnrollment",
       });
 
       const payload = {
-        teacherId: state?.teacherId,
+        enrollmentId: state?.enrollmentId,
         data: {
           firstName: values?.firstName,
           middleName: values?.middleName,
           lastName: values?.lastName,
           mobileNo: values?.mobileNo?.toString(),
-          teacherId: values?.teacherId,
+          enrollmentId: values?.enrollmentId,
         },
       };
 
-      await updateTeacher({ payload })
+      await updateEnrollment({ payload })
         .then((res) => {
           setErrors(null);
 
-          toast.update("updateTeacher", {
+          toast.update("updateEnrollment", {
             isLoading: false,
             type: "success",
-            render: "Successfully Teacher Updated: " + values.teacherName,
+            render: "Successfully Enrollment Updated: " + values.enrollmentName,
             autoClose: 3000,
             closeOnClick: true,
           });
@@ -166,7 +208,7 @@ const TeacherDetail = () => {
           onRefresh();
         })
         .catch((err) => {
-          toast.update("updateTeacher", {
+          toast.update("updateEnrollment", {
             isLoading: false,
             type: "error",
             autoClose: 5000,
@@ -181,35 +223,77 @@ const TeacherDetail = () => {
     },
   });
 
+  let { semester, class: _class, studentId } = formik.values;
+
+  const {
+    data: studentData,
+    isError: studentIsErr,
+    isLoading: studentIsLoading,
+    errMsg: studentErrMsg,
+    refetch: studentRefetch,
+  } = useApiCall(
+    "STUDENT_DETAIL",
+    urls.studentDetail(),
+    {
+      payload: {
+        isMiniView: true,
+        studentId: studentId || "",
+      },
+    },
+    false
+  );
+
+  const {
+    data: coursesData,
+    isError: coursesIsErr,
+    isLoading: coursesIsLoading,
+    refetch: coursesRefetch,
+  } = useApiCall(
+    "COURSES_ENROLLMENT_CREATE",
+    urls.courses(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          classSlug: _class?.value ?? "",
+          semesterSlug: semester?.value ?? "",
+        },
+      },
+    },
+    false
+  );
+
   const onEdit = () => {
     setIsEdit(!isEdit);
   };
 
   const onDelete = async () => {
     toast.loading("Please wait a few minutes...", {
-      toastId: "deleteTeacher",
+      toastId: "deleteEnrollment",
     });
 
     setIsDeleting(true);
-    await deleteTeacher({
-      payload: { teacherId: teacher.techid },
+    await deleteEnrollment({
+      payload: { enrollmentId: enrollment.techid },
     })
       .then((res) => {
         setErrors(null);
 
-        toast.update("deleteTeacher", {
+        toast.update("deleteEnrollment", {
           isLoading: false,
           type: "success",
-          render: "Successfully Teacher Deleted: " + teacher?.teachername,
+          render:
+            "Successfully Enrollment Deleted: " +
+            `${enrollment?.firstname} ${enrollment?.middlename} - ${enrollment.stdid}`,
           autoClose: 3000,
           closeOnClick: true,
         });
         setDeleteModal(false);
-        navigate("/teachers");
+        navigate("/enrollments");
         setIsDeleting(false);
       })
       .catch((err) => {
-        toast.update("deleteTeacher", {
+        toast.update("deleteEnrollment", {
           isLoading: false,
           type: "error",
           autoClose: 5000,
@@ -223,7 +307,7 @@ const TeacherDetail = () => {
       });
   };
 
-  if (teacherIsLoading) {
+  if (enrollmentIsLoading) {
     return (
       <div className="page-content ">
         <Col lg={12} className="text-center mt-5">
@@ -231,20 +315,25 @@ const TeacherDetail = () => {
         </Col>
       </div>
     );
-  } else if (teacherIsErr) {
-    return <ResError error={teacherErrMsg} />;
+  } else if (enrollmentIsErr) {
+    return <ResError error={enrollmentErrMsg} />;
   }
 
-  if (!teacher) {
+  if (!enrollment) {
     return (
       <NotFound>
-        <h3>Sorry!, Teacher Not Found</h3>
-        <Link className="btn btn-outline-info mt-3" to={"/teachers"}>
-          Go All Teachers
+        <h3>Sorry!, Enrollment Not Found</h3>
+        <Link className="btn btn-outline-info mt-3" to={"/enrollments"}>
+          Go All Enrollments
         </Link>
       </NotFound>
     );
   }
+
+  const getStudentData = () => {
+    studentRefetch();
+    setIsGetStudent(true);
+  };
 
   return (
     <React.Fragment>
@@ -253,12 +342,12 @@ const TeacherDetail = () => {
           <Row>
             <Col lg={12}>
               {error && <ResError error={error} />}
-              {teacherIsErr && <ResError error={teacherErrMsg} />}
+              {enrollmentIsErr && <ResError error={enrollmentErrMsg} />}
               <Card className="mx-n4 mt-n4 bg-info bg-white">
                 <CardBody>
                   <div className="text-center mb-4">
-                    <h5 className="mt-3 mb-1">{`${teacher?.firstname} ${teacher?.middlename} ${teacher?.lastname}`}</h5>
-                    <p className="text-muted mb-3">Teacher</p>
+                    <h5 className="mt-3 mb-1">{`${enrollment?.firstname} ${enrollment?.middlename} ${enrollment?.lastname}`}</h5>
+                    <p className="text-muted mb-3">Enrollment</p>
                   </div>
 
                   <div className="d-flex align-items-center">
@@ -303,7 +392,7 @@ const TeacherDetail = () => {
                       </button>
                       <Link
                         className="btn btn-secondary d-flex justify-content-center align-items-center"
-                        to={"/teachers"}
+                        to={"/enrollments"}
                       >
                         <i className="bx bx-left-arrow align-baseline me-1"></i>
                         Back
@@ -316,13 +405,21 @@ const TeacherDetail = () => {
           </Row>
 
           <Row>
-            <Sidebar teacher={teacher} />
+            <Sidebar enrollment={enrollment} />
             <UpdateForm
-              teacher={teacher}
-              teacherId={state?.teacherId}
+              enrollment={enrollment}
+              enrollmentId={state?.enrollmentId}
               isEdit={isEdit}
               formik={formik}
               isSubmitting={isSubmitting}
+              semestersData={semestersData}
+              classesData={classesData}
+              coursesData={coursesData}
+              studentData={studentData}
+              isGetStudent={isGetStudent}
+              coursesIsLoading={coursesIsLoading}
+              classesIsLoading={classesIsLoading}
+              semestersIsLoading={semestersIsLoading}
             />
           </Row>
         </Container>
@@ -353,7 +450,7 @@ const TeacherDetail = () => {
           <p>
             Do you really want to delete these record{" "}
             <span className="fw-bold fs-6 text-primary">
-              {`${teacher?.firstname} ${teacher?.middlename} - ${teacher.techid}`}
+              {`${enrollment?.firstname} ${enrollment?.middlename} - ${enrollment.stdid}`}
             </span>
             ? This process can't be undone.
           </p>
@@ -377,4 +474,4 @@ const TeacherDetail = () => {
   );
 };
 
-export default TeacherDetail;
+export default EnrollmentDetail;

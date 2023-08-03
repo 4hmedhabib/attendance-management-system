@@ -12,54 +12,42 @@ import ResError from "../../components/Common/ResError";
 import TableContainer from "../../components/Common/TableContainer";
 import useApiCall from "../../hooks/apiHook";
 
-function Course() {
+function Semester() {
   //meta title
-  document.title = "Courses | FFU - ATMS";
+  document.title = "Semesters | FFU - ATMS";
 
-  const [courses, setCourses] = useState([]);
+  const [semesters, setSemesters] = useState([]);
 
   const {
     data,
     isError,
     isLoading,
     errMsg,
-    refetch: coursesRefetch,
+    refetch: semestersRefetch,
   } = useApiCall(
-    "COURSE_LIST",
-    urls.courses(),
+    "SEMESTER_LIST",
+    urls.semesters(),
     {
-      payload: {
-        isMiniView: false,
-        filters: {
-          semesterSlug: null,
-          classSlug: null,
-        },
-      },
+      payload: { isMiniView: false },
     },
     false
   );
 
   const navigate = useNavigate();
 
-  const handleCourseClicks = () => {
+  const handleSemesterClicks = () => {
     navigate("create");
   };
 
   useEffect(() => {
     if (data) {
-      setCourses(data.data);
+      setSemesters(data.data);
     }
   }, [data]);
 
   const onRefresh = useCallback(() => {
-    coursesRefetch({
-      payload: {
-        isMiniView: false,
-        filters: {
-          semesterSlug: "semester_1",
-          classSlug: null,
-        },
-      },
+    semestersRefetch({
+      payload: { isMiniView: false },
     });
   }, []);
 
@@ -71,7 +59,7 @@ function Course() {
     () => [
       {
         Header: "ID",
-        accessor: "courseid",
+        accessor: "semesterid",
         style: {
           textAlign: "center",
           width: "10%",
@@ -82,8 +70,8 @@ function Course() {
         },
       },
       {
-        Header: "Course Name",
-        accessor: "coursename",
+        Header: "Semester Name",
+        accessor: "semestername",
         Cell: ({ cell }) => {
           return cell?.value;
         },
@@ -96,8 +84,8 @@ function Course() {
         },
       },
       {
-        Header: "Semesters",
-        accessor: "_count.semesters",
+        Header: "Classes",
+        accessor: "_count.classes",
         Cell: ({ cell }) => {
           return cell?.value;
         },
@@ -111,7 +99,7 @@ function Course() {
       },
       {
         Header: "View",
-        accessor: "courseslug",
+        accessor: "semesterslug",
         disableFilters: true,
         Cell: ({ cell }) => {
           return (
@@ -120,7 +108,7 @@ function Course() {
               color="primary"
               className="btn-sm btn-rounded"
               onClick={() =>
-                navigate("detail", { state: { courseSlug: cell?.value } })
+                navigate("detail", { state: { semesterSlug: cell?.value } })
               }
             >
               View
@@ -136,7 +124,7 @@ function Course() {
     <React.Fragment>
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Courses" breadcrumbItem="Courses List" />
+          <Breadcrumbs title="Semesters" breadcrumbItem="Semesters List" />
 
           {isError && <ResError error={errMsg} />}
 
@@ -146,15 +134,15 @@ function Course() {
                 <CardBody>
                   <TableContainer
                     columns={columns}
-                    data={courses || []}
+                    data={semesters || []}
                     isGlobalFilter={false}
                     isAddOptions={true}
-                    handleClick={handleCourseClicks}
+                    handleClick={handleSemesterClicks}
                     customPageSize={50}
                     className="custom-header-css"
                     isLoading={isLoading && !isError}
                     onRefresh={onRefresh}
-                    title="Add New Course"
+                    title="Add New Semester"
                   />
                 </CardBody>
               </Card>
@@ -166,6 +154,6 @@ function Course() {
   );
 }
 
-export default Course;
-export { default as CourseDetail } from "./CourseDetail";
-export { default as CreateCourse } from "./CreateCourse";
+export default Semester;
+export { default as CreateSemester } from "./CreateSemester";
+export { default as SemesterDetail } from "./SemesterDetail";

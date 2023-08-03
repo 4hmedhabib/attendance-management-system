@@ -20,20 +20,20 @@ class SemesterRoute implements IRoutes {
   }
 
   private initializeRoutes() {
-    this.router.get(
-      `${this.path}`,
+    this.router.post(
+      `${this.path}/list`,
       ValidationMiddleware(GetSemestersDto),
       this.semester.getSemesters
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail`,
       ValidationMiddleware(GetSemesterBySlugDto),
       this.semester.getSemesterBySlug
     );
 
     this.router.post(
-      `${this.path}`,
+      `${this.path}/create`,
       ValidationMiddleware(CreateSemesterDto),
       this.semester.createSemester
     );

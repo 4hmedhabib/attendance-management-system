@@ -20,7 +20,7 @@ const UpdateForm = ({ student, isEdit, formik, isSubmitting }) => {
       <Col lg={9}>
         <NotFound>
           <h3>Sorry!, Course Not Found</h3>
-          <Link className="btn btn-outline-info mt-3" to={"/student"}>
+          <Link className="btn btn-outline-info mt-3" to={"/students"}>
             Go All Students
           </Link>
         </NotFound>

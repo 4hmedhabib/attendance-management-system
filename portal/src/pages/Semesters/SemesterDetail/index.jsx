@@ -13,25 +13,26 @@ import {
 import { useFormik } from "formik";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import slugify from "slugify";
 import urls from "../../../api/urls";
 import NotFound from "../../../components/Common/NotFound";
 import ResError from "../../../components/Common/ResError";
 import useApiCall from "../../../hooks/apiHook";
-import { updateTeacherSchema } from "../../../validations/teachers";
+import { updateSemesterSchema } from "../../../validations/semesters";
 import Sidebar from "./Sidebar";
 import UpdateForm from "./UpdateForm";
 
-const TeacherDetail = () => {
-  document.title = "Teacher Detail | FFU ATMS";
+const SemesterDetail = () => {
+  document.title = "Semester Detail | FFU ATMS";
 
   const { state } = useLocation();
 
-  if (!state?.teacherId) {
+  if (!state?.semesterSlug) {
     return (
       <NotFound>
-        <h3>Sorry!, Teacher Id Not Found</h3>
-        <Link className="btn btn-outline-info mt-3" to={"/teachers"}>
-          Go All Teachers
+        <h3>Sorry!, Semester Id Not Found</h3>
+        <Link className="btn btn-outline-info mt-3" to={"/semesters"}>
+          Go All Semesters
         </Link>
       </NotFound>
     );
@@ -39,7 +40,7 @@ const TeacherDetail = () => {
 
   const navigate = useNavigate();
 
-  const [teacher, setTeacher] = useState(null);
+  const [semester, setSemester] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -47,40 +48,80 @@ const TeacherDetail = () => {
   const [modal_backdrop, setDeleteModal] = useState(false);
 
   const {
-    data: teacherData,
-    isError: teacherIsErr,
-    isLoading: teacherIsLoading,
-    errMsg: teacherErrMsg,
-    refetch: teacherRefetch,
-  } = useApiCall("TEACHER_DETAIL", urls.teacherDetail(), {
+    data: semesterData,
+    isError: semesterIsErr,
+    isLoading: semesterIsLoading,
+    errMsg: semesterErrMsg,
+    refetch: semesterRefetch,
+  } = useApiCall("SEMESTER_DETAIL", urls.semesterDetail(), {
     payload: {
       isMiniView: false,
-      teacherId: state.teacherId,
+      semesterSlug: state.semesterSlug,
     },
   });
 
-  const { update: updateTeacher } = useApiCall(
-    "UPDATE_TEACHER",
-    urls.updateTeacher(),
+  const {
+    data: classesData,
+    isError: classesIsErr,
+    isLoading: classesIsLoading,
+    errMsg: classesErrMsg,
+    refetch: classesRefetch,
+  } = useApiCall(
+    "CLASSES_SEMESTER_DETAIL",
+    urls.classes(),
     {
       payload: {
         isMiniView: true,
         filters: {
-          teacherId: state.teacherId,
+          semesterSlug: state.semesterSlug,
         },
       },
     },
     false
   );
 
-  const { remove: deleteTeacher } = useApiCall(
-    "DELETE_TEACHER",
-    urls.deleteTeacher(),
+  const {
+    data: usersData,
+    isError: usersIsErr,
+    isLoading: usersIsLoading,
+    errMsg: usersErrMsg,
+    refetch: usersRefetch,
+  } = useApiCall(
+    "USERS_SEMESTER_DETAIL",
+    urls.users(),
     {
       payload: {
         isMiniView: true,
         filters: {
-          teacherId: state.teacherId,
+          isAdmin: true,
+        },
+      },
+    },
+    false
+  );
+
+  const { update: updateSemester } = useApiCall(
+    "UPDATE_SEMESTER",
+    urls.updateSemester(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          semesterSlug: state.semesterSlug,
+        },
+      },
+    },
+    false
+  );
+
+  const { remove: deleteSemester } = useApiCall(
+    "DELETE_SEMESTER",
+    urls.deleteSemester(),
+    {
+      payload: {
+        isMiniView: true,
+        filters: {
+          semesterSlug: state.semesterSlug,
         },
       },
     },
@@ -88,16 +129,32 @@ const TeacherDetail = () => {
   );
 
   useEffect(() => {
-    if (teacherData) {
-      setTeacher(teacherData.data);
+    if (semesterData) {
+      setSemester(semesterData.data);
     }
-  }, [teacherData]);
+  }, [semesterData]);
 
   const onRefresh = useCallback(() => {
-    teacherRefetch({
+    semesterRefetch({
       payload: {
         isMiniView: false,
-        teacherId: state.teacherId,
+        semesterSlug: state.semesterSlug,
+      },
+    });
+    usersRefetch({
+      payload: {
+        isMiniView: true,
+        filters: {
+          isAdmin: true,
+        },
+      },
+    });
+    classesRefetch({
+      payload: {
+        isMiniView: true,
+        filters: {
+          semesterSlug: state.semesterSlug,
+        },
       },
     });
   }, []);
@@ -125,39 +182,41 @@ const TeacherDetail = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      firstName: teacher?.firstname ?? "",
-      middleName: teacher?.middlename ?? "",
-      lastName: teacher?.lastname ?? "",
-      mobileNo: teacher?.mobileno?.toString() ?? "",
-      teacherId: teacher?.techid?.toUpperCase() ?? "",
+      semesterName: semester?.semestername ?? "",
+      description: semester?.description ?? "",
+      manager: semester?.manager
+        ? {
+            label: `${semester?.manager?.firstname} ${semester?.manager?.middlename} ${semester?.manager?.lastname}`,
+            value: semester?.manager.username,
+          }
+        : undefined,
+      deputy: undefined,
     },
-    validationSchema: updateTeacherSchema,
+    validationSchema: updateSemesterSchema,
     onSubmit: async (values) => {
       setErrors(null);
       setIsSubmitting(true);
       toast.loading("Please wait a few minutes...", {
-        toastId: "updateTeacher",
+        toastId: "updateSemester",
       });
 
       const payload = {
-        teacherId: state?.teacherId,
+        semesterSlug: state?.semesterSlug,
         data: {
-          firstName: values?.firstName,
-          middleName: values?.middleName,
-          lastName: values?.lastName,
-          mobileNo: values?.mobileNo?.toString(),
-          teacherId: values?.teacherId,
+          semesterName: values.semesterName,
+          semesterSlug: slugify(values.semesterName?.toLowerCase(), "_"),
+          description: values.description,
         },
       };
 
-      await updateTeacher({ payload })
+      await updateSemester({ payload })
         .then((res) => {
           setErrors(null);
 
-          toast.update("updateTeacher", {
+          toast.update("updateSemester", {
             isLoading: false,
             type: "success",
-            render: "Successfully Teacher Updated: " + values.teacherName,
+            render: "Successfully Semester Updated: " + values.semesterName,
             autoClose: 3000,
             closeOnClick: true,
           });
@@ -166,7 +225,8 @@ const TeacherDetail = () => {
           onRefresh();
         })
         .catch((err) => {
-          toast.update("updateTeacher", {
+          console.log("----++++-");
+          toast.update("updateSemester", {
             isLoading: false,
             type: "error",
             autoClose: 5000,
@@ -187,29 +247,29 @@ const TeacherDetail = () => {
 
   const onDelete = async () => {
     toast.loading("Please wait a few minutes...", {
-      toastId: "deleteTeacher",
+      toastId: "deleteSemester",
     });
 
     setIsDeleting(true);
-    await deleteTeacher({
-      payload: { teacherId: teacher.techid },
+    await deleteSemester({
+      payload: { semesterSlug: semester.semesterslug },
     })
       .then((res) => {
         setErrors(null);
 
-        toast.update("deleteTeacher", {
+        toast.update("deleteSemester", {
           isLoading: false,
           type: "success",
-          render: "Successfully Teacher Deleted: " + teacher?.teachername,
+          render: "Successfully Semester Deleted: " + semester?.semestername,
           autoClose: 3000,
           closeOnClick: true,
         });
         setDeleteModal(false);
-        navigate("/teachers");
+        navigate("/semesters");
         setIsDeleting(false);
       })
       .catch((err) => {
-        toast.update("deleteTeacher", {
+        toast.update("deleteSemester", {
           isLoading: false,
           type: "error",
           autoClose: 5000,
@@ -223,7 +283,7 @@ const TeacherDetail = () => {
       });
   };
 
-  if (teacherIsLoading) {
+  if (semesterIsLoading) {
     return (
       <div className="page-content ">
         <Col lg={12} className="text-center mt-5">
@@ -231,16 +291,16 @@ const TeacherDetail = () => {
         </Col>
       </div>
     );
-  } else if (teacherIsErr) {
-    return <ResError error={teacherErrMsg} />;
+  } else if (semesterIsErr) {
+    return <ResError error={semesterErrMsg} />;
   }
 
-  if (!teacher) {
+  if (!semester) {
     return (
       <NotFound>
-        <h3>Sorry!, Teacher Not Found</h3>
-        <Link className="btn btn-outline-info mt-3" to={"/teachers"}>
-          Go All Teachers
+        <h3>Sorry!, Semester Not Found</h3>
+        <Link className="btn btn-outline-info mt-3" to={"/semesters"}>
+          Go All Semesters
         </Link>
       </NotFound>
     );
@@ -253,12 +313,12 @@ const TeacherDetail = () => {
           <Row>
             <Col lg={12}>
               {error && <ResError error={error} />}
-              {teacherIsErr && <ResError error={teacherErrMsg} />}
+              {semesterIsErr && <ResError error={semesterErrMsg} />}
               <Card className="mx-n4 mt-n4 bg-info bg-white">
                 <CardBody>
                   <div className="text-center mb-4">
-                    <h5 className="mt-3 mb-1">{`${teacher?.firstname} ${teacher?.middlename} ${teacher?.lastname}`}</h5>
-                    <p className="text-muted mb-3">Teacher</p>
+                    <h5 className="mt-3 mb-1">{semester?.semestername}</h5>
+                    <p className="text-muted mb-3">Semester</p>
                   </div>
 
                   <div className="d-flex align-items-center">
@@ -303,7 +363,7 @@ const TeacherDetail = () => {
                       </button>
                       <Link
                         className="btn btn-secondary d-flex justify-content-center align-items-center"
-                        to={"/teachers"}
+                        to={"/semesters"}
                       >
                         <i className="bx bx-left-arrow align-baseline me-1"></i>
                         Back
@@ -316,11 +376,19 @@ const TeacherDetail = () => {
           </Row>
 
           <Row>
-            <Sidebar teacher={teacher} />
+            <Sidebar semester={semester} />
             <UpdateForm
-              teacher={teacher}
-              teacherId={state?.teacherId}
+              semester={semester}
+              semesterSlug={state?.semesterSlug}
               isEdit={isEdit}
+              classesData={classesData}
+              classesIsErr={classesIsErr}
+              classesErrMsg={classesErrMsg}
+              classesIsLoading={classesIsLoading}
+              usersData={usersData}
+              usersIsErr={usersIsErr}
+              usersIsLoading={usersIsLoading}
+              usersErrMsg={usersErrMsg}
               formik={formik}
               isSubmitting={isSubmitting}
             />
@@ -353,7 +421,7 @@ const TeacherDetail = () => {
           <p>
             Do you really want to delete these record{" "}
             <span className="fw-bold fs-6 text-primary">
-              {`${teacher?.firstname} ${teacher?.middlename} - ${teacher.techid}`}
+              {semester?.semestername}{" "}
             </span>
             ? This process can't be undone.
           </p>
@@ -377,4 +445,4 @@ const TeacherDetail = () => {
   );
 };
 
-export default TeacherDetail;
+export default SemesterDetail;

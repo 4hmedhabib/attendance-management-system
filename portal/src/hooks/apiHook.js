@@ -6,7 +6,7 @@ import apiClient from "../api/apiClient";
 const useApiCall = (key = "repoData", resourceUrl, _data, enabled = true) => {
   const [errMsg, setErrMsg] = useState(null);
 
-  const fetchAll = async () => {
+  const fetchAll = async (payload) => {
     try {
       const response = await apiClient.post(resourceUrl, _data);
       return response.data;
@@ -35,7 +35,12 @@ const useApiCall = (key = "repoData", resourceUrl, _data, enabled = true) => {
     return response.data;
   };
 
-  const { data, isLoading, isError, refetch } = useQuery([key], fetchAll, {
+  const {
+    data,
+    isLoading = false,
+    isError,
+    refetch,
+  } = useQuery([key], fetchAll, {
     enabled: enabled,
   });
 

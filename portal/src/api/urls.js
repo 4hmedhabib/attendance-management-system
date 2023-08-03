@@ -47,6 +47,22 @@ export default {
     return `${this.api}/shifts/delete`;
   },
 
+  semesters: function () {
+    return `${this.api}/semesters/list`;
+  },
+  semesterDetail: function () {
+    return `${this.api}/semesters/detail`;
+  },
+  createSemester: function () {
+    return `${this.api}/semesters/create`;
+  },
+  updateSemester: function () {
+    return `${this.api}/semesters/update`;
+  },
+  deleteSemester: function () {
+    return `${this.api}/semesters/delete`;
+  },
+
   classes: function () {
     return `${this.api}/classes/list`;
   },
@@ -109,5 +125,21 @@ export default {
   },
   deleteStudent: function () {
     return `${this.api}/students/delete`;
+  },
+
+  enrollments: function () {
+    return `${this.api}/students/enrollments/list`;
+  },
+  enrollmentDetail: function () {
+    return `${this.api}/students/enrollments/detail`;
+  },
+  createEnrollment: function () {
+    return `${this.api}/students/enrollments/create`;
+  },
+  updateEnrollment: function () {
+    return `${this.api}/students/enrollments/update`;
+  },
+  deleteEnrollment: function () {
+    return `${this.api}/students/enrollments/delete`;
   },
 };

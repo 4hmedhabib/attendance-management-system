@@ -22,9 +22,11 @@ class CourseController {
   ): Promise<void> => {
     try {
       const isMiniView = req.body.payload.isMiniView;
+      const filters = req.body.payload.filters;
 
       const findAllCoursesData: ICourse[] = await this.course.findAllCourse(
-        isMiniView
+        isMiniView,
+        filters
       );
 
       res.status(200).json({
