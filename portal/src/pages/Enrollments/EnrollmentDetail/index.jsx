@@ -26,8 +26,6 @@ const EnrollmentDetail = () => {
 
   const { state } = useLocation();
 
-  console.log(state);
-
   if (!state?.enrollmentId) {
     return (
       <NotFound>
@@ -164,14 +162,40 @@ const EnrollmentDetail = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      studentId: "",
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      class: undefined,
-      semester: undefined,
-      course: undefined,
-      teacher: undefined,
+      studentId: enrollment?.student?.stdid || "",
+      firstName: enrollment?.student?.firstname || "",
+      middleName: enrollment?.student?.middlename || "",
+      lastName: enrollment?.student?.lastname || "",
+      class: enrollment?.semester_course?.class_semester?.class
+        ? {
+            label:
+              enrollment?.semester_course?.class_semester?.class?.classname,
+            value:
+              enrollment?.semester_course?.class_semester?.class?.classslug,
+          }
+        : undefined,
+      semester: enrollment?.semester_course?.class_semester?.semester
+        ? {
+            label:
+              enrollment?.semester_course?.class_semester?.semester
+                ?.semestername,
+            value:
+              enrollment?.semester_course?.class_semester?.semester
+                ?.semesterslug,
+          }
+        : undefined,
+      course: enrollment?.semester_course?.course
+        ? {
+            label: enrollment?.semester_course?.course?.coursename,
+            value: enrollment?.semester_course?.course?.courseslug,
+          }
+        : undefined,
+      teacher: enrollment?.semester_course?.teacher
+        ? {
+            label: `${enrollment?.semester_course?.teacher?.firstname} ${enrollment?.semester_course?.teacher?.middlename}`,
+            value: enrollment?.semester_course?.teacher?.techid,
+          }
+        : undefined,
     },
     validationSchema: updateEnrollmentSchema,
     onSubmit: async (values) => {
@@ -263,6 +287,55 @@ const EnrollmentDetail = () => {
     false
   );
 
+  let { values } = formik;
+
+  useEffect(() => {
+    console.log(values);
+  }, [values]);
+
+  const onRefreshData = useCallback(() => {
+    semestersRefetch({
+      payload: { isMiniView: true },
+    });
+
+    classesRefetch({
+      payload: {
+        isMiniView: true,
+        filters: {
+          facultySlug: null,
+          shiftSlug: null,
+        },
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (studentData?.data && isGetStudent) {
+      formik.setFieldValue("firstName", studentData?.data?.firstname);
+      formik.setFieldValue("middleName", studentData?.data?.middlename);
+      formik.setFieldValue("lastName", studentData?.data?.lastname);
+      setIsGetStudent(false);
+    }
+  }, [isGetStudent, studentData]);
+
+  useEffect(() => {
+    if (semester && _class) {
+      coursesRefetch({
+        payload: {
+          isMiniView: true,
+          filters: {
+            semesterSlug: semester?.value ?? "",
+            classSlug: _class?.value ?? "",
+          },
+        },
+      });
+    }
+  }, [semester, _class]);
+
+  useEffect(() => {
+    onRefreshData();
+  }, [onRefreshData]);
+
   const onEdit = () => {
     setIsEdit(!isEdit);
   };
@@ -300,7 +373,7 @@ const EnrollmentDetail = () => {
           render: err?.response?.data?.message ?? "Something went wrong!",
           closeOnClick: true,
         });
-        console.log(err.response.data.message);
+
         setErrors(err?.response?.data?.message ?? err.message);
         setDeleteModal(false);
         setIsDeleting(false);
@@ -330,6 +403,22 @@ const EnrollmentDetail = () => {
     );
   }
 
+  const getTeacherData = () => {
+    let _course = coursesData?.data?.find(
+      (course) => course?.classslug === course?.value
+    );
+
+    if (_course && _course.semesters[0]?.teacher) {
+      let teacher = {
+        label: `${_course?.semesters[0]?.teacher?.firstname} ${_course?.semesters[0]?.teacher?.middlename} ${_course?.semesters[0]?.teacher?.lastname}`,
+        value: coursesData?.data?.find(
+          (course) => course?.courseslug === formik.values?.course?.value
+        )?.semesters[0]?.teacher?.techid,
+      };
+      formik.setFieldValue("teacher", teacher);
+    }
+  };
+
   const getStudentData = () => {
     studentRefetch();
     setIsGetStudent(true);
@@ -346,7 +435,7 @@ const EnrollmentDetail = () => {
               <Card className="mx-n4 mt-n4 bg-info bg-white">
                 <CardBody>
                   <div className="text-center mb-4">
-                    <h5 className="mt-3 mb-1">{`${enrollment?.firstname} ${enrollment?.middlename} ${enrollment?.lastname}`}</h5>
+                    <h5 className="mt-3 mb-1">{`${enrollment?.student?.stdid} - ${enrollment?.semester_course?.course.coursename} - ${enrollment?.semester_course?.class_semester?.semester?.semestername}`}</h5>
                     <p className="text-muted mb-3">Enrollment</p>
                   </div>
 
@@ -420,6 +509,8 @@ const EnrollmentDetail = () => {
               coursesIsLoading={coursesIsLoading}
               classesIsLoading={classesIsLoading}
               semestersIsLoading={semestersIsLoading}
+              getStudentData={getStudentData}
+              getTeacherData={getTeacherData}
             />
           </Row>
         </Container>

@@ -27,6 +27,8 @@ const UpdateForm = ({
   coursesIsLoading,
   classesIsLoading,
   semestersIsLoading,
+  getStudentData,
+  getTeacherData,
 }) => {
   if (!enrollment) {
     return (
@@ -282,16 +284,7 @@ const UpdateForm = ({
                   color="primary"
                   className="btn "
                 >
-                  {isSubmitting ? <Spinner size={"sm"} /> : "Create"}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => navigate(-1)}
-                  color="secondary"
-                  className=" "
-                  disabled={isSubmitting}
-                >
-                  Cancel
+                  {isSubmitting ? <Spinner size={"sm"} /> : "Save Changes"}
                 </Button>
               </div>
             </Form>

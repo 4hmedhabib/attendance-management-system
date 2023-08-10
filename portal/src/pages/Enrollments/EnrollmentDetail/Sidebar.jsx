@@ -14,8 +14,12 @@ const Sidebar = ({ enrollment }) => {
                 <div className="d-flex">
                   <i className="bx bx-id-card font-size-18 text-primary"></i>
                   <div className="ms-3">
-                    <h6 className="mb-1 fw-semibold">First Name:</h6>
-                    <span className="text-muted">{enrollment?.firstname}</span>
+                    <h6 className="mb-1 fw-semibold">Student Name:</h6>
+                    <span className="text-muted">
+                      {enrollment?.student?.firstname}{" "}
+                      {enrollment?.student?.middlename}{" "}
+                      {enrollment?.student?.lastname}
+                    </span>
                   </div>
                 </div>
               </li>
@@ -23,8 +27,10 @@ const Sidebar = ({ enrollment }) => {
                 <div className="d-flex">
                   <i className="bx bx-id-card font-size-18 text-primary"></i>
                   <div className="ms-3">
-                    <h6 className="mb-1 fw-semibold">Middle Name:</h6>
-                    <span className="text-muted">{enrollment?.middlename}</span>
+                    <h6 className="mb-1 fw-semibold">Course:</h6>
+                    <span className="text-muted">
+                      {enrollment?.semester_course?.course?.coursename}
+                    </span>
                   </div>
                 </div>
               </li>
@@ -32,8 +38,13 @@ const Sidebar = ({ enrollment }) => {
                 <div className="d-flex">
                   <i className="bx bx-id-card font-size-18 text-primary"></i>
                   <div className="ms-3">
-                    <h6 className="mb-1 fw-semibold">Last Name:</h6>
-                    <span className="text-muted">{enrollment?.lastname}</span>
+                    <h6 className="mb-1 fw-semibold">Semester:</h6>
+                    <span className="text-muted">
+                      {
+                        enrollment?.semester_course?.class_semester?.semester
+                          ?.semestername
+                      }
+                    </span>
                   </div>
                 </div>
               </li>
@@ -43,7 +54,7 @@ const Sidebar = ({ enrollment }) => {
                   <div className="ms-3">
                     <h6 className="mb-1 fw-semibold">enrollment ID:</h6>
                     <span className="text-muted">
-                      {enrollment?.techid?.toUpperCase()}
+                      {enrollment?.enrollment_id}
                     </span>
                   </div>
                 </div>
@@ -51,10 +62,13 @@ const Sidebar = ({ enrollment }) => {
 
               <li>
                 <div className="d-flex">
-                  <i className="mdi mdi-phone-classic font-size-18 text-primary"></i>
+                  <i className="mdi mdi-account-details font-size-18 text-primary"></i>
                   <div className="ms-3">
-                    <h6 className="mb-1 fw-semibold">Mobile No:</h6>
-                    <span className="text-muted">{enrollment?.mobileno}</span>
+                    <h6 className="mb-1 fw-semibold">Teacher:</h6>
+                    <span className="text-muted">
+                      {enrollment?.semester_course?.teacher?.firstname}{" "}
+                      {enrollment?.semester_course?.teacher?.middlename}
+                    </span>
                   </div>
                 </div>
               </li>
@@ -113,8 +127,8 @@ const Sidebar = ({ enrollment }) => {
                   <div className="ms-3">
                     <h6 className="mb-1 fw-semibold">Created At:</h6>
                     <span className="text-muted">
-                      {enrollment?.createdat
-                        ? dayjs(enrollment?.createdat).format(
+                      {enrollment?.created_at
+                        ? dayjs(enrollment?.created_at).format(
                             "YYYY-MM-DD HH:mm"
                           )
                         : "NULL"}
@@ -127,8 +141,8 @@ const Sidebar = ({ enrollment }) => {
                   <i className="mdi mdi-calendar font-size-18 text-primary"></i>
                   <div className="ms-3">
                     <h6 className="mb-1 fw-semibold">Updated At:</h6>
-                    {enrollment?.updatedat
-                      ? dayjs(enrollment?.updatedat).format("YYYY-MM-DD HH:mm")
+                    {enrollment?.updated_at
+                      ? dayjs(enrollment?.updated_at).format("YYYY-MM-DD HH:mm")
                       : "NULL"}
                   </div>
                 </div>
