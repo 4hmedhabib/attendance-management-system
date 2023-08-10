@@ -25,7 +25,7 @@ const semester_coursesDB = prisma.semester_courses;
 @Service()
 class StudentService {
   public async findAllStudent(isMiniView: boolean): Promise<IStudent[]> {
-    const students: IStudent[] = await studentsDB.findMany({
+    const students: IStudent[] = await studentsDB?.findMany({
       select: {
         studentid: true,
         stdid: true,
@@ -60,7 +60,7 @@ class StudentService {
     isMiniView: boolean
   ): Promise<IStudent> {
     try {
-      const findStudent: IStudent = await studentsDB.findUnique({
+      const findStudent: IStudent = await studentsDB?.findUnique({
         where: { stdid: studentId },
         select: {
           studentid: true,
@@ -113,7 +113,7 @@ class StudentService {
   ): Promise<any> {
     let savedData: Prisma.studentsCreateInput;
 
-    const findStudent = await studentsDB.findUnique({
+    const findStudent = await studentsDB?.findUnique({
       where: { stdid: studentData.studentId },
       select: { studentid: true, stdid: true },
     });
@@ -124,7 +124,7 @@ class StudentService {
         `This student id ${studentData.studentId} already exists`
       );
 
-    const findMobileNo = await studentsDB.findUnique({
+    const findMobileNo = await studentsDB?.findUnique({
       where: { stdid: studentData.studentId },
       select: { studentid: true, stdid: true },
     });
@@ -151,7 +151,7 @@ class StudentService {
     };
 
     try {
-      const createStudentData: IStudent = await studentsDB.create({
+      const createStudentData: IStudent = await studentsDB?.create({
         data: savedData,
         select: {
           studentid: true,
@@ -176,7 +176,7 @@ class StudentService {
   ): Promise<any> {
     return new Promise(async (resolve, reject) => {
       let createdByUsername = "ahmedhabib";
-      const findCreatedBy = await usersDB.findUnique({
+      const findCreatedBy = await usersDB?.findUnique({
         where: { username: createdByUsername },
         select: { userid: true, username: true },
       });
@@ -194,7 +194,7 @@ class StudentService {
         new Promise<Prisma.studentsCreateManyInput>(async (resolve, reject) => {
           let savedData: Prisma.studentsCreateManyInput;
 
-          const findStudent = await studentsDB.findUnique({
+          const findStudent = await studentsDB?.findUnique({
             where: { stdid: studentData.studentId },
             select: { studentid: true, stdid: true },
           });
@@ -208,7 +208,7 @@ class StudentService {
             );
           }
 
-          const findMobileNo = await studentsDB.findUnique({
+          const findMobileNo = await studentsDB?.findUnique({
             where: { stdid: studentData.studentId },
             select: { studentid: true, stdid: true },
           });
@@ -255,7 +255,7 @@ class StudentService {
             logger.error(`ERROR STACK: ${err.stack}`);
             return reject(err.message);
           } else {
-            const savedData = await studentsDB.createMany({
+            const savedData = await studentsDB?.createMany({
               data: result.filter((res) => res),
               skipDuplicates: true,
             });
@@ -284,7 +284,7 @@ class StudentService {
   ): Promise<IStudent> {
     let updatedData: Prisma.studentsUpdateInput;
 
-    const findStudent: IStudent = await studentsDB.findUnique({
+    const findStudent: IStudent = await studentsDB?.findUnique({
       where: {
         stdid: studentId,
       },
@@ -296,7 +296,7 @@ class StudentService {
 
     if (!findStudent) throw new HttpException(409, "Student doesn't exist");
 
-    const checkStudentMobileno: IStudent = await studentsDB.findUnique({
+    const checkStudentMobileno: IStudent = await studentsDB?.findUnique({
       where: {
         stdid: studentData.mobileNo,
       },
@@ -316,7 +316,7 @@ class StudentService {
         "This mobileno already exists please check it: " + studentData.mobileNo
       );
 
-    const checkStudentId: IStudent = await studentsDB.findUnique({
+    const checkStudentId: IStudent = await studentsDB?.findUnique({
       where: {
         stdid: studentData.mobileNo,
       },
@@ -350,7 +350,7 @@ class StudentService {
       },
     };
 
-    const updateStudentData: IStudent = await studentsDB.update({
+    const updateStudentData: IStudent = await studentsDB?.update({
       where: {
         studentid: findStudent.studentid,
       },
@@ -387,7 +387,7 @@ class StudentService {
   }
 
   public async deleteStudent(studentId: string): Promise<IStudent> {
-    const findStudent: IStudent = await studentsDB.findUnique({
+    const findStudent: IStudent = await studentsDB?.findUnique({
       where: {
         stdid: studentId,
       },
@@ -395,7 +395,7 @@ class StudentService {
 
     if (!findStudent) throw new HttpException(409, "Student doesn't exist");
 
-    const deleteStudentData: IStudent = await studentsDB.delete({
+    const deleteStudentData: IStudent = await studentsDB?.delete({
       where: {
         studentid: findStudent.studentid,
       },
@@ -414,7 +414,7 @@ class StudentService {
   public async createEnrollment(enrollmentsData: CreateEnrollmentPayload[]) {
     return new Promise(async (resolve, reject) => {
       let createdByUsername = "ahmedhabib";
-      const findCreatedBy = await usersDB.findUnique({
+      const findCreatedBy = await usersDB?.findUnique({
         where: { username: createdByUsername },
         select: { userid: true, username: true },
       });
@@ -436,7 +436,7 @@ class StudentService {
         return new Promise(async (resolve, reject) => {
           let savedData: Prisma.enrollmentsCreateManyInput;
 
-          const findStudent = await studentsDB.findUnique({
+          const findStudent = await studentsDB?.findUnique({
             where: { stdid: enrollmentData.studentId },
             select: { studentid: true, stdid: true },
           });
@@ -447,7 +447,7 @@ class StudentService {
             return reject(`This student ${enrollmentData.studentId} not found`);
           }
 
-          const findClass = await classesDB.findUnique({
+          const findClass = await classesDB?.findUnique({
             where: { classslug: enrollmentData.classId },
             select: { classid: true, classslug: true },
           });
@@ -458,7 +458,7 @@ class StudentService {
             return reject(`This class ${enrollmentData.classId} not found`);
           }
 
-          const findSemester = await semestersDB.findUnique({
+          const findSemester = await semestersDB?.findUnique({
             where: { semesterslug: enrollmentData.semesterId },
             select: { semesterid: true, semesterslug: true },
           });
@@ -472,7 +472,7 @@ class StudentService {
             );
           }
 
-          const findCourse = await coursesDB.findUnique({
+          const findCourse = await coursesDB?.findUnique({
             where: { courseslug: enrollmentData.courseId },
             select: { courseid: true, courseslug: true },
           });
@@ -483,7 +483,7 @@ class StudentService {
             return reject(`This course ${enrollmentData.courseId} not found`);
           }
 
-          const findTeacher = await teachersDB.findUnique({
+          const findTeacher = await teachersDB?.findUnique({
             where: { techid: enrollmentData.teacherId },
             select: { teacherid: true, techid: true },
           });
@@ -493,7 +493,7 @@ class StudentService {
             return reject(`This teacher ${enrollmentData.teacherId} not found`);
           }
 
-          const findSemesterCourse = await semester_coursesDB.findUnique({
+          const findSemesterCourse = await semester_coursesDB?.findUnique({
             where: {
               teacherid_courseid_semesterid_classid: {
                 teacherid: findTeacher.teacherid,
@@ -520,7 +520,7 @@ class StudentService {
             );
           }
 
-          const findEnrollment = await enrollmentsDB.findFirst({
+          const findEnrollment = await enrollmentsDB?.findFirst({
             where: {
               semester_course: findSemesterCourse,
               studentid: findStudent.studentid,
@@ -573,7 +573,7 @@ class StudentService {
             logger.error(`ERROR STACK: ${err.stack}`);
             return reject(err.message);
           } else {
-            const savedData = await enrollmentsDB.createMany({
+            const savedData = await enrollmentsDB?.createMany({
               data: result.filter((res) => res),
               skipDuplicates: true,
             });
@@ -638,7 +638,7 @@ class StudentService {
       };
     }
 
-    const enrollments: IEnrollment[] = await enrollmentsDB.findMany({
+    const enrollments: IEnrollment[] = await enrollmentsDB?.findMany({
       where: enrollmentsWhere,
       select: {
         enrollment_id: true,
@@ -721,7 +721,7 @@ class StudentService {
     isMiniView: boolean,
     enrollmentId: number
   ): Promise<IEnrollment> {
-    const enrollment: IEnrollment = await enrollmentsDB.findUnique({
+    const enrollment: IEnrollment = await enrollmentsDB?.findUnique({
       where: { enrollment_id: enrollmentId },
       select: {
         enrollment_id: true,

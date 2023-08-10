@@ -14,7 +14,7 @@ class UserService {
     isMiniView: boolean,
     filters: GetUsersBySlugFilters
   ): Promise<IUser[]> {
-    const users: IUser[] = await usersDB.findMany({
+    const users: IUser[] = await usersDB?.findMany({
       where: {
         isadmin: filters.isAdmin ?? undefined,
       },
@@ -54,7 +54,7 @@ class UserService {
     isMiniView: boolean
   ): Promise<IUser> {
     try {
-      const findUser: IUser = await usersDB.findUnique({
+      const findUser: IUser = await usersDB?.findUnique({
         where: { username: username },
         select: {
           userid: true,
@@ -130,7 +130,7 @@ class UserService {
   public async createUser(userData: IRPCreateUserPayload): Promise<any> {
     let savedData: Prisma.usersCreateInput;
 
-    const findUser = await usersDB.findUnique({
+    const findUser = await usersDB?.findUnique({
       where: { username: userData.username },
       select: { userid: true, username: true },
     });
@@ -141,7 +141,7 @@ class UserService {
         `This user ${userData.username} already exists`
       );
 
-    const findMobileNo = await usersDB.findUnique({
+    const findMobileNo = await usersDB?.findUnique({
       where: { username: userData.username },
       select: { userid: true, username: true },
     });
@@ -152,7 +152,7 @@ class UserService {
         `This mobileno ${userData.mobileNo} already exists`
       );
 
-    const findEmail = await usersDB.findUnique({
+    const findEmail = await usersDB?.findUnique({
       where: { username: userData.username },
       select: { userid: true, username: true },
     });
@@ -166,7 +166,7 @@ class UserService {
     if (userData.password !== userData.passwordConfirm)
       throw new HttpException(409, `Passwords do NOT match`);
 
-    if ((await usersDB.count()) <= 0) {
+    if ((await usersDB?.count()) <= 0) {
       savedData = {
         ...savedData,
         firstname: userData.firstName,
@@ -200,7 +200,7 @@ class UserService {
     }
 
     try {
-      const createUserData: IUser = await usersDB.create({
+      const createUserData: IUser = await usersDB?.create({
         data: savedData,
         select: {
           userid: true,
@@ -226,7 +226,7 @@ class UserService {
   ): Promise<IUser> {
     let updatedData: Prisma.usersUpdateInput;
 
-    const findUser: IUser = await usersDB.findUnique({
+    const findUser: IUser = await usersDB?.findUnique({
       where: {
         username: username,
       },
@@ -238,7 +238,7 @@ class UserService {
 
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
-    const checkUser: IUser = await usersDB.findUnique({
+    const checkUser: IUser = await usersDB?.findUnique({
       where: {
         username: userData.username,
       },
@@ -255,7 +255,7 @@ class UserService {
         "This user already exists please check it: " + userData.username
       );
 
-    const checkUserMobileno: IUser = await usersDB.findUnique({
+    const checkUserMobileno: IUser = await usersDB?.findUnique({
       where: {
         username: userData.mobileNo,
       },
@@ -272,7 +272,7 @@ class UserService {
         "This mobileno already exists please check it: " + userData.mobileNo
       );
 
-    const checkUserEmail: IUser = await usersDB.findUnique({
+    const checkUserEmail: IUser = await usersDB?.findUnique({
       where: {
         username: userData.mobileNo,
       },
@@ -306,7 +306,7 @@ class UserService {
       },
     };
 
-    const updateUserData: IUser = await usersDB.update({
+    const updateUserData: IUser = await usersDB?.update({
       where: {
         userid: findUser.userid,
       },
@@ -365,7 +365,7 @@ class UserService {
   }
 
   public async deleteUser(username: string): Promise<IUser> {
-    const findUser: IUser = await usersDB.findUnique({
+    const findUser: IUser = await usersDB?.findUnique({
       where: {
         username: username,
       },
@@ -373,7 +373,7 @@ class UserService {
 
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
-    const deleteUserData: IUser = await usersDB.delete({
+    const deleteUserData: IUser = await usersDB?.delete({
       where: {
         userid: findUser.userid,
       },

@@ -11,7 +11,7 @@ const teachersDB = prisma.teachers;
 @Service()
 class TeacherService {
   public async findAllTeacher(isMiniView: boolean): Promise<ITeacher[]> {
-    const teachers: ITeacher[] = await teachersDB.findMany({
+    const teachers: ITeacher[] = await teachersDB?.findMany({
       select: {
         teacherid: true,
         techid: true,
@@ -44,7 +44,7 @@ class TeacherService {
     isMiniView: boolean
   ): Promise<ITeacher> {
     try {
-      const findTeacher: ITeacher = await teachersDB.findUnique({
+      const findTeacher: ITeacher = await teachersDB?.findUnique({
         where: { techid: teacherId },
         select: {
           teacherid: true,
@@ -96,7 +96,7 @@ class TeacherService {
   ): Promise<any> {
     let savedData: Prisma.teachersCreateInput;
 
-    const findTeacher = await teachersDB.findUnique({
+    const findTeacher = await teachersDB?.findUnique({
       where: { techid: teacherData.teacherId },
       select: { teacherid: true, techid: true },
     });
@@ -107,7 +107,7 @@ class TeacherService {
         `This teacher id ${teacherData.teacherId} already exists`
       );
 
-    const findMobileNo = await teachersDB.findUnique({
+    const findMobileNo = await teachersDB?.findUnique({
       where: { techid: teacherData.teacherId },
       select: { teacherid: true, techid: true },
     });
@@ -133,7 +133,7 @@ class TeacherService {
     };
 
     try {
-      const createTeacherData: ITeacher = await teachersDB.create({
+      const createTeacherData: ITeacher = await teachersDB?.create({
         data: savedData,
         select: {
           teacherid: true,
@@ -159,7 +159,7 @@ class TeacherService {
   ): Promise<ITeacher> {
     let updatedData: Prisma.teachersUpdateInput;
 
-    const findTeacher: ITeacher = await teachersDB.findUnique({
+    const findTeacher: ITeacher = await teachersDB?.findUnique({
       where: {
         techid: teacherId,
       },
@@ -171,7 +171,7 @@ class TeacherService {
 
     if (!findTeacher) throw new HttpException(409, "Teacher doesn't exist");
 
-    const checkTeacherMobileno: ITeacher = await teachersDB.findUnique({
+    const checkTeacherMobileno: ITeacher = await teachersDB?.findUnique({
       where: {
         techid: teacherData.mobileNo,
       },
@@ -191,7 +191,7 @@ class TeacherService {
         "This mobileno already exists please check it: " + teacherData.mobileNo
       );
 
-    const checkTeacherId: ITeacher = await teachersDB.findUnique({
+    const checkTeacherId: ITeacher = await teachersDB?.findUnique({
       where: {
         techid: teacherData.mobileNo,
       },
@@ -224,7 +224,7 @@ class TeacherService {
       },
     };
 
-    const updateTeacherData: ITeacher = await teachersDB.update({
+    const updateTeacherData: ITeacher = await teachersDB?.update({
       where: {
         teacherid: findTeacher.teacherid,
       },
@@ -261,7 +261,7 @@ class TeacherService {
   }
 
   public async deleteTeacher(teacherId: string): Promise<ITeacher> {
-    const findTeacher: ITeacher = await teachersDB.findUnique({
+    const findTeacher: ITeacher = await teachersDB?.findUnique({
       where: {
         techid: teacherId,
       },
@@ -269,7 +269,7 @@ class TeacherService {
 
     if (!findTeacher) throw new HttpException(409, "Teacher doesn't exist");
 
-    const deleteTeacherData: ITeacher = await teachersDB.delete({
+    const deleteTeacherData: ITeacher = await teachersDB?.delete({
       where: {
         teacherid: findTeacher.teacherid,
       },

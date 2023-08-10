@@ -15,7 +15,7 @@ class CourseService {
     isMiniView: boolean,
     filters: GetCoursesBySlugFilters
   ): Promise<ICourse[]> {
-    const courses: ICourse[] = await coursesDB.findMany({
+    const courses: ICourse[] = await coursesDB?.findMany({
       where: {
         AND: [
           {
@@ -81,7 +81,7 @@ class CourseService {
     isMiniView: boolean
   ): Promise<ICourse> {
     try {
-      const findCourse: ICourse = await coursesDB.findUnique({
+      const findCourse: ICourse = await coursesDB?.findUnique({
         where: { courseslug: courseSlug },
         select: {
           courseid: !isMiniView,
@@ -134,7 +134,7 @@ class CourseService {
   public async createCourse(courseData: IRPCreateCoursePayload): Promise<any> {
     let savedData: Prisma.coursesCreateInput;
 
-    const findCourse = await coursesDB.findUnique({
+    const findCourse = await coursesDB?.findUnique({
       where: { courseslug: courseData.courseSlug },
       select: { courseid: true, courseslug: true, coursename: true },
     });
@@ -158,7 +158,7 @@ class CourseService {
     };
 
     try {
-      const createCourseData: ICourse = await coursesDB.create({
+      const createCourseData: ICourse = await coursesDB?.create({
         data: savedData,
         select: {
           courseid: true,
@@ -185,7 +185,7 @@ class CourseService {
   ): Promise<ICourse> {
     let updatedData: Prisma.coursesUpdateInput;
 
-    const findCourse: ICourse = await coursesDB.findUnique({
+    const findCourse: ICourse = await coursesDB?.findUnique({
       where: {
         courseslug: courseSlug,
       },
@@ -197,7 +197,7 @@ class CourseService {
 
     if (!findCourse) throw new HttpException(409, "Course doesn't exist");
 
-    const checkCourse: ICourse = await coursesDB.findUnique({
+    const checkCourse: ICourse = await coursesDB?.findUnique({
       where: {
         courseslug: courseData.courseSlug,
       },
@@ -226,7 +226,7 @@ class CourseService {
       },
     };
 
-    const updateCourseData: ICourse = await coursesDB.update({
+    const updateCourseData: ICourse = await coursesDB?.update({
       where: {
         courseid: findCourse.courseid,
       },
@@ -265,7 +265,7 @@ class CourseService {
   }
 
   public async deleteCourse(courseSlug: string): Promise<ICourse> {
-    const findCourse: ICourse = await coursesDB.findUnique({
+    const findCourse: ICourse = await coursesDB?.findUnique({
       where: {
         courseslug: courseSlug,
       },
@@ -273,7 +273,7 @@ class CourseService {
 
     if (!findCourse) throw new HttpException(409, "Course doesn't exist");
 
-    const deleteCourseData: ICourse = await coursesDB.delete({
+    const deleteCourseData: ICourse = await coursesDB?.delete({
       where: {
         courseid: findCourse.courseid,
       },
