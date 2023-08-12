@@ -12,7 +12,7 @@ const usersDB = prisma.users;
 @Service()
 class FacultyService {
   public async findAllFaculty(isMiniView: boolean): Promise<IFaculty[]> {
-    const faculties: IFaculty[] = await facultiesDB.findMany({
+    const faculties: IFaculty[] = await facultiesDB?.findMany({
       select: {
         facultyid: true,
         facultyname: true,
@@ -51,7 +51,7 @@ class FacultyService {
     isMiniView: boolean
   ): Promise<IFaculty> {
     try {
-      const findFaculty: IFaculty = await facultiesDB.findUnique({
+      const findFaculty: IFaculty = await facultiesDB?.findUnique({
         where: { facultyslug: facultySlug },
         select: {
           facultyid: !isMiniView,
@@ -128,7 +128,7 @@ class FacultyService {
   ): Promise<any> {
     let savedData: Prisma.facultiesCreateInput;
 
-    const findFaculty = await facultiesDB.findUnique({
+    const findFaculty = await facultiesDB?.findUnique({
       where: { facultyslug: facultyData.facultySlug },
       select: { facultyid: true, facultyslug: true, facultyname: true },
     });
@@ -140,7 +140,7 @@ class FacultyService {
       );
 
     if (facultyData.manager?.length) {
-      const findManager = await usersDB.findUnique({
+      const findManager = await usersDB?.findUnique({
         where: { username: facultyData.manager },
         select: { userid: true, username: true },
       });
@@ -162,7 +162,7 @@ class FacultyService {
     }
 
     if (facultyData.deputy?.length) {
-      const findDeputy = await usersDB.findUnique({
+      const findDeputy = await usersDB?.findUnique({
         where: { username: facultyData.deputy },
         select: { userid: true, username: true },
       });
@@ -196,7 +196,7 @@ class FacultyService {
     };
 
     try {
-      const createFacultyData: IFaculty = await facultiesDB.create({
+      const createFacultyData: IFaculty = await facultiesDB?.create({
         data: savedData,
         select: {
           facultyid: true,
@@ -223,7 +223,7 @@ class FacultyService {
   ): Promise<IFaculty> {
     let updatedData: Prisma.facultiesUpdateInput;
 
-    const findFaculty: IFaculty = await facultiesDB.findUnique({
+    const findFaculty: IFaculty = await facultiesDB?.findUnique({
       where: {
         facultyslug: facultySlug,
       },
@@ -235,7 +235,7 @@ class FacultyService {
 
     if (!findFaculty) throw new HttpException(409, "Faculty doesn't exist");
 
-    const checkFaculty: IFaculty = await facultiesDB.findUnique({
+    const checkFaculty: IFaculty = await facultiesDB?.findUnique({
       where: {
         facultyslug: facultyData.facultySlug,
       },
@@ -254,7 +254,7 @@ class FacultyService {
       );
 
     if (facultyData.manager?.length) {
-      const findManager = await usersDB.findUnique({
+      const findManager = await usersDB?.findUnique({
         where: { username: facultyData.manager },
         select: { userid: true, username: true },
       });
@@ -276,7 +276,7 @@ class FacultyService {
     }
 
     if (facultyData.deputy?.length) {
-      const findDeputy = await usersDB.findUnique({
+      const findDeputy = await usersDB?.findUnique({
         where: { username: facultyData.deputy },
         select: { userid: true, username: true },
       });
@@ -309,7 +309,7 @@ class FacultyService {
       },
     };
 
-    const updateFacultyData: IFaculty = await facultiesDB.update({
+    const updateFacultyData: IFaculty = await facultiesDB?.update({
       where: {
         facultyid: findFaculty.facultyid,
       },
@@ -375,7 +375,7 @@ class FacultyService {
   }
 
   public async deleteFaculty(facultySlug: string): Promise<IFaculty> {
-    const findFaculty: IFaculty = await facultiesDB.findUnique({
+    const findFaculty: IFaculty = await facultiesDB?.findUnique({
       where: {
         facultyslug: facultySlug,
       },
@@ -383,7 +383,7 @@ class FacultyService {
 
     if (!findFaculty) throw new HttpException(409, "Faculty doesn't exist");
 
-    const deleteFacultyData: IFaculty = await facultiesDB.delete({
+    const deleteFacultyData: IFaculty = await facultiesDB?.delete({
       where: {
         facultyid: findFaculty.facultyid,
       },

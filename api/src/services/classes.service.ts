@@ -44,7 +44,7 @@ class ClassService {
     isMiniView: boolean,
     filters: GetClassesFilters
   ): Promise<IClass[]> {
-    const classes: IClass[] = await classesDB.findMany({
+    const classes: IClass[] = await classesDB?.findMany({
       where: {
         faculty: {
           facultyslug: filters.facultySlug ?? undefined,
@@ -102,7 +102,7 @@ class ClassService {
     isMiniView: boolean
   ): Promise<IClass> {
     try {
-      const findClass: IClass = await classesDB.findUnique({
+      const findClass: IClass = await classesDB?.findUnique({
         where: { classslug: classSlug },
         select: {
           classid: !isMiniView,
@@ -174,7 +174,7 @@ class ClassService {
   public async createClass(classData: IRPCreateClassPayload): Promise<any> {
     let savedData: Prisma.classesCreateInput;
 
-    const findClass = await classesDB.findUnique({
+    const findClass = await classesDB?.findUnique({
       where: { classslug: classData.classSlug },
       select: { classid: true, classslug: true, classname: true },
     });
@@ -185,14 +185,14 @@ class ClassService {
         `This class ${classData.className} already exists`
       );
 
-    let faculty: IFaculty = await facultiesDB.findUnique({
+    let faculty: IFaculty = await facultiesDB?.findUnique({
       where: { facultyslug: classData.facultySlug || "" },
     });
 
     if (!faculty)
       throw new HttpException(409, `faculty ${classData.shiftSlug} not found`);
 
-    let shift: IShift = await shiftsDB.findUnique({
+    let shift: IShift = await shiftsDB?.findUnique({
       where: { shiftslug: classData.shiftSlug || "" },
     });
 
@@ -222,7 +222,7 @@ class ClassService {
     };
 
     try {
-      const createClassData: IClass = await classesDB.create({
+      const createClassData: IClass = await classesDB?.create({
         data: savedData,
         select: {
           classid: true,
@@ -249,7 +249,7 @@ class ClassService {
     const classData = classSemesterData.payload;
     let savedData: Prisma.class_semestersCreateInput;
 
-    const findClass = await classesDB.findUnique({
+    const findClass = await classesDB?.findUnique({
       where: { classslug: classData.classSlug },
       select: { classid: true, classslug: true, classname: true },
     });
@@ -260,7 +260,7 @@ class ClassService {
         `This class ${classData.classSlug} not found`
       );
 
-    let semester: { semesterid: number } = await semestersDB.findUnique({
+    let semester: { semesterid: number } = await semestersDB?.findUnique({
       where: { semesterslug: classData.semester.semesterSlug || "" },
       select: { semesterid: true },
     });
@@ -294,7 +294,7 @@ class ClassService {
 
     try {
       const createClassSemester: IClassSemester =
-        await class_semestersDB.create({
+        await class_semestersDB?.create({
           data: savedData,
           select: {
             class: {
@@ -332,7 +332,7 @@ class ClassService {
   ): Promise<IClass> {
     let updatedData: Prisma.classesUpdateInput;
 
-    const findClass: IClass = await classesDB.findUnique({
+    const findClass: IClass = await classesDB?.findUnique({
       where: {
         classslug: classSlug,
       },
@@ -344,7 +344,7 @@ class ClassService {
 
     if (!findClass) throw new HttpException(409, "Class doesn't exist");
 
-    const checkClass: IClass = await classesDB.findUnique({
+    const checkClass: IClass = await classesDB?.findUnique({
       where: {
         classslug: classData.classSlug,
       },
@@ -361,14 +361,14 @@ class ClassService {
         "This class already exists please check it: " + classData.className
       );
 
-    let faculty: IFaculty = await facultiesDB.findUnique({
+    let faculty: IFaculty = await facultiesDB?.findUnique({
       where: { facultyslug: classData.facultySlug || "" },
     });
 
     if (!faculty)
       throw new HttpException(409, `faculty ${classData.shiftSlug} not found`);
 
-    let shift: IShift = await shiftsDB.findUnique({
+    let shift: IShift = await shiftsDB?.findUnique({
       where: { shiftslug: classData.shiftSlug || "" },
     });
 
@@ -397,7 +397,7 @@ class ClassService {
       },
     };
 
-    const updateClassData: IClass = await classesDB.update({
+    const updateClassData: IClass = await classesDB?.update({
       where: {
         classid: findClass.classid,
       },
@@ -456,7 +456,7 @@ class ClassService {
   }
 
   public async deleteClass(classSlug: string): Promise<IClass> {
-    const findClass: IClass = await classesDB.findUnique({
+    const findClass: IClass = await classesDB?.findUnique({
       where: {
         classslug: classSlug,
       },
@@ -464,7 +464,7 @@ class ClassService {
 
     if (!findClass) throw new HttpException(409, "Class doesn't exist");
 
-    const deleteClassData: IClass = await classesDB.delete({
+    const deleteClassData: IClass = await classesDB?.delete({
       where: {
         classid: findClass.classid,
       },
@@ -484,7 +484,7 @@ class ClassService {
   ): Promise<IClassSemester[]> {
     try {
       const findClassSemesters: IClassSemester[] =
-        await class_semestersDB.findMany({
+        await class_semestersDB?.findMany({
           where: { class: { classslug: classSlug } },
           select: {
             class: { select: { classslug: true, classname: true } },
@@ -544,7 +544,7 @@ class ClassService {
     const classSemesterData = classSemesterCoursesData.payload;
     let savedData: Prisma.semester_coursesCreateManyInput;
 
-    const findClass = await classesDB.findUnique({
+    const findClass = await classesDB?.findUnique({
       where: { classslug: classSemesterData.classSlug },
       select: { classid: true, classslug: true, classname: true },
     });
@@ -555,7 +555,7 @@ class ClassService {
         `This class ${classSemesterData.classSlug} not found`
       );
 
-    let findSemester: { semesterid: number } = await semestersDB.findUnique({
+    let findSemester: { semesterid: number } = await semestersDB?.findUnique({
       where: { semesterslug: classSemesterData.semesterSlug || "" },
       select: { semesterid: true },
     });
@@ -569,7 +569,7 @@ class ClassService {
     // async.map<any, any, number>([], async (err, result) => {
     //   try {
     //     const createClassSemesterCourses: IClassSemesterCourses =
-    //       await semester_coursesDB.createMany({
+    //       await semester_coursesDB?.createMany({
     //         data: savedData,
     //         skipDuplicates: true,
     //       });
@@ -589,7 +589,7 @@ class ClassService {
     const results = await Promise.allSettled(
       classSemesterData.courses.map(async (course) => {
         try {
-          let findCourse: { courseid: number } = await coursesDB.findUnique({
+          let findCourse: { courseid: number } = await coursesDB?.findUnique({
             where: { courseslug: course.courseSlug },
             select: { courseid: true },
           });
@@ -600,10 +600,12 @@ class ClassService {
               `course ${course.courseSlug} not found`
             );
 
-          let findTeacher: { teacherid: number } = await teachersDB.findUnique({
-            where: { techid: course.teacherId || "" },
-            select: { teacherid: true },
-          });
+          let findTeacher: { teacherid: number } = await teachersDB?.findUnique(
+            {
+              where: { techid: course.teacherId || "" },
+              select: { teacherid: true },
+            }
+          );
 
           if (!findTeacher)
             throw new HttpException(
@@ -611,7 +613,7 @@ class ClassService {
               `teacher ${course.teacherId} not found`
             );
 
-          let findDuplicate = await semester_coursesDB.findUnique({
+          let findDuplicate = await semester_coursesDB?.findUnique({
             where: {
               teacherid_courseid_semesterid_classid: {
                 classid: findClass.classid,
@@ -629,7 +631,7 @@ class ClassService {
               `semester course ${course.courseSlug} aleardy exists`
             );
 
-          let classSemesterCourse = await semester_coursesDB.create({
+          let classSemesterCourse = await semester_coursesDB?.create({
             data: {
               class_semester: {
                 connect: {
@@ -690,7 +692,7 @@ class ClassService {
     isMiniView: boolean
   ): Promise<IClassSemesterCourses[]> {
     try {
-      const findClass = await classesDB.findUnique({
+      const findClass = await classesDB?.findUnique({
         where: { classslug: classSlug },
         select: { classid: true, classslug: true, classname: true },
       });
@@ -698,7 +700,7 @@ class ClassService {
       if (!findClass)
         throw new HttpException(409, `This class ${classSlug} not found`);
 
-      let findSemester: { semesterid: number } = await semestersDB.findUnique({
+      let findSemester: { semesterid: number } = await semestersDB?.findUnique({
         where: { semesterslug: semesterSlug || "" },
         select: { semesterid: true },
       });
@@ -707,7 +709,7 @@ class ClassService {
         throw new HttpException(409, `semester ${semesterSlug} not found`);
 
       const findClassSemesterCourses: IClassSemesterCourses[] =
-        await semester_coursesDB.findMany({
+        await semester_coursesDB?.findMany({
           where: {
             classid: findClass.classid,
             semesterid: findSemester.semesterid,
@@ -832,7 +834,7 @@ class ClassService {
       await Promise.allSettled(
         classByCourse.enrollments.map(async (enrollment) => {
           try {
-            const findDuplicate = await attendancesDB.findFirst({
+            const findDuplicate = await attendancesDB?.findFirst({
               where: {
                 enrollmentid: enrollment.enrollment_id,
                 AND: [
@@ -913,7 +915,7 @@ class ClassService {
     let { classSlug, courseSlug, semesterSlug, teacherId } = payload;
 
     try {
-      const findClass = await classesDB.findUnique({
+      const findClass = await classesDB?.findUnique({
         where: { classslug: classSlug },
         select: { classid: true, classslug: true, classname: true },
       });
@@ -921,7 +923,7 @@ class ClassService {
       if (!findClass)
         throw new HttpException(409, `This class ${classSlug} not found`);
 
-      let findSemester: { semesterid: number } = await semestersDB.findUnique({
+      let findSemester: { semesterid: number } = await semestersDB?.findUnique({
         where: { semesterslug: semesterSlug || "" },
         select: { semesterid: true },
       });
@@ -929,7 +931,7 @@ class ClassService {
       if (!findSemester)
         throw new HttpException(409, `semester ${semesterSlug} not found`);
 
-      let findCourse: { courseid: number } = await coursesDB.findUnique({
+      let findCourse: { courseid: number } = await coursesDB?.findUnique({
         where: { courseslug: courseSlug || "" },
         select: { courseid: true },
       });
@@ -937,7 +939,7 @@ class ClassService {
       if (!findCourse)
         throw new HttpException(409, `course ${courseSlug} not found`);
 
-      let findTeacher: { teacherid: number } = await teachersDB.findUnique({
+      let findTeacher: { teacherid: number } = await teachersDB?.findUnique({
         where: { techid: teacherId || "" },
         select: { teacherid: true },
       });
@@ -945,7 +947,7 @@ class ClassService {
       if (!findTeacher)
         throw new HttpException(409, `teacher ${teacherId} not found`);
 
-      const enrollments: IEnrollment[] = await enrollmentsDB.findMany({
+      const enrollments: IEnrollment[] = await enrollmentsDB?.findMany({
         where: {
           courseid: findCourse.courseid,
           classid: findClass.classid,
@@ -963,7 +965,7 @@ class ClassService {
       const endDate = setEndDay(payload.endDate);
 
       const classSemesterCoursesAttendances: IClassSemesterCourses[] =
-        await attendancesDB.findMany({
+        await attendancesDB?.findMany({
           where: {
             enrollmentid: {
               in: enrollments.map((enrollment) => enrollment.enrollment_id),
@@ -1053,7 +1055,7 @@ class ClassService {
   public async updateClassSemesterCoursesAttendance(
     payload: UpdateClassSemesterCourseAttendancePayload
   ): Promise<any> {
-    const findUpdatedBy = await usersDB.findUnique({
+    const findUpdatedBy = await usersDB?.findUnique({
       where: {
         username: "ahmedhabib",
       },
@@ -1064,7 +1066,7 @@ class ClassService {
 
     if (!findUpdatedBy) throw new HttpException(409, "User doesn't exist");
 
-    const findAttendance: IAttendances = await attendancesDB.findUnique({
+    const findAttendance: IAttendances = await attendancesDB?.findUnique({
       where: {
         attendanceid: payload.attendanceId,
       },
@@ -1076,8 +1078,8 @@ class ClassService {
     if (!findAttendance)
       throw new HttpException(409, "Attendance doesn't exist");
 
-    const findStatus: IAttendanceStatus = await attendancestatusesDB.findUnique(
-      {
+    const findStatus: IAttendanceStatus =
+      await attendancestatusesDB?.findUnique({
         where: {
           statusslug: payload.statusSlug,
         },
@@ -1086,12 +1088,11 @@ class ClassService {
           statusslug: true,
           statusname: true,
         },
-      }
-    );
+      });
 
     if (!findStatus) throw new HttpException(409, "Status doesn't exist");
 
-    const updateAttendaceData: IAttendances = await attendancesDB.update({
+    const updateAttendaceData: IAttendances = await attendancesDB?.update({
       where: {
         attendanceid: findAttendance.attendanceid,
       },

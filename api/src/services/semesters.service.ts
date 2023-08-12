@@ -12,7 +12,7 @@ const usersDB = prisma.users;
 @Service()
 class SemesterService {
   public async findAllSemester(isMiniView: boolean): Promise<ISemester[]> {
-    const semesters: ISemester[] = await semestersDB.findMany({
+    const semesters: ISemester[] = await semestersDB?.findMany({
       select: {
         semesterid: true,
         semestername: true,
@@ -50,7 +50,7 @@ class SemesterService {
     isMiniView: boolean
   ): Promise<ISemester> {
     try {
-      const findSemester: ISemester = await semestersDB.findUnique({
+      const findSemester: ISemester = await semestersDB?.findUnique({
         where: { semesterslug: semesterSlug },
         select: {
           semesterid: !isMiniView,
@@ -107,7 +107,7 @@ class SemesterService {
   ): Promise<any> {
     let savedData: Prisma.semestersCreateInput;
 
-    const findSemester = await semestersDB.findUnique({
+    const findSemester = await semestersDB?.findUnique({
       where: { semesterslug: semesterData.semesterSlug },
       select: { semesterid: true, semesterslug: true, semestername: true },
     });
@@ -131,7 +131,7 @@ class SemesterService {
     };
 
     try {
-      const createSemesterData: ISemester = await semestersDB.create({
+      const createSemesterData: ISemester = await semestersDB?.create({
         data: savedData,
         select: {
           semesterid: true,
@@ -158,7 +158,7 @@ class SemesterService {
   ): Promise<ISemester> {
     let updatedData: Prisma.semestersUpdateInput;
 
-    const findSemester: ISemester = await semestersDB.findUnique({
+    const findSemester: ISemester = await semestersDB?.findUnique({
       where: {
         semesterslug: semesterSlug,
       },
@@ -170,7 +170,7 @@ class SemesterService {
 
     if (!findSemester) throw new HttpException(409, "Semester doesn't exist");
 
-    const checkSemester: ISemester = await semestersDB.findUnique({
+    const checkSemester: ISemester = await semestersDB?.findUnique({
       where: {
         semesterslug: semesterData.semesterSlug,
       },
@@ -200,7 +200,7 @@ class SemesterService {
       },
     };
 
-    const updateSemesterData: ISemester = await semestersDB.update({
+    const updateSemesterData: ISemester = await semestersDB?.update({
       where: {
         semesterid: findSemester.semesterid,
       },
@@ -246,7 +246,7 @@ class SemesterService {
   }
 
   public async deleteSemester(semesterSlug: string): Promise<ISemester> {
-    const findSemester: ISemester = await semestersDB.findUnique({
+    const findSemester: ISemester = await semestersDB?.findUnique({
       where: {
         semesterslug: semesterSlug,
       },
@@ -254,7 +254,7 @@ class SemesterService {
 
     if (!findSemester) throw new HttpException(409, "Semester doesn't exist");
 
-    const deleteSemesterData: ISemester = await semestersDB.delete({
+    const deleteSemesterData: ISemester = await semestersDB?.delete({
       where: {
         semesterid: findSemester.semesterid,
       },

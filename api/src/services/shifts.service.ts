@@ -13,7 +13,7 @@ const facultiesDB = prisma.faculties;
 @Service()
 class ShiftService {
   public async findAllShift(isMiniView: boolean): Promise<IShift[]> {
-    const shifts: IShift[] = await shiftsDB.findMany({
+    const shifts: IShift[] = await shiftsDB?.findMany({
       select: {
         shiftid: true,
         shiftname: true,
@@ -51,7 +51,7 @@ class ShiftService {
     isMiniView: boolean
   ): Promise<IShift> {
     try {
-      const findShift: IShift = await shiftsDB.findUnique({
+      const findShift: IShift = await shiftsDB?.findUnique({
         where: { shiftslug: shiftSlug },
         select: {
           shiftid: !isMiniView,
@@ -106,7 +106,7 @@ class ShiftService {
   public async createShift(shiftData: IRPCreateShiftPayload): Promise<any> {
     let savedData: Prisma.shiftsCreateInput;
 
-    const findShift = await shiftsDB.findUnique({
+    const findShift = await shiftsDB?.findUnique({
       where: { shiftslug: shiftData.shiftSlug },
       select: { shiftid: true, shiftslug: true, shiftname: true },
     });
@@ -130,7 +130,7 @@ class ShiftService {
     };
 
     try {
-      const createShiftData: IShift = await shiftsDB.create({
+      const createShiftData: IShift = await shiftsDB?.create({
         data: savedData,
         select: {
           shiftid: true,
@@ -157,7 +157,7 @@ class ShiftService {
   ): Promise<IShift> {
     let updatedData: Prisma.shiftsUpdateInput;
 
-    const findShift: IShift = await shiftsDB.findUnique({
+    const findShift: IShift = await shiftsDB?.findUnique({
       where: {
         shiftslug: shiftSlug,
       },
@@ -169,7 +169,7 @@ class ShiftService {
 
     if (!findShift) throw new HttpException(409, "Shift doesn't exist");
 
-    const checkShift: IShift = await shiftsDB.findUnique({
+    const checkShift: IShift = await shiftsDB?.findUnique({
       where: {
         shiftslug: shiftData.shiftSlug,
       },
@@ -198,7 +198,7 @@ class ShiftService {
       },
     };
 
-    const updateShiftData: IShift = await shiftsDB.update({
+    const updateShiftData: IShift = await shiftsDB?.update({
       where: {
         shiftid: findShift.shiftid,
       },
@@ -244,7 +244,7 @@ class ShiftService {
   }
 
   public async deleteShift(shiftSlug: string): Promise<IShift> {
-    const findShift: IShift = await shiftsDB.findUnique({
+    const findShift: IShift = await shiftsDB?.findUnique({
       where: {
         shiftslug: shiftSlug,
       },
@@ -252,7 +252,7 @@ class ShiftService {
 
     if (!findShift) throw new HttpException(409, "Shift doesn't exist");
 
-    const deleteShiftData: IShift = await shiftsDB.delete({
+    const deleteShiftData: IShift = await shiftsDB?.delete({
       where: {
         shiftid: findShift.shiftid,
       },

@@ -53,7 +53,7 @@ const EnrollmentDetail = () => {
     isLoading: enrollmentIsLoading,
     errMsg: enrollmentErrMsg,
     refetch: enrollmentRefetch,
-  } = useApiCall("ENROLLMENT_DETAIL", urls.enrollmentDetail(), {
+  } = useApiCall("ATTENDANCE_DETAIL", urls.enrollmentDetail(), {
     payload: {
       isMiniView: false,
       enrollmentId: state.enrollmentId,
@@ -66,7 +66,7 @@ const EnrollmentDetail = () => {
     isLoading: semestersIsLoading,
     refetch: semestersRefetch,
   } = useApiCall(
-    "SEMESTERS_ENROLLMENT_CREATE",
+    "SEMESTERS_ATTENDANCE_CREATE",
     urls.semesters(),
     {
       payload: {
@@ -82,7 +82,7 @@ const EnrollmentDetail = () => {
     isLoading: classesIsLoading,
     refetch: classesRefetch,
   } = useApiCall(
-    "CLASSES_ENROLLMENT_CREATE",
+    "CLASSES_ATTENDANCE_CREATE",
     urls.classes(),
     {
       payload: {
@@ -97,7 +97,7 @@ const EnrollmentDetail = () => {
   );
 
   const { update: updateEnrollment } = useApiCall(
-    "UPDATE_ENROLLMENT",
+    "UPDATE_ATTENDANCE",
     urls.updateEnrollment(),
     {
       payload: {
@@ -111,7 +111,7 @@ const EnrollmentDetail = () => {
   );
 
   const { remove: deleteEnrollment } = useApiCall(
-    "DELETE_ENROLLMENT",
+    "DELETE_ATTENDANCE",
     urls.deleteEnrollment(),
     {
       payload: {
@@ -273,7 +273,7 @@ const EnrollmentDetail = () => {
     isLoading: coursesIsLoading,
     refetch: coursesRefetch,
   } = useApiCall(
-    "COURSES_ENROLLMENT_CREATE",
+    "COURSES_ATTENDANCE_CREATE",
     urls.courses(),
     {
       payload: {
