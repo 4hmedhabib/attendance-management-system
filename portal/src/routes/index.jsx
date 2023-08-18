@@ -63,9 +63,9 @@ const authProtectedRoutes = [
   { path: "/enrollments/create", component: <CreateEnrollment /> },
   { path: "/enrollments/detail", component: <EnrollmentDetail /> },
 
-  { path: "/attendances", component: <Enrollments /> },
-  { path: "/attendances/create", component: <CreateEnrollment /> },
-  { path: "/attendances/detail", component: <EnrollmentDetail /> },
+  { path: "/attendances", component: <Attendances /> },
+  { path: "/attendances/create", component: <CreateAttendance /> },
+  { path: "/attendances/detail", component: <AttendanceDetail /> },
 
   { path: "/administrations", component: <Dashboard /> },
 
