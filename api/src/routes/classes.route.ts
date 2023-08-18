@@ -3,16 +3,19 @@ import { ClassController } from "../controllers";
 import {
   CreateClassDto,
   CreateClassSemesterCourseAttendancesDto,
+  CreateClassSemesterCourseSessionsDto,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   DeleteClassBySlugDto,
   GetClassBySlugDto,
   GetClassSemesterCourseAttendancesDto,
+  GetClassSemesterCourseSessionsDto,
   GetClassSemesterCoursesBySlugDto,
   GetClassSemestersBySlugDto,
   GetClassesDto,
   UpdateClassDto,
   UpdateClassSemesterCourseAttendancesDto,
+  UpdateClassSemesterCourseSessionsDto,
 } from "../dtos";
 import { IRoutes } from "../interfaces/";
 import { ValidationMiddleware } from "../middlewares/validation.middleware";
@@ -97,6 +100,24 @@ class ClassRoute implements IRoutes {
       `${this.path}/detail/semesters/courses/attendances/update`,
       ValidationMiddleware(UpdateClassSemesterCourseAttendancesDto),
       this.class.updateClassSemesterCourseAttendances
+    );
+
+    this.router.post(
+      `${this.path}/detail/semesters/courses/sessions/create`,
+      ValidationMiddleware(CreateClassSemesterCourseSessionsDto),
+      this.class.createClassSemesterCourseSessions
+    );
+
+    this.router.get(
+      `${this.path}/detail/semesters/courses/sessions/`,
+      ValidationMiddleware(GetClassSemesterCourseSessionsDto),
+      this.class.getClassSemesterCourseSessions
+    );
+
+    this.router.put(
+      `${this.path}/detail/semesters/courses/sessions/update`,
+      ValidationMiddleware(UpdateClassSemesterCourseSessionsDto),
+      this.class.updateClassSemesterCourseSessions
     );
   }
 }
