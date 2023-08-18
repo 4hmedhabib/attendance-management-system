@@ -142,4 +142,20 @@ export default {
   deleteEnrollment: function () {
     return `${this.api}/students/enrollments/delete`;
   },
+
+  attendances: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/list`;
+  },
+  attendanceDetail: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/detail`;
+  },
+  createattendance: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/create`;
+  },
+  updateattendance: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/update`;
+  },
+  deleteattendance: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/delete`;
+  },
 };
