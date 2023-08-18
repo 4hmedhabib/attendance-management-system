@@ -3,12 +3,15 @@ import { Service } from "typedi";
 import { preDefined } from "../constants";
 import {
   CreateClassSemesterCourseAttendancePayload,
+  CreateClassSemesterCourseSessionPayload,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   GetClassSemesterCourseAttendancePayload,
+  GetClassSemesterCourseSessionPayload,
   GetClassesFilters,
   UpdateClassData,
   UpdateClassSemesterCourseAttendancePayload,
+  UpdateClassSemesterCourseSessionPayload,
 } from "../dtos/classes.dto";
 import { HttpException } from "../exceptions/httpException";
 import {
@@ -19,6 +22,7 @@ import {
   IClassSemesterCourses,
   IEnrollment,
   IRPCreateClassPayload,
+  ISessions,
   IShift,
 } from "../interfaces";
 import { logger, setEndDay, setStartDay } from "../utils";
@@ -36,6 +40,7 @@ const teachersDB = prisma.teachers;
 const attendancesDB = prisma.attendances;
 const enrollmentsDB = prisma.enrollments;
 const attendancestatusesDB = prisma.attendacestatuses;
+const sessionsDB = prisma.sessions;
 const usersDB = prisma.users;
 
 @Service()
@@ -790,24 +795,31 @@ class ClassService {
 
       const classAttendanceData = classSemesterCourseAttendancesData;
 
+      let findSession = await sessionsDB?.findUnique({
+        where: { sessionuid: classAttendanceData.sessionUID || "" },
+        select: {
+          sessionid: true,
+          teacherid: true,
+          classid: true,
+          semesterid: true,
+          courseid: true,
+        },
+      });
+
+      if (!findSession)
+        throw new HttpException(
+          409,
+          `session ${classAttendanceData.sessionUID} not found`
+        );
+
       const classByCourse = await trx.semester_courses.findFirst({
         where: {
-          course: {
-            courseslug: classAttendanceData.courseSlug,
-          },
-          teacher: {
-            techid: classAttendanceData.teacherId,
-          },
-          class_semester: {
-            semester: {
-              semesterslug: classAttendanceData.semesterSlug,
-            },
-            class: {
-              classslug: classAttendanceData.classSlug,
-            },
-          },
+          courseid: findSession?.courseid,
+          classid: findSession?.classid,
+          semesterid: findSession?.semesterid,
+          teacherid: findSession?.teacherid,
         },
-        include: {
+        select: {
           enrollments: {
             select: {
               studentid: true,
@@ -856,6 +868,11 @@ class ClassService {
                 enrollment: {
                   connect: {
                     enrollment_id: enrollment.enrollment_id,
+                  },
+                },
+                session: {
+                  connect: {
+                    sessionid: findSession.sessionid,
                   },
                 },
                 status: {
@@ -1121,6 +1138,322 @@ class ClassService {
     });
 
     return updateAttendaceData;
+  }
+
+  public async createClassSemesterCourseSessions(
+    classSemesterCourseSessionsData: CreateClassSemesterCourseSessionPayload
+  ): Promise<any> {
+    const results = await prisma.$transaction(async (trx) => {
+      const { classSlug, courseSlug, teacherId, semesterSlug } =
+        classSemesterCourseSessionsData;
+
+      let alreadyExits: number = 0;
+      let totalCreated: number = 0;
+      let totalErrors: number = 0;
+
+      let year = new Date().getFullYear();
+      let month = new Date().getMonth();
+      let day = new Date().getDay();
+      let sessionUID = `${classSlug}_${courseSlug}_${teacherId}_${semesterSlug}_${year}_${month}_${day}`;
+
+      let findDuplicate = await sessionsDB?.findUnique({
+        where: {
+          sessionuid: sessionUID,
+        },
+        select: { teacherid: true },
+      });
+
+      if (findDuplicate)
+        throw new HttpException(
+          409,
+          `session class course ${classSlug} ${courseSlug} ${year}_${month}_${day} aleardy exists`
+        );
+
+      const classByCourse = await trx.semester_courses.findFirst({
+        where: {
+          course: {
+            courseslug: courseSlug,
+          },
+          teacher: {
+            techid: teacherId,
+          },
+          class_semester: {
+            semester: {
+              semesterslug: semesterSlug,
+            },
+            class: {
+              classslug: classSlug,
+            },
+          },
+        },
+        select: {
+          courseid: true,
+          semesterid: true,
+          teacherid: true,
+          classid: true,
+          enrollments: { select: { enrollment_id: true } },
+          _count: {
+            select: {
+              enrollments: true,
+            },
+          },
+        },
+      });
+
+      if (!classByCourse)
+        throw new HttpException(409, "Class Course doesn't exist");
+
+      if (classByCourse?._count.enrollments <= 0) {
+        throw new HttpException(404, `Sorry!, no students found.`);
+      }
+
+      const currentDate = new Date();
+      const startDate = setStartDay(currentDate);
+      const endDate = setEndDay(currentDate);
+
+      const newSession = await sessionsDB.create({
+        data: {
+          sessionuid: sessionUID,
+          sessiondate: new Date(),
+          createdby: {
+            connect: {
+              username: "ahmedhabib",
+            },
+          },
+          semester_course: {
+            connect: {
+              teacherid_courseid_semesterid_classid: {
+                classid: classByCourse.classid,
+                teacherid: classByCourse.teacherid,
+                semesterid: classByCourse.semesterid,
+                courseid: classByCourse.courseid,
+              },
+            },
+          },
+        },
+      });
+
+      await Promise.allSettled(
+        classByCourse.enrollments.map(async (enrollment) => {
+          try {
+            const findDuplicate = await attendancesDB?.findFirst({
+              where: {
+                enrollmentid: enrollment.enrollment_id,
+                sessionid: newSession.sessionid,
+                AND: [
+                  { attendancedate: { gte: startDate } },
+                  { attendancedate: { lte: endDate } },
+                ],
+              },
+              select: { attendancedate: true, attendanceid: true },
+            });
+
+            if (findDuplicate) {
+              alreadyExits++;
+              return { success: true, data: findDuplicate };
+            }
+
+            await trx.attendances.create({
+              data: {
+                session: { connect: { sessionid: newSession?.sessionid } },
+                attendancedate: currentDate,
+                enrollment: {
+                  connect: {
+                    enrollment_id: enrollment.enrollment_id,
+                  },
+                },
+                status: {
+                  connect: {
+                    statusslug: preDefined.attendenceStatuses.default,
+                  },
+                },
+                createdby: {
+                  connect: {
+                    username: "ahmedhabib",
+                  },
+                },
+              },
+              select: {
+                attendanceid: true,
+                attendancedate: true,
+                enrollment: {
+                  select: {
+                    enrollment_id: true,
+                    student: {
+                      select: {
+                        studentid: true,
+                        stdid: true,
+                      },
+                    },
+                  },
+                },
+              },
+            });
+
+            totalCreated++;
+          } catch (err) {
+            logger.error(JSON.stringify(err));
+
+            throw new Error(
+              err.message || "Something went wrong please contact support team"
+            );
+          }
+        })
+      );
+
+      return {
+        totalStudents: classByCourse._count.enrollments,
+        totalCreated,
+        alreadyExits,
+        totalErrors,
+      };
+    });
+
+    return results;
+  }
+
+  public async findClassSemesterCoursesSessions(
+    payload: GetClassSemesterCourseSessionPayload,
+    isMiniView: boolean
+  ): Promise<ISessions[]> {
+    let { classSlug, courseSlug, semesterSlug, teacherId } = payload;
+
+    try {
+      const findClass = await classesDB?.findUnique({
+        where: { classslug: classSlug },
+        select: { classid: true, classslug: true, classname: true },
+      });
+
+      if (!findClass)
+        throw new HttpException(409, `This class ${classSlug} not found`);
+
+      let findSemester: { semesterid: number } = await semestersDB?.findUnique({
+        where: { semesterslug: semesterSlug || "" },
+        select: { semesterid: true },
+      });
+
+      if (!findSemester)
+        throw new HttpException(409, `semester ${semesterSlug} not found`);
+
+      let findCourse: { courseid: number } = await coursesDB?.findUnique({
+        where: { courseslug: courseSlug || "" },
+        select: { courseid: true },
+      });
+
+      if (!findCourse)
+        throw new HttpException(409, `course ${courseSlug} not found`);
+
+      let findTeacher: { teacherid: number } = await teachersDB?.findUnique({
+        where: { techid: teacherId || "" },
+        select: { teacherid: true },
+      });
+
+      if (!findTeacher)
+        throw new HttpException(409, `teacher ${teacherId} not found`);
+
+      const startDate = setStartDay(payload.startDate);
+      const endDate = setEndDay(payload.endDate);
+
+      const classSemesterCoursesSessions: IClassSemesterCourses[] =
+        await sessionsDB?.findMany({
+          where: {
+            classid: findClass.classid,
+            semesterid: findSemester.semesterid,
+            teacherid: findTeacher.teacherid,
+            courseid: findCourse.courseid,
+            AND: [
+              { sessiondate: { gte: startDate ? startDate : undefined } },
+              { sessiondate: { lte: endDate ? endDate : undefined } },
+            ],
+          },
+          select: {
+            sessionid: true,
+            sessiondate: true,
+            sessionuid: true,
+            createdby: !isMiniView
+              ? {
+                  select: {
+                    username: !isMiniView,
+                    firstname: !isMiniView,
+                    middlename: !isMiniView,
+                    lastname: !isMiniView,
+                  },
+                }
+              : false,
+          },
+        });
+
+      return classSemesterCoursesSessions;
+    } catch (err: any) {
+      logger.error(JSON.stringify(err.message) || err);
+      throw new HttpException(
+        500,
+        err.message ||
+          `Something went wrong getting class semester course sessions, please contact support team.`
+      );
+    }
+  }
+
+  public async updateClassSemesterCoursesSession(
+    payload: UpdateClassSemesterCourseSessionPayload
+  ): Promise<any> {
+    const findUpdatedBy = await usersDB?.findUnique({
+      where: {
+        username: "ahmedhabib",
+      },
+      select: {
+        userid: true,
+      },
+    });
+
+    if (!findUpdatedBy) throw new HttpException(409, "User doesn't exist");
+
+    const findSession: ISessions = await sessionsDB?.findUnique({
+      where: {
+        sessionid: payload.sessionId,
+      },
+      select: {
+        sessionid: true,
+      },
+    });
+
+    if (!findSession) throw new HttpException(409, "Session doesn't exist");
+
+    const updateSessionData: ISessions = await sessionsDB?.update({
+      where: {
+        sessionid: findSession.sessionid,
+      },
+      data: {
+        updatedby: { connect: { userid: findUpdatedBy.userid } },
+      },
+      select: {
+        sessionid: true,
+        sessiondate: true,
+        sessionuid: true,
+        createdat: true,
+        updatedat: true,
+        createdby: {
+          select: {
+            userid: true,
+            username: true,
+            firstname: true,
+            middlename: true,
+            lastname: true,
+          },
+        },
+        updatedby: {
+          select: {
+            userid: true,
+            username: true,
+            firstname: true,
+            middlename: true,
+            lastname: true,
+          },
+        },
+      },
+    });
+
+    return updateSessionData;
   }
 }
 
