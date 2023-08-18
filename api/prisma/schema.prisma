@@ -86,6 +86,9 @@ model users {
 
     createdenrollments enrollments[] @relation("CREATED_ENROLLMENTS")
     updatedenrollments enrollments[] @relation("UPDATED_ENROLLMENTS")
+
+    createdsessions sessions[] @relation("CREATED_SESSIONS")
+    updatedsessions sessions[] @relation("UPDATED_SESSIONS")
 }
 
 model faculties {
@@ -256,6 +259,7 @@ model semester_courses {
     semesterid     Int
 
     enrollments enrollments[]
+    sessions    sessions[]
 
     @@id([teacherid, courseid, semesterid, classid])
 }
@@ -319,6 +323,9 @@ model attendances {
 
     enrollment   enrollments @relation(fields: [enrollmentid], references: [enrollment_id])
     enrollmentid Int
+
+    session   sessions @relation(fields: [sessionid], references: [sessionid])
+    sessionid Int
 }
 
 model attendacestatuses {
@@ -403,4 +410,29 @@ model enrollments {
 
     updatedby   users? @relation("UPDATED_ENROLLMENTS", fields: [updatedbyid], references: [userid])
     updatedbyid Int?
+}
+
+model sessions {
+    sessionid   Int      @id @default(autoincrement())
+    sessionuid  String   @unique
+    sessiondate DateTime
+    sessiondesc String?
+    createdat   DateTime @default(now())
+    updatedat   DateTime @updatedAt
+
+    createdby   users @relation("CREATED_SESSIONS", fields: [createdbyid], references: [userid])
+    createdbyid Int
+
+    updatedby   users? @relation("UPDATED_SESSIONS", fields: [updatedbyid], references: [userid])
+    updatedbyid Int?
+
+    // RELATIONS
+    // ======
+    attendances attendances[]
+
+    semester_course semester_courses @relation(fields: [teacherid, courseid, semesterid, classid], references: [teacherid, courseid, semesterid, classid])
+    teacherid       Int
+    courseid        Int
+    semesterid      Int
+    classid         Int
 }
