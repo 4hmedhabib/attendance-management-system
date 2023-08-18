@@ -16,17 +16,17 @@ function Attendance() {
   //meta title
   document.title = "Attendances | FFU - ATMS";
 
-  const [enrollments, setAttendances] = useState([]);
+  const [attendances, setAttendances] = useState([]);
 
   const {
     data,
     isError,
     isLoading,
     errMsg,
-    refetch: enrollmentsRefetch,
+    refetch: attendancesRefetch,
   } = useApiCall(
     "ATTENDANCE_LIST",
-    urls.enrollments(),
+    urls.attendances(),
     {
       payload: {
         isMiniView: false,
@@ -54,7 +54,7 @@ function Attendance() {
   }, [data]);
 
   const onRefresh = useCallback(() => {
-    enrollmentsRefetch({
+    attendancesRefetch({
       payload: { isMiniView: false },
     });
   }, []);
@@ -67,7 +67,7 @@ function Attendance() {
     () => [
       {
         Header: "ID",
-        accessor: "enrollment_id",
+        accessor: "attendance_id",
         style: {
           textAlign: "center",
           width: "10%",
@@ -125,14 +125,14 @@ function Attendance() {
       },
       {
         Header: "Date",
-        accessor: "enrollmentdate",
+        accessor: "attendancedate",
         Cell: ({ cell }) => {
           return dayjs(cell?.value).format("YYYY-MM-DD");
         },
       },
       {
         Header: "View",
-        accessor: "enrollment_id",
+        accessor: "attendance_id",
         id: "ViewAttendanceId",
         disableFilters: true,
         Cell: ({ cell }) => {
@@ -142,7 +142,7 @@ function Attendance() {
               color="primary"
               className="btn-sm btn-rounded"
               onClick={() =>
-                navigate("detail", { state: { enrollmentId: cell?.value } })
+                navigate("detail", { state: { attendanceId: cell?.value } })
               }
             >
               View
@@ -168,7 +168,7 @@ function Attendance() {
                 <CardBody>
                   <TableContainer
                     columns={columns}
-                    data={enrollments || []}
+                    data={attendances || []}
                     isGlobalFilter={false}
                     isAddOptions={true}
                     handleClick={handleAttendanceClicks}
