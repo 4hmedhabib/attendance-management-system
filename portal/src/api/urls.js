@@ -158,4 +158,20 @@ export default {
   deleteattendance: function () {
     return `${this.api}/classes/detail/semesters/courses/attendances/delete`;
   },
+
+  sessions: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/list`;
+  },
+  sessionDetail: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/detail`;
+  },
+  createSession: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/create`;
+  },
+  updateSession: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/update`;
+  },
+  deleteSession: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/delete`;
+  },
 };
