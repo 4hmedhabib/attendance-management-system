@@ -20,13 +20,10 @@ import Enrollments, {
 } from "../pages/Enrollments";
 import Faculties, { CreateFaculty, FacultyDetail } from "../pages/Faculties";
 import Semesters, { CreateSemester, SemesterDetail } from "../pages/Semesters";
+import Sessions, { CreateSession, SessionDetail } from "../pages/Sessions";
 import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
 import Students, { CreateStudent, StudentDetail } from "../pages/Students";
 import Teachers, { CreateTeacher, TeacherDetail } from "../pages/Teachers";
-import Attendances, {
-  CreateAttendance,
-  AttendanceDetail,
-} from "../pages/Attendances";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -63,9 +60,9 @@ const authProtectedRoutes = [
   { path: "/enrollments/create", component: <CreateEnrollment /> },
   { path: "/enrollments/detail", component: <EnrollmentDetail /> },
 
-  { path: "/attendances", component: <Attendances /> },
-  { path: "/attendances/create", component: <CreateAttendance /> },
-  { path: "/attendances/detail", component: <AttendanceDetail /> },
+  { path: "/sessions", component: <Sessions /> },
+  { path: "/sessions/create", component: <CreateSession /> },
+  { path: "/sessions/detail", component: <SessionDetail /> },
 
   { path: "/administrations", component: <Dashboard /> },
 
