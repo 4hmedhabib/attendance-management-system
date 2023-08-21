@@ -211,9 +211,9 @@ const SidebarContent = (props) => {
             </li>
 
             <li>
-              <Link to="/attendances">
+              <Link to="/sessions">
                 <i className="bx bxs-calendar"></i>
-                <span>{props.t("Attendances")}</span>
+                <span>{props.t("Sessions")}</span>
               </Link>
             </li>
 
