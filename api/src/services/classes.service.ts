@@ -571,25 +571,22 @@ class ClassService {
         `semester ${classSemesterData.semesterSlug} not found`
       );
 
-    // async.map<any, any, number>([], async (err, result) => {
-    //   try {
-    //     const createClassSemesterCourses: IClassSemesterCourses =
-    //       await semester_coursesDB?.createMany({
-    //         data: savedData,
-    //         skipDuplicates: true,
-    //       });
+    let classSemester: { semesterid: number } =
+      await class_semestersDB?.findUnique({
+        where: {
+          classid_semesterid: {
+            classid: findClass.classid,
+            semesterid: findSemester.semesterid,
+          },
+        },
+        select: { semesterid: true },
+      });
 
-    //     return createClassSemesterCourses;
-    //   } catch (err: any) {
-    //     console.log(err);
-
-    //     logger.error(JSON.stringify(err.message) || err);
-    //     throw new HttpException(
-    //       500,
-    //       `Something went wrong creating semester coureses, please contact support team.`
-    //     );
-    //   }
-    // });
+    if (!classSemester)
+      throw new HttpException(
+        409,
+        `class semester [${classSemesterData.classSlug} ${classSemesterData.semesterSlug}] not found`
+      );
 
     const results = await Promise.allSettled(
       classSemesterData.courses.map(async (course) => {
@@ -1160,7 +1157,7 @@ class ClassService {
         where: {
           sessionuid: sessionUID,
         },
-        select: { teacherid: true },
+        select: { sessionuid: true },
       });
 
       if (findDuplicate)
@@ -1169,22 +1166,63 @@ class ClassService {
           `session class course ${classSlug} ${courseSlug} ${year}_${month}_${day} aleardy exists`
         );
 
+      const findClass = await classesDB?.findUnique({
+        where: { classslug: classSlug },
+        select: { classid: true, classslug: true, classname: true },
+      });
+
+      if (!findClass)
+        throw new HttpException(409, `This class ${classSlug} not found`);
+
+      const findTeacher = await teachersDB?.findUnique({
+        where: { techid: teacherId },
+        select: { teacherid: true },
+      });
+
+      if (!findTeacher)
+        throw new HttpException(409, `The teacher ${teacherId} not found`);
+
+      const findCourse = await coursesDB?.findUnique({
+        where: { courseslug: courseSlug },
+        select: { courseid: true, courseslug: true, coursename: true },
+      });
+
+      if (!findCourse)
+        throw new HttpException(409, `This course ${courseSlug} not found`);
+
+      let findSemester: { semesterid: number } = await semestersDB?.findUnique({
+        where: { semesterslug: semesterSlug || "" },
+        select: { semesterid: true },
+      });
+
+      if (!findSemester)
+        throw new HttpException(409, `semester ${semesterSlug} not found`);
+
+      let classSemester: { semesterid: number } =
+        await class_semestersDB?.findUnique({
+          where: {
+            classid_semesterid: {
+              classid: findClass.classid,
+              semesterid: findSemester.semesterid,
+            },
+          },
+          select: { semesterid: true },
+        });
+
+      if (!classSemester)
+        throw new HttpException(
+          409,
+          `class semester [${classSlug} ${semesterSlug}] not found`
+        );
+
       const classByCourse = await trx.semester_courses.findFirst({
         where: {
-          course: {
-            courseslug: courseSlug,
-          },
-          teacher: {
-            techid: teacherId,
-          },
           class_semester: {
-            semester: {
-              semesterslug: semesterSlug,
-            },
-            class: {
-              classslug: classSlug,
-            },
+            classid: findClass.classid,
+            semesterid: findSemester.semesterid,
           },
+          teacherid: findTeacher.teacherid,
+          courseid: findCourse.courseid,
         },
         select: {
           courseid: true,
