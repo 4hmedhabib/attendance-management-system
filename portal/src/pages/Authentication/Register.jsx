@@ -215,15 +215,15 @@ const Register = (props) => {
               </Card>
               <div className="mt-5 text-center">
                 <p>
-                  Already have an account ?{" "}
-                  <Link to="/login" className="font-weight-medium text-primary">
+                  Don&#39;t have an account ?{" "}
+                  <Link to="/register" className="fw-medium text-primary">
                     {" "}
-                    Login
+                    Signup now{" "}
                   </Link>{" "}
                 </p>
                 <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
+                  © {new Date().getFullYear()} FFU. ATMS
+                  <i className="mdi mdi-heart text-danger" /> by FFU Team
                 </p>
               </div>
             </Col>
