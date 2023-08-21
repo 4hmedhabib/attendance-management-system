@@ -16,6 +16,7 @@ import {
 
 //Import Breadcrumb
 import { useFormik } from "formik";
+import { isArray } from "lodash";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import urls from "../../api/urls";
@@ -85,8 +86,12 @@ const CreateStudent = () => {
             type: "error",
             autoClose: 5000,
             render:
-              err?.response?.data?.message ??
-              (err.message || err || "Something went wrong!"),
+              (isArray(err?.response?.data?.message)
+                ? Object.values(err?.response?.data?.message[0])[0][0]
+                : err?.response?.data?.message) ||
+              err.message ||
+              err ||
+              "Something went wrong!",
             closeOnClick: true,
           });
         });
@@ -206,11 +211,12 @@ const CreateStudent = () => {
                           <Input
                             id="mobileNo"
                             name="mobileNo"
-                            type="number"
+                            type="text"
                             className="form-control"
                             placeholder="Mobile No"
                             value={formik.values.mobileNo}
                             onBlur={formik.handleBlur}
+                            maxLength={12}
                             onChange={formik.handleChange}
                             disabled={isSubmitting}
                           />
