@@ -2,7 +2,6 @@ import { Router } from "express";
 import { ClassController } from "../controllers";
 import {
   CreateClassDto,
-  CreateClassSemesterCourseAttendancesDto,
   CreateClassSemesterCourseSessionsDto,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
@@ -84,11 +83,11 @@ class ClassRoute implements IRoutes {
       this.class.createClassSemesterCourses
     );
 
-    this.router.post(
-      `${this.path}/detail/semesters/courses/attendances/create`,
-      ValidationMiddleware(CreateClassSemesterCourseAttendancesDto),
-      this.class.createClassSemesterCourseAttendances
-    );
+    // this.router.post(
+    //   `${this.path}/detail/semesters/courses/attendances/create`,
+    //   ValidationMiddleware(CreateClassSemesterCourseAttendancesDto),
+    //   this.class.createClassSemesterCourseAttendances
+    // );
 
     this.router.get(
       `${this.path}/detail/semesters/courses/attendances/`,
