@@ -19,6 +19,7 @@ import NotFound from "../../../components/Common/NotFound";
 import ResError from "../../../components/Common/ResError";
 import useApiCall from "../../../hooks/apiHook";
 import { updateClassSchema } from "../../../validations";
+import Sessions from "./Sessions";
 import Sidebar from "./Sidebar";
 import UpdateForm from "./UpdateForm";
 
@@ -46,6 +47,7 @@ const ClassDetail = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setErrors] = useState(null);
   const [modal_backdrop, setDeleteModal] = useState(false);
+  const [showSessions, setShowSessions] = useState(true);
 
   const {
     data: classData,
@@ -302,139 +304,149 @@ const ClassDetail = () => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
-        <Container fluid>
-          <Row>
-            <Col lg={12}>
-              {error && <ResError error={error} />}
-              {classIsErr && <ResError error={classErrMsg} />}
-              <Card className="mx-n4 mt-n4 bg-info bg-white">
-                <CardBody>
-                  <div className="text-center mb-4">
-                    <h5 className="mt-3 mb-1">{_class?.classname}</h5>
-                    <p className="text-muted mb-3">Class</p>
-                  </div>
+      {!showSessions && (
+        <>
+          <div className="page-content">
+            <Container fluid>
+              <Row>
+                <Col lg={12}>
+                  {error && <ResError error={error} />}
+                  {classIsErr && <ResError error={classErrMsg} />}
+                  <Card className="mx-n4 mt-n4 bg-info bg-white">
+                    <CardBody>
+                      <div className="text-center mb-4">
+                        <h5 className="mt-3 mb-1">{_class?.classname}</h5>
+                        <p className="text-muted mb-3">Class</p>
+                      </div>
 
-                  <div className="d-flex align-items-center">
-                    <ul className="list-unstyled hstack gap-3 mb-0 flex-grow-1"></ul>
-                    <div className="hstack gap-2">
-                      <button
-                        className="btn btn-info d-flex justify-content-center align-items-center"
-                        onClick={onRefresh}
-                      >
-                        <i className="mdi mdi-reload align-baseline me-1"></i>
-                        Refresh
-                      </button>
-                      <button
-                        className="btn btn-danger d-flex justify-content-center align-items-center"
-                        type="button"
-                        onClick={() => {
-                          toggleDeleteModal();
-                        }}
-                        data-toggle="modal"
-                      >
-                        <i className="bx bx-trash align-baseline me-1"></i>
-                        Delete
-                      </button>
-                      <button
-                        type="button"
-                        className={`btn ${
-                          isEdit ? "btn-danger" : "btn-warning"
-                        } d-flex justify-content-center align-items-center`}
-                        onClick={onEdit}
-                      >
-                        {!isEdit ? (
-                          <>
-                            <i className="bx bxs-edit align-baseline me-1"></i>
-                            Edit
-                          </>
-                        ) : (
-                          <>
-                            <i className="bx bx bx-x align-baseline me-1"></i>
-                            Cancel
-                          </>
-                        )}
-                      </button>
-                      <Link
-                        className="btn btn-secondary d-flex justify-content-center align-items-center"
-                        to={"/classes"}
-                      >
-                        <i className="bx bx-left-arrow align-baseline me-1"></i>
-                        Back
-                      </Link>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+                      <div className="d-flex align-items-center">
+                        <ul className="list-unstyled hstack gap-3 mb-0 flex-grow-1"></ul>
+                        <div className="hstack gap-2">
+                          <button
+                            className="btn btn-info d-flex justify-content-center align-items-center"
+                            onClick={onRefresh}
+                          >
+                            <i className="mdi mdi-reload align-baseline me-1"></i>
+                            Refresh
+                          </button>
+                          <button
+                            className="btn btn-danger d-flex justify-content-center align-items-center"
+                            type="button"
+                            onClick={() => {
+                              toggleDeleteModal();
+                            }}
+                            data-toggle="modal"
+                          >
+                            <i className="bx bx-trash align-baseline me-1"></i>
+                            Delete
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${
+                              isEdit ? "btn-danger" : "btn-warning"
+                            } d-flex justify-content-center align-items-center`}
+                            onClick={onEdit}
+                          >
+                            {!isEdit ? (
+                              <>
+                                <i className="bx bxs-edit align-baseline me-1"></i>
+                                Edit
+                              </>
+                            ) : (
+                              <>
+                                <i className="bx bx bx-x align-baseline me-1"></i>
+                                Cancel
+                              </>
+                            )}
+                          </button>
+                          <Link
+                            className="btn btn-secondary d-flex justify-content-center align-items-center"
+                            to={"/classes"}
+                          >
+                            <i className="bx bx-left-arrow align-baseline me-1"></i>
+                            Back
+                          </Link>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
 
-          <Row>
-            <Sidebar _class={_class} />
-            <UpdateForm
-              _class={_class}
-              classSlug={state?.classSlug}
-              isEdit={isEdit}
-              facultiesData={facultiesData}
-              facultiesIsErr={facultiesIsErr}
-              facultiesErrMsg={facultiesErrMsg}
-              facultiesIsLoading={facultiesIsLoading}
-              shiftsData={shiftsData}
-              shiftsIsErr={shiftsIsErr}
-              shiftsIsLoading={shiftsIsLoading}
-              shiftsErrMsg={shiftsErrMsg}
-              formik={formik}
-              isSubmitting={isSubmitting}
-            />
-          </Row>
-        </Container>
-      </div>
+              <Row>
+                <Sidebar _class={_class} />
+                <UpdateForm
+                  _class={_class}
+                  classSlug={state?.classSlug}
+                  isEdit={isEdit}
+                  facultiesData={facultiesData}
+                  facultiesIsErr={facultiesIsErr}
+                  facultiesErrMsg={facultiesErrMsg}
+                  facultiesIsLoading={facultiesIsLoading}
+                  shiftsData={shiftsData}
+                  shiftsIsErr={shiftsIsErr}
+                  shiftsIsLoading={shiftsIsLoading}
+                  shiftsErrMsg={shiftsErrMsg}
+                  formik={formik}
+                  isSubmitting={isSubmitting}
+                />
+              </Row>
+            </Container>
+          </div>
 
-      <Modal
-        isOpen={modal_backdrop}
-        toggle={() => {
-          toggleDeleteModal();
-        }}
-        backdrop={"static"}
-        id="staticBackdrop"
-      >
-        <div className="modal-header">
-          <h5 className="modal-title" id="deleteBackdropLabel">
-            Are you sure?
-          </h5>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => {
-              setDeleteModal(false);
+          <Modal
+            isOpen={modal_backdrop}
+            toggle={() => {
+              toggleDeleteModal();
             }}
-            aria-label="Close"
-          ></button>
-        </div>
-        <div className="modal-body">
-          <p>
-            Do you really want to delete these record{" "}
-            <span className="fw-bold fs-6 text-primary">
-              {_class?.classname}{" "}
-            </span>
-            ? This process can't be undone.
-          </p>
-        </div>
-        <div className="modal-footer">
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => {
-              setDeleteModal(false);
-            }}
+            backdrop={"static"}
+            id="staticBackdrop"
           >
-            Cancel
-          </button>
-          <button onClick={onDelete} type="button" className="btn btn-danger">
-            {isDeleting ? <Spinner size={"sm"} /> : "Delete"}
-          </button>
-        </div>
-      </Modal>
+            <div className="modal-header">
+              <h5 className="modal-title" id="deleteBackdropLabel">
+                Are you sure?
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={() => {
+                  setDeleteModal(false);
+                }}
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <p>
+                Do you really want to delete these record{" "}
+                <span className="fw-bold fs-6 text-primary">
+                  {_class?.classname}{" "}
+                </span>
+                ? This process can't be undone.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => {
+                  setDeleteModal(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={onDelete}
+                type="button"
+                className="btn btn-danger"
+              >
+                {isDeleting ? <Spinner size={"sm"} /> : "Delete"}
+              </button>
+            </div>
+          </Modal>
+        </>
+      )}
+
+      {showSessions && <Sessions />}
     </React.Fragment>
   );
 };
