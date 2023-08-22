@@ -20,7 +20,6 @@ import {
   IClass,
   IClassSemester,
   IClassSemesterCourses,
-  IEnrollment,
   IRPCreateClassPayload,
   ISessions,
   IShift,
@@ -926,68 +925,21 @@ class ClassService {
     payload: GetClassSemesterCourseAttendancePayload,
     isMiniView: boolean
   ): Promise<IAttendances[]> {
-    let { classSlug, courseSlug, semesterSlug, teacherId } = payload;
+    let { sessionId } = payload;
 
     try {
-      const findClass = await classesDB?.findUnique({
-        where: { classslug: classSlug },
-        select: { classid: true, classslug: true, classname: true },
+      const findSession = await sessionsDB?.findUnique({
+        where: { sessionuid: sessionId },
+        select: { sessionid: true, sessionuid: true },
       });
 
-      if (!findClass)
-        throw new HttpException(409, `This class ${classSlug} not found`);
-
-      let findSemester: { semesterid: number } = await semestersDB?.findUnique({
-        where: { semesterslug: semesterSlug || "" },
-        select: { semesterid: true },
-      });
-
-      if (!findSemester)
-        throw new HttpException(409, `semester ${semesterSlug} not found`);
-
-      let findCourse: { courseid: number } = await coursesDB?.findUnique({
-        where: { courseslug: courseSlug || "" },
-        select: { courseid: true },
-      });
-
-      if (!findCourse)
-        throw new HttpException(409, `course ${courseSlug} not found`);
-
-      let findTeacher: { teacherid: number } = await teachersDB?.findUnique({
-        where: { techid: teacherId || "" },
-        select: { teacherid: true },
-      });
-
-      if (!findTeacher)
-        throw new HttpException(409, `teacher ${teacherId} not found`);
-
-      const enrollments: IEnrollment[] = await enrollmentsDB?.findMany({
-        where: {
-          courseid: findCourse.courseid,
-          classid: findClass.classid,
-          teacherid: findTeacher.teacherid,
-          semesterid: findSemester.semesterid,
-        },
-        select: { enrollment_id: true },
-      });
-
-      if (enrollments.length <= 0) {
-        throw new HttpException(404, `Sorry!, no students found.`);
-      }
-
-      const startDate = setStartDay(payload.startDate);
-      const endDate = setEndDay(payload.endDate);
+      if (!findSession)
+        throw new HttpException(409, `This session ${sessionId} not found`);
 
       const classSemesterCoursesAttendances: IClassSemesterCourses[] =
         await attendancesDB?.findMany({
           where: {
-            enrollmentid: {
-              in: enrollments.map((enrollment) => enrollment.enrollment_id),
-            },
-            AND: [
-              { createddate: { gte: startDate ? startDate : undefined } },
-              { createddate: { lte: endDate ? endDate : undefined } },
-            ],
+            sessionid: findSession.sessionid,
           },
           select: {
             attendanceid: true,
@@ -1061,7 +1013,7 @@ class ClassService {
       throw new HttpException(
         500,
         err.message ||
-          `Something went wrong creating class, please contact support team.`
+          `Something went wrong getting attendances, please contact support team.`
       );
     }
   }
