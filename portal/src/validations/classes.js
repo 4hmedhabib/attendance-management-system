@@ -33,3 +33,19 @@ export const updateClassSchema = yup.object({
     })
     .required(),
 });
+
+export const createClassSemesterSchema = yup.object({
+  className: yup.string().required(),
+  semester: yup
+    .object({
+      label: yup.string().required(),
+      value: yup.string().required(),
+    })
+    .required(),
+  startDate: yup
+    .date()
+    .required(),
+  endDate: yup
+    .date()
+    .required(),
+});
