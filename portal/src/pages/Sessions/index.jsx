@@ -219,14 +219,14 @@ function Session() {
         Header: "Teacher",
         accessor: "semester_course.teacher",
         Cell: ({ cell }) => {
-          return `${cell?.value.firstname} ${cell?.value.middlename}`;
+          return `${cell?.value?.firstname} ${cell?.value?.middlename}`;
         },
       },
       {
         Header: "Created By",
         accessor: "createdby",
         Cell: ({ cell }) => {
-          return `${cell?.value.firstname} ${cell?.value.middlename}`;
+          return `${cell?.value?.firstname} ${cell?.value?.middlename}`;
         },
       },
       {

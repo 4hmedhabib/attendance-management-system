@@ -112,7 +112,7 @@ function Teacher() {
         Header: "Created By",
         accessor: "createdby",
         Cell: ({ cell }) => {
-          return `${cell?.value.firstname} ${cell?.value.middlename}`;
+          return `${cell?.value?.firstname} ${cell?.value?.middlename}`;
         },
       },
       {
