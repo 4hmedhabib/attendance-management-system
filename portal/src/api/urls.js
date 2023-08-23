@@ -174,4 +174,15 @@ export default {
   deleteSession: function () {
     return `${this.api}/classes/detail/semesters/courses/sessions/delete`;
   },
+
+  createClassSemester: function () {
+    return `${this.api}/classes/detail/semesters/create`
+  },
+  classSemesters: function () {
+    return `${this.api}/classes/detail/semesters`
+  },
+  classSemesterCourses: function () {
+    return `${this.api}/classes/detail/semesters/courses`
+  },
+
 };
