@@ -59,7 +59,7 @@ class ClassRoute implements IRoutes {
       this.class.deleteClass
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail/semesters`,
       ValidationMiddleware(GetClassSemestersBySlugDto),
       this.class.getClassSemestersBySlug
@@ -71,7 +71,7 @@ class ClassRoute implements IRoutes {
       this.class.createClassSemester
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail/semesters/courses`,
       ValidationMiddleware(GetClassSemesterCoursesBySlugDto),
       this.class.getClassSemesterCoursesBySlug
@@ -89,7 +89,7 @@ class ClassRoute implements IRoutes {
     //   this.class.createClassSemesterCourseAttendances
     // );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail/semesters/courses/attendances/`,
       ValidationMiddleware(GetClassSemesterCourseAttendancesDto),
       this.class.getClassSemesterCourseAttendances
@@ -107,7 +107,7 @@ class ClassRoute implements IRoutes {
       this.class.createClassSemesterCourseSessions
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail/semesters/courses/sessions/`,
       ValidationMiddleware(GetClassSemesterCourseSessionsDto),
       this.class.getClassSemesterCourseSessions
