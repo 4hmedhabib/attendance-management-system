@@ -264,15 +264,28 @@ class ClassService {
         `This class ${classData.classSlug} not found`
       );
 
-    let semester: { semesterid: number } = await semestersDB?.findUnique({
+    let findSemester: { semesterid: number } = await semestersDB?.findUnique({
       where: { semesterslug: classData.semester.semesterSlug || "" },
       select: { semesterid: true },
     });
 
-    if (!semester)
+    if (!findSemester)
       throw new HttpException(
         409,
         `semester ${classData.semester.semesterSlug} not found`
+      );
+
+    const findDuplicate = await class_semestersDB.findFirst({
+      where: {
+        classid: findClass.classid,
+        semesterid: findSemester.semesterid,
+      },
+    });
+
+    if (findDuplicate)
+      throw new HttpException(
+        409,
+        `This semester ${classData.semester.semesterSlug} already exists`
       );
 
     savedData = {
@@ -284,7 +297,7 @@ class ClassService {
       },
       semester: {
         connect: {
-          semesterid: semester.semesterid,
+          semesterid: findSemester.semesterid,
         },
       },
       assignedby: {
@@ -518,13 +531,11 @@ class ClassService {
             isgoingon: true,
             isended: true,
             isstarted: true,
-            _count: !isMiniView
-              ? {
-                  select: {
-                    courses: !isMiniView,
-                  },
-                }
-              : false,
+            _count: {
+              select: {
+                courses: true,
+              },
+            },
           },
         });
 
@@ -716,30 +727,10 @@ class ClassService {
             semesterid: findSemester.semesterid,
           },
           select: {
-            class_semester: {
+            course: {
               select: {
-                courses: {
-                  select: {
-                    course: {
-                      select: {
-                        coursename: true,
-                        courseslug: true,
-                      },
-                    },
-                  },
-                },
-                semester: {
-                  select: {
-                    semestername: true,
-                    semesterslug: true,
-                  },
-                },
-                class: {
-                  select: {
-                    classname: true,
-                    classslug: true,
-                  },
-                },
+                coursename: true,
+                courseslug: true,
               },
             },
             teacher: {
@@ -749,6 +740,11 @@ class ClassService {
                 techid: true,
               },
             },
+            _count: {
+              select: {
+                enrollments: true,
+              },
+            },
             assignedby: !isMiniView
               ? {
                   select: {
@@ -756,14 +752,6 @@ class ClassService {
                     firstname: !isMiniView,
                     middlename: !isMiniView,
                     lastname: !isMiniView,
-                  },
-                }
-              : false,
-
-            _count: !isMiniView
-              ? {
-                  select: {
-                    enrollments: !isMiniView,
                   },
                 }
               : false,
