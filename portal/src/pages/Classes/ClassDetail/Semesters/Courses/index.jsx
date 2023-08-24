@@ -34,8 +34,8 @@ function ClassSemesterCourses({
     urls.classSemesterCourses(),
     {
       payload: {
-        classSlug: "class_ict_2223",
-        semesterSlug: "semester_6",
+        classSlug: selectedSemester?.class?.classslug,
+        semesterSlug: selectedSemester?.semester?.semesterslug,
         isMiniView: true,
       },
     },
@@ -108,12 +108,11 @@ function ClassSemesterCourses({
                       </div>
 
                       <Row>
-                        {classSemesterCourses?.map((course, idx) => {
-                          console.log(course);
-                          return (
-                            <Col key={idx} sm="6" md="4" xl="3">
-                              <div className="border p-3 rounded mt-4">
-                                <div className="d-flex align-items-center mb-3">
+                        {classSemesterCourses?.map((course, idx) => (
+                          <Col key={idx} sm="6" md="4" xl="3">
+                            <div className="border p-3 rounded mt-4">
+                              <Row>
+                                <div className="d-flex align-items-center mb-3 col-6">
                                   <div className="avatar-xs me-3">
                                     <span className="avatar-title rounded-circle bg-info bg-soft text-info font-size-18">
                                       <i className="mdi mdi-book-open" />
@@ -123,34 +122,48 @@ function ClassSemesterCourses({
                                     {course?.course?.coursename}
                                   </h5>
                                 </div>
+                                <div className="col-6 align-self-start text-danger fs-5 text-end">
+                                  <i className="bx bxs-trash mr-1 btn text-danger" />
+                                </div>
+                              </Row>
 
-                                <Row>
-                                  <div className="col-lg-6">
-                                    <div className="text-muted mt-3">
-                                      <p>{`${course?.teacher?.firstname} ${course?.teacher?.middlename}`}</p>
-                                      <h4>{course?._count?.enrollments}</h4>
-                                    </div>
+                              <Row>
+                                <div className="col-lg-6">
+                                  <div className="text-muted mt-3">
+                                    <p className="d-flex align-items-center">
+                                      <i className="bx bxs-user-voice mr-1" />
+                                      {`${course?.teacher?.firstname} ${course?.teacher?.middlename}`}
+                                    </p>
+                                    <p>Students</p>
+                                    <h4>{course?._count?.enrollments}</h4>
                                   </div>
+                                </div>
 
-                                  <div className="col-lg-6 align-self-end">
-                                    <div className="float-end mt-3">
-                                      <Link
-                                        to="/courses/detail"
-                                        state={{
-                                          courseSlug:
-                                            course?.course?.courseslug,
-                                        }}
-                                        className="btn btn-primary"
-                                      >
-                                        View
-                                      </Link>
-                                    </div>
+                                <div className="col-lg-6 align-self-end">
+                                  <div className="float-end mt-3">
+                                    <Link
+                                      to="/courses/detail"
+                                      state={{
+                                        courseSlug: course?.course?.courseslug,
+                                      }}
+                                      className="btn btn-primary"
+                                    >
+                                      View Course
+                                    </Link>
                                   </div>
-                                </Row>
-                              </div>
-                            </Col>
-                          );
-                        })}
+                                </div>
+                              </Row>
+                            </div>
+                          </Col>
+                        ))}
+
+                        {classSemesterCourses.length <= 0 && (
+                          <div className="mx-4 mt-5 mb-4 text-center">
+                            <h4 className="bg-light d-inline px-5 py-2 rounded-3">
+                              No Data Found!
+                            </h4>
+                          </div>
+                        )}
                       </Row>
                     </CardBody>
                   </Card>
@@ -160,8 +173,9 @@ function ClassSemesterCourses({
 
             {createClassSemesterCourses && (
               <Create
-                onShowCreateClassSemesterCourses={setCreateClassSemesterCourses}
-                classData={classData}
+                onShowCreateSemesterCourse={setCreateClassSemesterCourses}
+                selectedSemester={selectedSemester}
+                oldCourses={classSemesterCourses.map((course) => course.course)}
               />
             )}
           </>
