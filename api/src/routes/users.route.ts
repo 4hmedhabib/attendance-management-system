@@ -23,6 +23,7 @@ class UserRoute implements IRoutes {
     this.router.post(
       `${this.path}/list`,
       ValidationMiddleware(GetUsersDto),
+
       this.user.getUsers
     );
 

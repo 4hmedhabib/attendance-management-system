@@ -8,6 +8,8 @@ import ShiftRoute from "./shifts.route";
 import StudentRoute from "./students.route";
 import TeacherRoute from "./teachers.route";
 import UserRoute from "./users.route";
+import AuthRoute from "./auth.route";
+import { isSessionValid } from "../middlewares/validation.middleware";
 
 class IndexRoutes implements IRoutes {
   public path = "/api";
@@ -25,12 +27,16 @@ class IndexRoutes implements IRoutes {
       new TeacherRoute(),
     ];
 
-    this.initializeRoutes(routes);
+    this.initializeRoutes(routes, [new AuthRoute()]);
   }
 
-  private initializeRoutes(routes: IRoutes[]) {
+  private initializeRoutes(routes: IRoutes[], authRoutes: IRoutes[]) {
     routes.forEach((route) => {
-      this.router.use(`${this.path}/`, route.router);
+      this.router.use(`${this.path}/`, isSessionValid, route.router);
+    });
+
+    authRoutes.forEach((route) => {
+      this.router.use(`/`, route.router);
     });
   }
 }
