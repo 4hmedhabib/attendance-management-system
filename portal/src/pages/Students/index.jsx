@@ -73,7 +73,6 @@ function Student() {
         Header: "Student ID",
         accessor: "stdid",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value?.toUpperCase()}`;
         },
       },
@@ -81,7 +80,6 @@ function Student() {
         Header: "First Name",
         accessor: "firstname",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
@@ -89,7 +87,6 @@ function Student() {
         Header: "Middle Name",
         accessor: "middlename",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
@@ -97,7 +94,6 @@ function Student() {
         Header: "Last Name",
         accessor: "lastname",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
