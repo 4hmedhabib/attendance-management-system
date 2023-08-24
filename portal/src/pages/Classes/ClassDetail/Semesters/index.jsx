@@ -9,7 +9,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, CardBody, Col, Row } from "reactstrap";
 import urls from "../../../../api/urls";
 import ResError from "../../../../components/Common/ResError";
-import TableContainer from "../../../../components/Common/TableContainer";
 import useApiCall from "../../../../hooks/apiHook";
 import Courses from "./Courses";
 import Create from "./Create";
@@ -42,12 +41,6 @@ function Semesters({ onShowSemester, classData }) {
     false
   );
 
-  const navigate = useNavigate();
-
-  const handleSemesterClicks = () => {
-    navigate("create");
-  };
-
   useEffect(() => {
     if (data) {
       setSemesters(data.data);
@@ -79,7 +72,11 @@ function Semesters({ onShowSemester, classData }) {
   };
 
   const onViewClassSemesterCourses = (semesterSlug) => {
-    setSelectedSemester({ semesterSlug, classSlug: classData?.classslug });
+    setSelectedSemester(
+      semesters.find(
+        (semester) => semester.semester.semesterslug === semesterSlug || null
+      )
+    );
     setShowClassSemesterCourses(true);
   };
 
@@ -141,7 +138,7 @@ function Semesters({ onShowSemester, classData }) {
                               <Row>
                                 <div className="col-lg-6">
                                   <div className="text-muted mt-3">
-                                    <p>Courses</p>
+                                    Courses
                                     <h4>{semester?._count?.courses}</h4>
                                   </div>
                                 </div>
@@ -164,6 +161,14 @@ function Semesters({ onShowSemester, classData }) {
                             </div>
                           </Col>
                         ))}
+
+                        {semesters.length <= 0 && (
+                          <div className="mx-4 mt-5 mb-4 text-center">
+                            <h4 className="bg-light d-inline px-5 py-2 rounded-3">
+                              No Data Found!
+                            </h4>
+                          </div>
+                        )}
                       </Row>
                     </CardBody>
                   </Card>
