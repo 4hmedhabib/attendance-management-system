@@ -6,3 +6,4 @@ export { default as ShiftService } from "./shifts.service";
 export { default as StudentService } from "./students.service";
 export { default as TeacherService } from "./teachers.service";
 export { default as UserService } from "./users.service";
+export { default as AuthService } from "./auth.service";

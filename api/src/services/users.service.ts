@@ -3,7 +3,7 @@ import { Service } from "typedi";
 import { GetUsersBySlugFilters, UpdateUserData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
 import { IRPCreateUserPayload, IUser } from "../interfaces";
-import { logger } from "../utils";
+import { hashPassword, logger } from "../utils";
 
 const prisma = new PrismaClient();
 const usersDB = prisma.users;
@@ -163,6 +163,14 @@ class UserService {
         `This email ${userData.email} already exists`
       );
 
+    const findGroup = await usersDB?.findUnique({
+      where: { username: userData.username },
+      select: { userid: true, username: true },
+    });
+
+    if (!findGroup)
+      throw new HttpException(404, `This group ${userData.group} not found!`);
+
     if (userData.password !== userData.passwordConfirm)
       throw new HttpException(409, `Passwords do NOT match`);
 
@@ -200,6 +208,8 @@ class UserService {
     }
 
     try {
+      savedData.password = await hashPassword(userData.password);
+
       const createUserData: IUser = await usersDB?.create({
         data: savedData,
         select: {
