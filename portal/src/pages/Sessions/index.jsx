@@ -187,7 +187,6 @@ function Session() {
         Header: "Session ID",
         accessor: "student.stdid",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value?.toUpperCase()}`;
         },
       },
@@ -195,7 +194,6 @@ function Session() {
         Header: "Semester",
         accessor: "semester_course.class_semester.semester.semestername",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
@@ -203,7 +201,6 @@ function Session() {
         Header: "Class",
         accessor: "semester_course.class_semester.class.classname",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
@@ -211,7 +208,6 @@ function Session() {
         Header: "Course",
         accessor: "semester_course.course.coursename",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
