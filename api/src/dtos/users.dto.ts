@@ -95,6 +95,16 @@ class CreateUserPayload {
   @IsBoolean()
   @IsNotEmpty({ message: "is teacher field is required" })
   isTeacher: boolean;
+
+  @IsString({ message: "group must be a string" })
+  @IsNotEmpty({ message: "group is required" })
+  @MinLength(3, {
+    message: "group must be longer than or equal to 3 characters",
+  })
+  @MaxLength(15, {
+    message: "group must be shorter than or equal to 15 characters",
+  })
+  group: string;
 }
 
 export class CreateUserDto {
@@ -173,6 +183,16 @@ export class UpdateUserData {
   @IsBoolean()
   @IsNotEmpty({ message: "is teacher field is required" })
   isTeacher: boolean;
+
+  @IsString({ message: "group must be a string" })
+  @IsNotEmpty({ message: "group is required" })
+  @MinLength(3, {
+    message: "group must be longer than or equal to 3 characters",
+  })
+  @MaxLength(15, {
+    message: "group must be shorter than or equal to 15 characters",
+  })
+  group: string;
 }
 
 class UpdateUserPayload {
