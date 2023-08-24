@@ -181,6 +181,9 @@ export default {
   classSemesters: function () {
     return `${this.api}/classes/detail/semesters`
   },
+  createClassSemesterCourses: function () {
+    return `${this.api}/classes/detail/semesters/courses/create`
+  },
   classSemesterCourses: function () {
     return `${this.api}/classes/detail/semesters/courses`
   },
