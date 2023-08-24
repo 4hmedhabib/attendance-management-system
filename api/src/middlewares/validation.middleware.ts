@@ -1,8 +1,9 @@
 import { plainToInstance } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
-import { RequestHandler } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { HttpException } from "../exceptions/httpException";
 import { logger } from "../utils";
+import { IRequest } from "../interfaces";
 
 /**
  * @name ValidationMiddleware
@@ -59,3 +60,43 @@ const getValidationErrorMessage = (errors: ValidationError[]) => {
 
   return _errors;
 };
+
+export function isSessionValid(
+  req: IRequest | Request,
+  res: Response,
+  next: NextFunction
+) {
+  if (
+    req.session &&
+    req.session.user &&
+    (global as any).activeTokens[req.session.user.username] &&
+    (global as any).activeTokens[req.session.user.username].token ==
+      req.cookies.token
+  ) {
+    // session valid
+    next();
+  } else if (
+    (global as any).activeTokens[req.cookies.username] &&
+    (global as any).activeTokens[req.cookies.userName].token ===
+      req.cookies.token
+  ) {
+    // session Valid , for reporting server
+    next();
+  } else if (req.url == "/") {
+    // ist time login
+    res.clearCookie("token");
+    res.clearCookie("encrypt");
+
+    console.log("Fail to validate SessionOne");
+  } else if (req.method == "POST") {
+    res.clearCookie("token");
+    res.clearCookie("encrypt");
+    console.log("Fail to validate SessionTwo");
+
+    next(new HttpException(409, "Your session has been expired"));
+  } else {
+    res.clearCookie("token");
+    res.clearCookie("encrypt");
+    next("Your session has been expired");
+  }
+}
