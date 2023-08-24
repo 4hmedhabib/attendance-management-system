@@ -89,6 +89,9 @@ model users {
 
     createdsessions sessions[] @relation("CREATED_SESSIONS")
     updatedsessions sessions[] @relation("UPDATED_SESSIONS")
+
+    group   groups? @relation(fields: [groupid], references: [groupid])
+    groupid Int?
 }
 
 model faculties {
@@ -362,6 +365,8 @@ model groups {
     updateddate DateTime @updatedAt
 
     permissions group_permissions[]
+
+    users users[]
 
     createdby   users? @relation("CREATED_BY", fields: [createdbyid], references: [userid])
     createdbyid Int?
