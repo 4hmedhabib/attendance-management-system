@@ -24,6 +24,7 @@ import Sessions, { CreateSession, SessionDetail } from "../pages/Sessions";
 import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
 import Students, { CreateStudent, StudentDetail } from "../pages/Students";
 import Teachers, { CreateTeacher, TeacherDetail } from "../pages/Teachers";
+import Users, { CreateUser, UserDetail } from "../pages/Users";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
@@ -64,7 +65,9 @@ const authProtectedRoutes = [
   { path: "/sessions/create", component: <CreateSession /> },
   { path: "/sessions/detail", component: <SessionDetail /> },
 
-  { path: "/administrations", component: <Dashboard /> },
+  { path: "/administrations", component: <Users /> },
+  { path: "/administrations/create", component: <CreateUser /> },
+  { path: "/administrations/detail", component: <UserDetail /> },
 
   // //profile
   { path: "/profile", component: <UserProfile /> },
