@@ -1,5 +1,6 @@
 export default {
   api: "/api",
+  auth: "/auth",
   faculties: function () {
     return `${this.api}/faculties`;
   },
@@ -29,6 +30,9 @@ export default {
   },
   deleteUser: function () {
     return `${this.api}/users/delete`;
+  },
+  groups: function () {
+    return `${this.api}/users/groups`;
   },
 
   shifts: function () {
@@ -187,5 +191,10 @@ export default {
   classSemesterCourses: function () {
     return `${this.api}/classes/detail/semesters/courses`
   },
+
+  login: function () {
+    return `${this.auth}/login`
+  },
+
 
 };
