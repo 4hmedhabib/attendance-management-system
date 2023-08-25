@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import slugify from "slugify";
+import { hashPassword } from "../../utils";
 
 const attandanceStatuses = ["Absent", "Present", "Late", "Excused"].map(
   (status: string) => ({
@@ -22,14 +23,14 @@ const users = [
     isadmin: true,
   },
 ].map(
-  (user): Prisma.usersCreateManyInput => ({
+  async (user): Promise<Prisma.usersCreateManyInput> => ({
     username: user.username,
     firstname: user.firstname,
     middlename: user.middlename,
     lastname: user.lastname,
     mobileno: user.mobileno,
     email: user.email,
-    password: user.password,
+    password: await hashPassword(user.password),
     isteacher: user.isteacher,
     isstudent: user.isstudent,
     isadmin: user.isadmin,
