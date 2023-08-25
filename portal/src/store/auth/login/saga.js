@@ -6,41 +6,36 @@ import { apiError, loginSuccess, logoutUserSuccess } from "./actions";
 
 //Include Both Helper File with needed methods
 import { getFirebaseBackend } from "../../../helpers/firebase_helper";
-import {
-  postFakeLogin,
-  postJwtLogin,
-  postSocialLogin,
-} from "../../../helpers/fakebackend_helper";
-
-const fireBaseBackend = getFirebaseBackend();
+import { postJwtLogin } from "../../../helpers/fakebackend_helper";
+import urls from "../../../api/urls";
+import useApiCall from "../../../hooks/apiHook";
 
 function* loginUser({ payload: { user, history } }) {
   try {
-    if (import.meta.env.VITE_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(
-        fireBaseBackend.loginUser,
-        user.email,
-        user.password
-      );
-      yield put(loginSuccess(response));
-    } else if (import.meta.env.VITE_APP_DEFAULTAUTH === "jwt") {
-      const response = yield call(postJwtLogin, {
-        email: user.email,
-        password: user.password,
-      });
-      localStorage.setItem("authUser", JSON.stringify(response));
-      yield put(loginSuccess(response));
-    } else if (import.meta.env.VITE_APP_DEFAULTAUTH === "fake") {
-      const response = yield call(postFakeLogin, {
-        email: user.email,
-        password: user.password,
-      });
-      localStorage.setItem("authUser", JSON.stringify(response));
-      yield put(loginSuccess(response));
-    }
-    history('/dashboard');
+    const response = yield call(postJwtLogin, {
+      payload: {
+        username: user.username,
+        password: user.password
+      }
+    });
+
+    localStorage.setItem("authUser", JSON.stringify(response));
+
+
+    yield put(loginSuccess(response));
+
+    history("/dashboard");
   } catch (error) {
-    yield put(apiError(error));
+    console.log(error)
+
+    let message;
+    if (Array.isArray(error.response?.data?.message)) {
+      message = Object.values(error.response?.data?.message[0])[0][0]
+    } else if (typeof error.response?.data?.message === 'string') {
+      message = error.response?.data?.message
+    }
+
+    yield put(apiError(message || error.message));
   }
 }
 
@@ -48,33 +43,10 @@ function* logoutUser({ payload: { history } }) {
   try {
     localStorage.removeItem("authUser");
 
-    if (import.meta.env.VITE_APP_DEFAULTAUTH === "firebase") {
-      const response = yield call(fireBaseBackend.logout);
-      yield put(logoutUserSuccess(response));
-    }
-    history('/login');
-  } catch (error) {
-    yield put(apiError(error));
-  }
-}
+    // const response = yield call(fireBaseBackend.logout);
+    yield put(logoutUserSuccess({ response: "" }));
 
-function* socialLogin({ payload: { data, history, type } }) {
-  try {
-    if (import.meta.env.VITE_APP_DEFAULTAUTH === "firebase") {
-      const fireBaseBackend = getFirebaseBackend();
-      const response = yield call(
-        fireBaseBackend.socialLoginUser,
-        data,
-        type,
-      );
-      localStorage.setItem("authUser", JSON.stringify(response));
-      yield put(loginSuccess(response));
-    } else {
-      const response = yield call(postSocialLogin, data);
-      localStorage.setItem("authUser", JSON.stringify(response));
-      yield put(loginSuccess(response));
-    }
-    history('/dashboard');
+    history("/login");
   } catch (error) {
     yield put(apiError(error));
   }
@@ -82,7 +54,6 @@ function* socialLogin({ payload: { data, history, type } }) {
 
 function* authSaga() {
   yield takeEvery(LOGIN_USER, loginUser);
-  yield takeLatest(SOCIAL_LOGIN, socialLogin);
   yield takeEvery(LOGOUT_USER, logoutUser);
 }
 
