@@ -41,3 +41,9 @@ export interface IRPCreateUserPayload {
 export interface IRBCreateUser {
   payload: IRPCreateUserPayload;
 }
+
+export interface IGroup {
+  groupid?: number;
+  groupname?: string;
+  groupslug?: string;
+}
