@@ -82,7 +82,6 @@ const CreateUser = () => {
           {
             teacherId: values.teacherId,
             classId: values.class?.value,
-            teacherId: values.teacher?.value,
             courseId: values.course?.value,
             groupId: values.group?.value,
           },
