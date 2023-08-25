@@ -45,11 +45,42 @@ export class App {
   // Set up a specific CORS policy
   corsOptions = {
     origin: "*",
+    credentials: true,
+    exposedHeaders: ["set-cookie"],
   };
 
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT!, { stream }));
-    this.app.use(cors(this.corsOptions));
+
+    // Allow cross origin requests
+    this.app.use(function (req, res, next) {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+      );
+      res.header("Access-Control-Allow-Credentials", "true");
+      next();
+    });
+
+    this.app.use(
+      cors((req, callback) => {
+        let corsOptions: cors.CorsOptions;
+        if (config.portalURLs.indexOf(req.headers!.origin!) !== -1) {
+          corsOptions = {
+            origin: true,
+            methods: ["POST", "HEAD", "OPTIONS", "GET"],
+            credentials: true,
+            exposedHeaders: ["set-cookie"],
+          };
+        } else {
+          corsOptions = { origin: false };
+        }
+        callback(null, corsOptions);
+      })
+    );
+
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
