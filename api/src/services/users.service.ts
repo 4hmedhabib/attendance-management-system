@@ -1,12 +1,13 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
-import { GetUsersBySlugFilters, UpdateUserData } from "../dtos";
+import { GetGroupsDto, GetUsersBySlugFilters, UpdateUserData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
-import { IRPCreateUserPayload, IUser } from "../interfaces";
+import { IGroup, IRPCreateUserPayload, IUser } from "../interfaces";
 import { hashPassword, logger } from "../utils";
 
 const prisma = new PrismaClient();
 const usersDB = prisma.users;
+const groupsDB = prisma.groups;
 
 @Service()
 class UserService {
@@ -24,11 +25,13 @@ class UserService {
         firstname: true,
         middlename: true,
         lastname: true,
+        group: { select: { groupname: true, groupslug: true } },
         mobileno: !isMiniView,
         email: !isMiniView,
         ispwdupgraded: !isMiniView,
         isstudent: !isMiniView,
         isteacher: !isMiniView,
+        createdat: true,
         createdby: !isMiniView
           ? {
               select: {
@@ -62,13 +65,14 @@ class UserService {
           firstname: true,
           middlename: true,
           lastname: true,
+          isadmin: true,
+          isteacher: true,
           mobileno: !isMiniView,
           email: !isMiniView,
           ispwdupgraded: !isMiniView,
           lastaccessdate: !isMiniView,
           lastchangepwd: !isMiniView,
           isstudent: !isMiniView,
-          isteacher: !isMiniView,
           createdat: !isMiniView,
           updatedat: !isMiniView,
           createdusers: !isMiniView
@@ -91,6 +95,7 @@ class UserService {
                 },
               }
             : false,
+          group: { select: { groupname: true, groupslug: true } },
           createdby: !isMiniView
             ? {
                 select: {
@@ -397,6 +402,44 @@ class UserService {
     });
 
     return deleteUserData;
+  }
+
+  public async findAllGroups(isMiniView: boolean): Promise<IGroup[]> {
+    const groups: IGroup[] = await groupsDB?.findMany({
+      select: {
+        groupid: true,
+        groupname: true,
+        groupslug: true,
+        createddate: true,
+        updateddate: true,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        updatedby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+      },
+    });
+
+    if (groups.length <= 0) {
+      throw new HttpException(404, "No data found!.");
+    }
+
+    return groups;
   }
 }
 
