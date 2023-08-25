@@ -47,12 +47,6 @@ const Dashboard = (props) => {
     },
   ];
 
-  useEffect(() => {
-    setTimeout(() => {
-      setSubscribemodal(true);
-    }, 2000);
-  }, []);
-
   //meta title
   document.title = "Dashboard | FFU ATMS";
 
