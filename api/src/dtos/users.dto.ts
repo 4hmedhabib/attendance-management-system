@@ -280,3 +280,16 @@ export class DeleteUserBySlugDto {
   @Type(() => DeleteUserBySlugPayload)
   payload: DeleteUserBySlugPayload;
 }
+
+export class GetGroupsPayload {
+  @IsBoolean({ message: "Is min view must be a boolean" })
+  @IsNotEmpty({ message: "Is min view is required" })
+  isMiniView: boolean;
+}
+
+export class GetGroupsDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => GetGroupsPayload)
+  payload: GetGroupsPayload;
+}
