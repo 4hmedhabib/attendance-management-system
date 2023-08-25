@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { authProtectedRoutes, publicRoutes } from "./routes";
 
 // Import all middleware
-import Authmiddleware from "./routes/route";
+import AuthMiddleware from "./routes/route";
 
 // layouts Format
 import VerticalLayout from "./components/VerticalLayout/";
@@ -78,9 +78,9 @@ const App = (props) => {
           <Route
             path={route.path}
             element={
-              // <Authmiddleware>
+              <AuthMiddleware>
                 <Layout>{route.component}</Layout>
-              // </Authmiddleware>
+              </AuthMiddleware>
             }
             key={idx}
             exact={true}
