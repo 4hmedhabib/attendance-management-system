@@ -6,3 +6,4 @@ export * from "./sessions";
 export * from "./shifts";
 export * from "./students";
 export * from "./teachers";
+export * from './users'
