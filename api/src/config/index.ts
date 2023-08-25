@@ -7,5 +7,6 @@ export const { NODE_ENV, PORT, SECRET_KEY, LOG_FORMAT, LOG_DIR, ORIGIN } =
 
 const isSecure = false;
 const maxSessionExpire = 30 * 60000; // 30 min
+const portalURLs = ["http://localhost:5173"];
 
-export { isSecure, CREDENTIALS, maxSessionExpire };
+export { isSecure, CREDENTIALS, maxSessionExpire, portalURLs };
