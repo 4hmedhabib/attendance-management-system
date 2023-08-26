@@ -33,6 +33,8 @@ class AuthService {
             lastaccessdate: true,
             isadmin: true,
             isteacher: true,
+            email: true,
+            mobileno: true,
             group: {
               select: {
                 groupid: true,

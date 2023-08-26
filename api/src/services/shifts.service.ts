@@ -2,9 +2,8 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
 import { UpdateShiftData } from "../dtos/shifts.dto";
 import { HttpException } from "../exceptions/httpException";
-import { IRPCreateShiftPayload, IShift } from "../interfaces";
+import { IRPCreateShiftPayload, IRequest, IShift } from "../interfaces";
 import { logger } from "../utils";
-import { IFaculty } from "./../interfaces/faculties.interface";
 
 const prisma = new PrismaClient();
 const shiftsDB = prisma.shifts;
@@ -103,7 +102,10 @@ class ShiftService {
     }
   }
 
-  public async createShift(shiftData: IRPCreateShiftPayload): Promise<any> {
+  public async createShift(
+    req: IRequest,
+    shiftData: IRPCreateShiftPayload
+  ): Promise<any> {
     let savedData: Prisma.shiftsCreateInput;
 
     const findShift = await shiftsDB?.findUnique({

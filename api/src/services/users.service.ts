@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
-import { GetGroupsDto, GetUsersBySlugFilters, UpdateUserData } from "../dtos";
+import { GetUsersBySlugFilters, UpdateUserData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
 import { IGroup, IRPCreateUserPayload, IUser } from "../interfaces";
 import { hashPassword, logger } from "../utils";
@@ -17,7 +17,7 @@ class UserService {
   ): Promise<IUser[]> {
     const users: IUser[] = await usersDB?.findMany({
       where: {
-        isadmin: filters.isAdmin ?? undefined,
+        isadmin: filters?.isAdmin || undefined,
       },
       select: {
         userid: true,
@@ -168,9 +168,9 @@ class UserService {
         `This email ${userData.email} already exists`
       );
 
-    const findGroup = await usersDB?.findUnique({
-      where: { username: userData.username },
-      select: { userid: true, username: true },
+    const findGroup = await groupsDB?.findUnique({
+      where: { groupslug: userData.group },
+      select: { groupid: true, groupslug: true },
     });
 
     if (!findGroup)
@@ -191,6 +191,11 @@ class UserService {
         isstudent: userData.isStudent,
         isteacher: userData.isTeacher,
         password: userData.password,
+        group: {
+          connect: {
+            groupid: findGroup.groupid,
+          },
+        },
       };
     } else {
       savedData = {
@@ -207,6 +212,11 @@ class UserService {
         createdby: {
           connect: {
             username: "ahmedhabib",
+          },
+        },
+        group: {
+          connect: {
+            groupid: findGroup.groupid,
           },
         },
       };

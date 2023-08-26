@@ -9,7 +9,12 @@ import {
   UpdateStudentData,
 } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
-import { IEnrollment, IRPCreateStudentPayload, IStudent } from "../interfaces";
+import {
+  IEnrollment,
+  IRPCreateStudentPayload,
+  IRequest,
+  IStudent,
+} from "../interfaces";
 import { logger } from "../utils";
 
 const prisma = new PrismaClient();
@@ -109,6 +114,7 @@ class StudentService {
   }
 
   public async createStudent(
+    req: IRequest,
     studentData: IRPCreateStudentPayload
   ): Promise<any> {
     let savedData: Prisma.studentsCreateInput;

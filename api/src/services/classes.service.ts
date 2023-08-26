@@ -21,6 +21,7 @@ import {
   IClassSemester,
   IClassSemesterCourses,
   IRPCreateClassPayload,
+  IRequest,
   ISessions,
   IShift,
 } from "../interfaces";
@@ -175,7 +176,10 @@ class ClassService {
     }
   }
 
-  public async createClass(classData: IRPCreateClassPayload): Promise<any> {
+  public async createClass(
+    req: IRequest,
+    classData: IRPCreateClassPayload
+  ): Promise<any> {
     let savedData: Prisma.classesCreateInput;
 
     const findClass = await classesDB?.findUnique({
@@ -1348,6 +1352,7 @@ class ClassService {
             sessionid: true,
             sessiondate: true,
             sessionuid: true,
+            _count: { select: { attendances: true } },
             createdby: !isMiniView
               ? {
                   select: {
@@ -1359,6 +1364,7 @@ class ClassService {
                 }
               : false,
           },
+          orderBy: { createdat: "desc" },
         });
 
       return classSemesterCoursesSessions;

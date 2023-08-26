@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
 import { UpdateSemesterData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
-import { IRPCreateSemesterPayload, ISemester } from "../interfaces";
+import { IRPCreateSemesterPayload, IRequest, ISemester } from "../interfaces";
 import { logger } from "../utils";
 
 const prisma = new PrismaClient();
@@ -103,6 +103,7 @@ class SemesterService {
   }
 
   public async createSemester(
+    req: IRequest,
     semesterData: IRPCreateSemesterPayload
   ): Promise<any> {
     let savedData: Prisma.semestersCreateInput;
