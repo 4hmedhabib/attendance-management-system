@@ -1,6 +1,9 @@
 export default {
   api: "/api",
   auth: "/auth",
+  dashboard: function () {
+    return `${this.api}/dashboard`;
+  },
   faculties: function () {
     return `${this.api}/faculties`;
   },
@@ -148,7 +151,7 @@ export default {
   },
 
   attendances: function () {
-    return `${this.api}/classes/detail/semesters/courses/attendances/list`;
+    return `${this.api}/classes/detail/semesters/courses/attendances`;
   },
   attendanceDetail: function () {
     return `${this.api}/classes/detail/semesters/courses/attendances/detail`;
@@ -164,7 +167,7 @@ export default {
   },
 
   sessions: function () {
-    return `${this.api}/classes/detail/semesters/courses/sessions/list`;
+    return `${this.api}/classes/detail/semesters/courses/sessions/`;
   },
   sessionDetail: function () {
     return `${this.api}/classes/detail/semesters/courses/sessions/detail`;
@@ -180,21 +183,19 @@ export default {
   },
 
   createClassSemester: function () {
-    return `${this.api}/classes/detail/semesters/create`
+    return `${this.api}/classes/detail/semesters/create`;
   },
   classSemesters: function () {
-    return `${this.api}/classes/detail/semesters`
+    return `${this.api}/classes/detail/semesters`;
   },
   createClassSemesterCourses: function () {
-    return `${this.api}/classes/detail/semesters/courses/create`
+    return `${this.api}/classes/detail/semesters/courses/create`;
   },
   classSemesterCourses: function () {
-    return `${this.api}/classes/detail/semesters/courses`
+    return `${this.api}/classes/detail/semesters/courses`;
   },
 
   login: function () {
-    return `${this.auth}/login`
+    return `${this.auth}/login`;
   },
-
-
 };
