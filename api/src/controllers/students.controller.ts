@@ -7,8 +7,8 @@ import {
 } from "../dtos";
 import {
   IEnrollment,
-  IRBCreateStudent,
   IRPCreateStudentPayload,
+  IRequest,
   IStudent,
 } from "../interfaces";
 import { StudentService } from "../services";
@@ -69,7 +69,7 @@ class StudentController {
   };
 
   public createStudent = async (
-    req: Request<any, any, IRBCreateStudent>,
+    req: IRequest,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
@@ -77,6 +77,7 @@ class StudentController {
       const studentData: IRPCreateStudentPayload = req.body.payload;
 
       const createStudentData: IStudent = await this.student.createStudent(
+        req,
         studentData
       );
 

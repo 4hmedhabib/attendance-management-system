@@ -70,6 +70,7 @@ class CourseController {
       const courseData: IRPCreateCoursePayload = req.body.payload;
 
       const createCourseData: ICourse = await this.course.createCourse(
+        req,
         courseData
       );
 

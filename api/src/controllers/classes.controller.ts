@@ -84,7 +84,10 @@ class ClassController {
     try {
       const classData: IRPCreateClassPayload = req.body.payload;
 
-      const createClassData: IClass = await this.class.createClass(classData);
+      const createClassData: IClass = await this.class.createClass(
+        req,
+        classData
+      );
 
       res.status(201).json({
         data: createClassData,
