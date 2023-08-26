@@ -1,17 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
-import {
-  GetUsersBySlugFilters,
-  LoginPayloadDto,
-  UpdateUserData,
-} from "../dtos";
-import { HttpException } from "../exceptions/httpException";
-import { IAuthLogin, IRPCreateUserPayload, IUser } from "../interfaces";
-import { comparePassword, hashPassword, logger } from "../utils";
-import { resolve } from "path";
-import { reject } from "async";
+import { PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
-import { log } from "console";
+import { LoginPayloadDto } from "../dtos";
+import { HttpException } from "../exceptions/httpException";
+import { comparePassword, hashPassword, logger } from "../utils";
 
 const prisma = new PrismaClient();
 const usersDB = prisma.users;
@@ -58,7 +49,7 @@ class AuthService {
 
         try {
           let response: any = {};
-
+          console.log(await hashPassword(payload.password));
           const _comparePassword = await comparePassword(
             payload.password,
             user.password
