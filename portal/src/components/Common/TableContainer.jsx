@@ -21,6 +21,7 @@ const TableContainer = ({
   isLoading,
   onRefresh = () => {},
   title = "",
+  isHideAdd = false,
 }) => {
   const {
     getTableProps,
@@ -103,15 +104,17 @@ const TableContainer = ({
             <i className="mdi mdi-reload me-1" />
             Refresh
           </Button>
-          <Button
-            type="button"
-            color="success"
-            className="btn-rounded  mb-0 me-2"
-            onClick={handleClick}
-          >
-            <i className="mdi mdi-plus me-1" />
-            {title}
-          </Button>
+          {!isHideAdd && (
+            <Button
+              type="button"
+              color="success"
+              className="btn-rounded  mb-0 me-2"
+              onClick={handleClick}
+            >
+              <i className="mdi mdi-plus me-1" />
+              {title}
+            </Button>
+          )}{" "}
         </Col>
       </Row>
 
