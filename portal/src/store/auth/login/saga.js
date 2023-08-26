@@ -1,38 +1,34 @@
-import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 
 // Login Redux States
-import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN } from "./actionTypes";
+import { LOGIN_USER, LOGOUT_USER } from "./actionTypes";
 import { apiError, loginSuccess, logoutUserSuccess } from "./actions";
 
 //Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper";
 import { postJwtLogin } from "../../../helpers/fakebackend_helper";
-import urls from "../../../api/urls";
-import useApiCall from "../../../hooks/apiHook";
 
 function* loginUser({ payload: { user, history } }) {
   try {
     const response = yield call(postJwtLogin, {
       payload: {
         username: user.username,
-        password: user.password
-      }
+        password: user.password,
+      },
     });
 
-    localStorage.setItem("authUser", JSON.stringify(response));
-
+    localStorage.setItem("authUser", JSON.stringify(response?.data?.data));
 
     yield put(loginSuccess(response));
 
     history("/dashboard");
   } catch (error) {
-    console.log(error)
+    console.log(error);
 
     let message;
     if (Array.isArray(error.response?.data?.message)) {
-      message = Object.values(error.response?.data?.message[0])[0][0]
-    } else if (typeof error.response?.data?.message === 'string') {
-      message = error.response?.data?.message
+      message = Object.values(error.response?.data?.message[0])[0][0];
+    } else if (typeof error.response?.data?.message === "string") {
+      message = error.response?.data?.message;
     }
 
     yield put(apiError(message || error.message));
