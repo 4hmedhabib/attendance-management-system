@@ -31,7 +31,7 @@ function Users() {
       payload: {
         isMiniView: true,
         filters: {
-          isAdmin: true,
+          isAdmin: null,
         },
       },
     },

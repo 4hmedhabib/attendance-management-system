@@ -33,6 +33,7 @@ const CreateUser = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGetTeacher, setIsGetTeacher] = useState(false);
+  const [teacherData, setTeacherData] = useState(null);
 
   const { create: createUser } = useApiCall(
     "CREATE_USER",
@@ -59,6 +60,8 @@ const CreateUser = () => {
 
   const formik = useFormik({
     initialValues: {
+      username: undefined,
+      teacherId: undefined,
       firstName: undefined,
       middleName: undefined,
       lastName: undefined,
@@ -78,14 +81,20 @@ const CreateUser = () => {
 
       setIsSubmitting(true);
       const payload = {
-        data: [
-          {
-            teacherId: values.teacherId,
-            classId: values.class?.value,
-            courseId: values.course?.value,
-            groupId: values.group?.value,
-          },
-        ],
+        firstName: values?.firstName,
+        middleName: values?.middleName,
+        lastName: values?.lastName,
+        username:
+          values?.group?.value === "teachers"
+            ? values.teacherId
+            : values.username,
+        mobileNo: values?.mobileNo,
+        email: values?.email,
+        password: values?.password,
+        passwordConfirm: values?.passwordConfirm,
+        isStudent: false,
+        isTeacher: values?.group?.value === "teachers",
+        group: values?.group?.value,
       };
 
       await createUser({ payload })
@@ -100,7 +109,7 @@ const CreateUser = () => {
 
           formik.resetForm();
           setIsSubmitting(false);
-          navigate("/enrollments/");
+          navigate("/administrations/");
         })
         .catch((err) => {
           toast.update("createUser", {
@@ -118,20 +127,10 @@ const CreateUser = () => {
 
   let { group, class: _class, course, teacherId } = formik.values;
 
-  const {
-    data: teacherData,
-    isError: teacherIsErr,
-    isLoading: teacherIsLoading,
-    errMsg: teacherErrMsg,
-    refetch: teacherRefetch,
-  } = useApiCall(
+  const { create: getTeacher } = useApiCall(
     "TEACHERS_DETAIL",
     urls.teacherDetail(),
-    {
-      payload: {
-        isMiniView: false,
-      },
-    },
+    {},
     false
   );
 
@@ -168,27 +167,24 @@ const CreateUser = () => {
     }
   }, [isGetTeacher, teacherData]);
 
-  const getSemesterData = () => {
-    let _course = coursesData?.data?.find(
-      (course) => course?.course?.classslug === course?.value
-    );
-
-    if (_course) {
-      let teacher = {
-        label: `${_course.teacher?.firstname} ${_course.teacher?.middlename} - ${_course.teacher?.techid}`,
-        value: coursesData?.data?.find(
-          (course) =>
-            course?.course?.courseslug === formik.values?.course?.value
-        ).teacher?.techid,
-      };
-      formik.setFieldValue("teacher", teacher);
-    }
-  };
-
-  const getTeacherData = () => {
-    teacherRefetch();
+  const getTeacherData = (teacherId) => {
+    console.log(teacherId, "000-80-");
+    getTeacher({
+      payload: {
+        teacherId: teacherId,
+        isMiniView: false,
+      },
+    }).then((res) => {
+      setTeacherData(res.data);
+      formik.setFieldValue("firstName", res?.data?.firstname);
+      formik.setFieldValue("middleName", res?.data?.middlename);
+      formik.setFieldValue("lastName", res?.data?.lastname);
+      formik.setFieldValue("mobileNo", res?.data?.mobileno);
+    });
     setIsGetTeacher(true);
   };
+
+  console.log(formik.errors);
 
   return (
     <React.Fragment>
@@ -256,6 +252,36 @@ const CreateUser = () => {
                               className="form-control"
                               placeholder="Teacher ID"
                               value={formik.values.teacherId}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange}
+                              disabled={isSubmitting}
+                            />
+                            <div className="input-group-prepend">
+                              <button
+                                // disabled={isSubmitting || teacherIsLoading}
+                                onClick={() =>
+                                  getTeacherData(formik.values.teacherId)
+                                }
+                                type="button"
+                                className="btn btn-primary"
+                              >
+                                Get Data
+                              </button>
+                            </div>
+                          </InputGroup>
+                        </Col>
+                      )}
+                      {formik.values?.group?.value !== "teachers" && (
+                        <Col sm="6">
+                          <Label htmlFor="username">Username</Label>
+                          <InputGroup className="mb-3">
+                            <Input
+                              id="username"
+                              name="username"
+                              type="text"
+                              className="form-control"
+                              placeholder="Username"
+                              value={formik.values.username}
                               onBlur={formik.handleBlur}
                               onChange={formik.handleChange}
                               disabled={isSubmitting}
@@ -382,7 +408,6 @@ const CreateUser = () => {
                             type="text"
                             className="form-control"
                             placeholder="Email"
-                            readOnly
                             value={formik.values.email}
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
@@ -402,10 +427,9 @@ const CreateUser = () => {
                           <Input
                             id="password"
                             name="password"
-                            type="text"
+                            type="password"
                             className="form-control"
                             placeholder="Password"
-                            readOnly
                             value={formik.values.password}
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
@@ -421,25 +445,24 @@ const CreateUser = () => {
                       </Col>
                       <Col sm="6">
                         <div className="mb-3">
-                          <Label htmlFor="confirmPassword">
+                          <Label htmlFor="passwordConfirm">
                             Confirm Password
                           </Label>
                           <Input
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            type="text"
+                            id="passwordConfirm"
+                            name="passwordConfirm"
+                            type="password"
                             className="form-control"
                             placeholder="Confirm Password"
-                            readOnly={group?.value === "teachers" || false}
-                            value={formik.values.confirmPassword}
+                            value={formik.values.passwordConfirm}
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             disabled={isSubmitting}
                           />
-                          {formik.touched?.confirmPassword &&
-                          Boolean(formik.errors?.confirmPassword) ? (
+                          {formik.touched?.passwordConfirm &&
+                          Boolean(formik.errors?.passwordConfirm) ? (
                             <span className="text-danger">
-                              {formik.errors?.confirmPassword}
+                              {formik.errors?.passwordConfirm}
                             </span>
                           ) : null}
                         </div>
