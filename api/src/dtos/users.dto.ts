@@ -4,8 +4,8 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNotEmptyObject,
+  IsOptional,
   IsString,
-  Matches,
   MaxLength,
   MinLength,
   ValidateNested,
@@ -77,9 +77,6 @@ class CreateUserPayload {
   @IsString()
   @MinLength(4)
   @MaxLength(20)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: "password too weak",
-  })
   password: string;
 
   @IsString()
@@ -233,7 +230,7 @@ class GetUserBySlugPayload {
 
 export class GetUsersBySlugFilters {
   @IsBoolean({ message: "is admin must be a boolean" })
-  @IsNotEmpty({ message: "is admin is required" })
+  @IsOptional({ message: "is admin is not required" })
   isAdmin: boolean;
 }
 
