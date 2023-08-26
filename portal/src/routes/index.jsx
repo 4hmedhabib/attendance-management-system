@@ -165,17 +165,17 @@ const authProtectedRoutes = [
   {
     path: "/sessions",
     component: <Sessions />,
-    allowedPerms: ["teachers", "deans", "admin"],
+    allowedPerms: [],
   },
   {
     path: "/sessions/create",
     component: <CreateSession />,
-    allowedPerms: ["teachers", "deans", "admin"],
+    allowedPerms: [],
   },
   {
     path: "/sessions/detail",
     component: <SessionDetail />,
-    allowedPerms: ["teachers", "deans", "admin"],
+    allowedPerms: [],
   },
 
   {
