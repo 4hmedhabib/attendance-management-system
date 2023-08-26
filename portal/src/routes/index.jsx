@@ -25,52 +25,181 @@ import Shifts, { CreateShift, ShiftDetail } from "../pages/Shifts";
 import Students, { CreateStudent, StudentDetail } from "../pages/Students";
 import Teachers, { CreateTeacher, TeacherDetail } from "../pages/Teachers";
 import Users, { CreateUser, UserDetail } from "../pages/Users";
+import NotFound from "../pages/Utility/NotFound";
 
 const authProtectedRoutes = [
-  { path: "/dashboard", component: <Dashboard /> },
+  {
+    path: "/dashboard",
+    component: <Dashboard />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
 
-  { path: "/shifts", component: <Shifts /> },
-  { path: "/shifts/create", component: <CreateShift /> },
-  { path: "/shifts/detail", component: <ShiftDetail /> },
+  {
+    path: "/shifts",
+    component: <Shifts />,
+    allowedPerms: ["admin"],
+  },
+  {
+    path: "/shifts/create",
+    component: <CreateShift />,
+    allowedPerms: ["admin"],
+  },
+  {
+    path: "/shifts/detail",
+    component: <ShiftDetail />,
+    allowedPerms: ["admin"],
+  },
 
-  { path: "/classes", component: <Classes /> },
-  { path: "/classes/create", component: <CreateClass /> },
-  { path: "/classes/detail", component: <ClassDetail /> },
+  {
+    path: "/classes",
+    component: <Classes />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
+  {
+    path: "/classes/create",
+    component: <CreateClass />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/classes/detail",
+    component: <ClassDetail />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
 
-  { path: "/faculties", component: <Faculties /> },
-  { path: "/faculties/create", component: <CreateFaculty /> },
-  { path: "/faculties/detail", component: <FacultyDetail /> },
+  {
+    path: "/faculties",
+    component: <Faculties />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/faculties/create",
+    component: <CreateFaculty />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/faculties/detail",
+    component: <FacultyDetail />,
+    allowedPerms: ["deans", "admin"],
+  },
 
-  { path: "/semesters", component: <Semesters /> },
-  { path: "/semesters/create", component: <CreateSemester /> },
-  { path: "/semesters/detail", component: <SemesterDetail /> },
+  {
+    path: "/semesters",
+    component: <Semesters />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/semesters/create",
+    component: <CreateSemester />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/semesters/detail",
+    component: <SemesterDetail />,
+    allowedPerms: ["deans", "admin"],
+  },
 
-  { path: "/courses", component: <Courses /> },
-  { path: "/courses/create", component: <CreateCourse /> },
-  { path: "/courses/detail", component: <CourseDetail /> },
+  {
+    path: "/courses",
+    component: <Courses />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
+  {
+    path: "/courses/create",
+    component: <CreateCourse />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/courses/detail",
+    component: <CourseDetail />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
 
-  { path: "/teachers", component: <Teachers /> },
-  { path: "/teachers/create", component: <CreateTeacher /> },
-  { path: "/teachers/detail", component: <TeacherDetail /> },
+  {
+    path: "/teachers",
+    component: <Teachers />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/teachers/create",
+    component: <CreateTeacher />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/teachers/detail",
+    component: <TeacherDetail />,
+    allowedPerms: ["deans", "admin"],
+  },
 
-  { path: "/students", component: <Students /> },
-  { path: "/students/create", component: <CreateStudent /> },
-  { path: "/students/detail", component: <StudentDetail /> },
+  {
+    path: "/students",
+    component: <Students />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/students/create",
+    component: <CreateStudent />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/students/detail",
+    component: <StudentDetail />,
+    allowedPerms: ["deans", "admin"],
+  },
 
-  { path: "/enrollments", component: <Enrollments /> },
-  { path: "/enrollments/create", component: <CreateEnrollment /> },
-  { path: "/enrollments/detail", component: <EnrollmentDetail /> },
+  {
+    path: "/enrollments",
+    component: <Enrollments />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/enrollments/create",
+    component: <CreateEnrollment />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/enrollments/detail",
+    component: <EnrollmentDetail />,
+    allowedPerms: ["deans", "admin"],
+  },
 
-  { path: "/sessions", component: <Sessions /> },
-  { path: "/sessions/create", component: <CreateSession /> },
-  { path: "/sessions/detail", component: <SessionDetail /> },
+  {
+    path: "/sessions",
+    component: <Sessions />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
+  {
+    path: "/sessions/create",
+    component: <CreateSession />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
+  {
+    path: "/sessions/detail",
+    component: <SessionDetail />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
 
-  { path: "/administrations", component: <Users /> },
-  { path: "/administrations/create", component: <CreateUser /> },
-  { path: "/administrations/detail", component: <UserDetail /> },
+  {
+    path: "/administrations",
+    component: <Users />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/administrations/create",
+    component: <CreateUser />,
+    allowedPerms: ["deans", "admin"],
+  },
+  {
+    path: "/administrations/detail",
+    component: <UserDetail />,
+    allowedPerms: ["deans", "admin"],
+  },
 
   // //profile
-  { path: "/profile", component: <UserProfile /> },
+  {
+    path: "/profile",
+    component: <UserProfile />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
@@ -78,6 +207,13 @@ const authProtectedRoutes = [
     path: "/",
     exact: true,
     component: <Navigate to="/dashboard" />,
+    allowedPerms: ["teachers", "deans", "admin"],
+  },
+  {
+    path: "*",
+    exact: true,
+    component: <NotFound />,
+    allowedPerms: ["teachers", "deans", "admin"],
   },
 ];
 
