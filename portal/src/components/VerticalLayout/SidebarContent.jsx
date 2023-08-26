@@ -230,7 +230,7 @@ const SidebarContent = (props) => {
               </li>
             </AuthPermMiddleware>
 
-            <AuthPermMiddleware allowedPerms={["teachers", "deans", "admin"]}>
+            <AuthPermMiddleware allowedPerms={[]}>
               <li>
                 <Link to="/sessions">
                   <i className="bx bxs-calendar"></i>
