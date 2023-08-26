@@ -1,12 +1,13 @@
 import * as yup from "yup";
 
 export const createUserSchema = yup.object({
-  username: yup.string().required(),
+  username: yup.string(),
   mobileNo: yup.string().required(),
   email: yup.string().email().required(),
-  password: yup.string().required('Password is required'),
-  passwordConfirmation: yup.string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+  password: yup.string().required("Password is required"),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
   firstName: yup.string().required(),
   middleName: yup.string().required(),
   lastName: yup.string().required(),
@@ -22,7 +23,7 @@ export const createUserSchema = yup.object({
       value: yup.string().required(),
     })
     .required(),
-  teacherId: yup.string().required(),
+  teacherId: yup.string(),
 });
 
 export const updateUserSchema = yup.object({
