@@ -13,42 +13,67 @@ import FullCalendar from "@fullcalendar/react";
 
 // Pages Components
 import LatestTranaction from "./LatestTranaction";
-import MonthlyEarning from "./MonthlyEarning";
 import WelcomeComp from "./WelcomeComp";
 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 //i18n
+import { useState } from "react";
 import { withTranslation } from "react-i18next";
+import urls from "../../api/urls";
+import useApiCall from "../../hooks/apiHook";
 import TopCities from "./TopCities";
 
 //redux
 
 const Dashboard = (props) => {
+  const [dashboardData, setDashboardData] = useState(null);
+
   const reports = [
     {
       title: "Classes",
       iconClass: "bx-buildings",
-      description: "22",
+      description: dashboardData?.classes || 0,
       color: "warning",
     },
     {
       title: "Courses",
       iconClass: "bxs-book",
-      description: "215",
+      description: dashboardData?.courses || 0,
       color: "success",
     },
     {
       title: "Students",
       iconClass: "bxs-graduation",
-      description: "1,500",
+      description: dashboardData?.students || 0,
       color: "primary",
     },
   ];
 
   //meta title
   document.title = "Dashboard | FFU ATMS";
+
+  const {
+    data,
+    isError,
+    isLoading,
+    errMsg,
+    refetch: dashboardRefetch,
+  } = useApiCall(
+    "DASHBOARD_DATA",
+    urls.dashboard(),
+    {
+      isMiniView: false,
+    },
+    true
+  );
+
+  useEffect(() => {
+    if (data) {
+      setDashboardData(data.data);
+    }
+  }, [data]);
 
   return (
     <React.Fragment>
