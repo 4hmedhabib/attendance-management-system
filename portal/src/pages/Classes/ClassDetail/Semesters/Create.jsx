@@ -14,20 +14,15 @@ import {
   Row,
   Spinner,
 } from "reactstrap";
-import slugify from "slugify";
 
 //Import Breadcrumb
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import urls from "../../../../api/urls";
-import Breadcrumbs from "../../../../components/Common/Breadcrumb";
-import useApiCall from "../../../../hooks/apiHook";
-import {
-  createClassSemesterSchema,
-  createSemesterSchema,
-} from "../../../../validations";
 import ResError from "../../../../components/Common/ResError";
+import useApiCall from "../../../../hooks/apiHook";
+import { createClassSemesterSchema } from "../../../../validations";
 
 //Date Picker
 import DatePicker from "react-datepicker";

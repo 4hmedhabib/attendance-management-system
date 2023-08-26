@@ -1,13 +1,12 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import dayjs from "dayjs";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
 import { Button, Card, CardBody, Col, Row } from "reactstrap";
 import urls from "../../../../../api/urls";
 import ResError from "../../../../../components/Common/ResError";
 import useApiCall from "../../../../../hooks/apiHook";
 import Create from "./Create";
+import Sessions from "./Sessions";
 
 function ClassSemesterCourses({
   onBackClassSemesterCourses,
@@ -18,6 +17,8 @@ function ClassSemesterCourses({
 
   const [classSemesterCourses, setClassSemesterCourses] = useState([]);
   const [showCourses, setCourses] = useState(false);
+  const [showSessions, setShowSessions] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [createClassSemesterCourses, setCreateClassSemesterCourses] =
     useState(false);
   const [selectedClassSemesterCourses, setSelectedClassSemesterCourses] =
@@ -72,6 +73,11 @@ function ClassSemesterCourses({
     setCreateClassSemesterCourses(true);
   };
 
+  const onShowSessions = (course) => {
+    setShowSessions(true);
+    setSelectedCourse(course);
+  };
+
   return (
     <React.Fragment>
       <div className="container-fluid">
@@ -79,7 +85,7 @@ function ClassSemesterCourses({
           <ResError error={errMsg} />
         )}
 
-        {!showCourses && (
+        {!showCourses && !showSessions && (
           <>
             {!createClassSemesterCourses && (
               <Row>
@@ -87,7 +93,9 @@ function ClassSemesterCourses({
                   <Card>
                     <CardBody>
                       <div className="d-flex align-items-center gap-2 justify-content-between">
-                        <h4 className="card-title">Semester Courses</h4>
+                        <div>
+                          <h4 className="card-title">Semester Courses</h4>
+                        </div>
 
                         <div className="d-flex gap-2">
                           <button
@@ -109,7 +117,7 @@ function ClassSemesterCourses({
 
                       <Row>
                         {classSemesterCourses?.map((course, idx) => (
-                          <Col key={idx} sm="6" md="4" xl="3">
+                          <Col key={idx} sm="6" md="4">
                             <div className="border p-3 rounded mt-4">
                               <Row>
                                 <div className="d-flex align-items-center mb-3 col-6">
@@ -128,7 +136,7 @@ function ClassSemesterCourses({
                               </Row>
 
                               <Row>
-                                <div className="col-lg-6">
+                                <div className="col-lg-8">
                                   <div className="text-muted mt-3">
                                     <p className="d-flex align-items-center">
                                       <i className="bx bxs-user-voice mr-1" />
@@ -139,17 +147,14 @@ function ClassSemesterCourses({
                                   </div>
                                 </div>
 
-                                <div className="col-lg-6 align-self-end">
+                                <div className="col-lg-4 align-self-end">
                                   <div className="float-end mt-3">
-                                    <Link
-                                      to="/courses/detail"
-                                      state={{
-                                        courseSlug: course?.course?.courseslug,
-                                      }}
-                                      className="btn btn-primary"
+                                    <Button
+                                      onClick={() => onShowSessions(course)}
+                                      className="btn btn-primary btn-sm"
                                     >
-                                      View Course
-                                    </Link>
+                                      View Sessions
+                                    </Button>
                                   </div>
                                 </div>
                               </Row>
@@ -171,7 +176,7 @@ function ClassSemesterCourses({
               </Row>
             )}
 
-            {createClassSemesterCourses && (
+            {createClassSemesterCourses && !showSessions && (
               <Create
                 onShowCreateSemesterCourse={setCreateClassSemesterCourses}
                 selectedSemester={selectedSemester}
@@ -179,6 +184,15 @@ function ClassSemesterCourses({
               />
             )}
           </>
+        )}
+
+        {selectedCourse && showSessions && (
+          <Sessions
+            selectedSemester={selectedSemester}
+            selectedCourse={selectedCourse}
+            setShowSessions={setShowSessions}
+            setSelectedCourse={setSelectedCourse}
+          />
         )}
       </div>
     </React.Fragment>
