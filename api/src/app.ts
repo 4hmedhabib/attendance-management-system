@@ -2,16 +2,16 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
+import session from "express-session";
 import helmet from "helmet";
 import hpp from "hpp";
 import morgan from "morgan";
 import "reflect-metadata";
+import * as config from "./config";
 import { LOG_FORMAT, NODE_ENV, PORT } from "./config";
-import { IRoutes } from "./interfaces";
+import { IRequest, IRoutes } from "./interfaces";
 import { ErrorMiddleware } from "./middlewares";
 import { logger, stream } from "./utils";
-import session from "express-session";
-import * as config from "./config";
 
 export class App {
   public app: express.Application;
@@ -65,12 +65,12 @@ export class App {
     });
 
     this.app.use(
-      cors((req, callback) => {
+      cors((req: IRequest, callback) => {
         let corsOptions: cors.CorsOptions;
         if (config.portalURLs.indexOf(req.headers!.origin!) !== -1) {
           corsOptions = {
             origin: true,
-            methods: ["POST", "HEAD", "OPTIONS", "GET"],
+            methods: ["POST", "HEAD", "OPTIONS", "GET", "PUT"],
             credentials: true,
             exposedHeaders: ["set-cookie"],
           };
