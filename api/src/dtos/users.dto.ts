@@ -4,8 +4,8 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNotEmptyObject,
+  IsOptional,
   IsString,
-  Matches,
   MaxLength,
   MinLength,
   ValidateNested,
@@ -77,9 +77,6 @@ class CreateUserPayload {
   @IsString()
   @MinLength(4)
   @MaxLength(20)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: "password too weak",
-  })
   password: string;
 
   @IsString()
@@ -95,6 +92,16 @@ class CreateUserPayload {
   @IsBoolean()
   @IsNotEmpty({ message: "is teacher field is required" })
   isTeacher: boolean;
+
+  @IsString({ message: "group must be a string" })
+  @IsNotEmpty({ message: "group is required" })
+  @MinLength(3, {
+    message: "group must be longer than or equal to 3 characters",
+  })
+  @MaxLength(15, {
+    message: "group must be shorter than or equal to 15 characters",
+  })
+  group: string;
 }
 
 export class CreateUserDto {
@@ -173,6 +180,16 @@ export class UpdateUserData {
   @IsBoolean()
   @IsNotEmpty({ message: "is teacher field is required" })
   isTeacher: boolean;
+
+  @IsString({ message: "group must be a string" })
+  @IsNotEmpty({ message: "group is required" })
+  @MinLength(3, {
+    message: "group must be longer than or equal to 3 characters",
+  })
+  @MaxLength(15, {
+    message: "group must be shorter than or equal to 15 characters",
+  })
+  group: string;
 }
 
 class UpdateUserPayload {
@@ -213,7 +230,7 @@ class GetUserBySlugPayload {
 
 export class GetUsersBySlugFilters {
   @IsBoolean({ message: "is admin must be a boolean" })
-  @IsNotEmpty({ message: "is admin is required" })
+  @IsOptional({ message: "is admin is not required" })
   isAdmin: boolean;
 }
 
@@ -259,4 +276,17 @@ export class DeleteUserBySlugDto {
   @ValidateNested()
   @Type(() => DeleteUserBySlugPayload)
   payload: DeleteUserBySlugPayload;
+}
+
+export class GetGroupsPayload {
+  @IsBoolean({ message: "Is min view must be a boolean" })
+  @IsNotEmpty({ message: "Is min view is required" })
+  isMiniView: boolean;
+}
+
+export class GetGroupsDto {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => GetGroupsPayload)
+  payload: GetGroupsPayload;
 }

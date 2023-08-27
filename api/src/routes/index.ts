@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { IRoutes } from "../interfaces/";
+import { isSessionValid } from "../middlewares/validation.middleware";
+import AuthRoute from "./auth.route";
 import ClassRoute from "./classes.route";
 import CourseRoute from "./courses.route";
+import DashboardRoute from "./dashboard.route";
 import FacultyRoute from "./faculties.route";
 import SemesterRoute from "./semesters.route";
 import ShiftRoute from "./shifts.route";
@@ -23,14 +26,19 @@ class IndexRoutes implements IRoutes {
       new CourseRoute(),
       new StudentRoute(),
       new TeacherRoute(),
+      new DashboardRoute(),
     ];
 
-    this.initializeRoutes(routes);
+    this.initializeRoutes(routes, [new AuthRoute()]);
   }
 
-  private initializeRoutes(routes: IRoutes[]) {
+  private initializeRoutes(routes: IRoutes[], authRoutes: IRoutes[]) {
     routes.forEach((route) => {
-      this.router.use(`${this.path}/`, route.router);
+      this.router.use(`${this.path}/`, isSessionValid, route.router);
+    });
+
+    authRoutes.forEach((route) => {
+      this.router.use(`/`, route.router);
     });
   }
 }

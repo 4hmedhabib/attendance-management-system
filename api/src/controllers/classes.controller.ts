@@ -1,17 +1,21 @@
 import { NextFunction, Request, Response } from "express";
 import {
   CreateClassSemesterCourseAttendancesDto,
+  CreateClassSemesterCourseSessionsDto,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   DeleteClassBySlugDto,
   GetClassBySlugDto,
   GetClassSemesterCourseAttendancesDto,
+  GetClassSemesterCourseSessionsDto,
   GetClassSemesterCoursesBySlugDto,
   GetClassSemestersBySlugDto,
   GetClassesDto,
   UpdateClassDto,
   UpdateClassSemesterCourseAttendancePayload,
   UpdateClassSemesterCourseAttendancesDto,
+  UpdateClassSemesterCourseSessionPayload,
+  UpdateClassSemesterCourseSessionsDto,
 } from "../dtos";
 import {
   IAttendances,
@@ -19,6 +23,7 @@ import {
   IClassSemester,
   IRBCreateClass,
   IRPCreateClassPayload,
+  ISessions,
 } from "../interfaces/";
 import { ClassService } from "../services/";
 
@@ -79,7 +84,10 @@ class ClassController {
     try {
       const classData: IRPCreateClassPayload = req.body.payload;
 
-      const createClassData: IClass = await this.class.createClass(classData);
+      const createClassData: IClass = await this.class.createClass(
+        req,
+        classData
+      );
 
       res.status(201).json({
         data: createClassData,
@@ -273,6 +281,65 @@ class ClassController {
       res.status(200).json({
         data: updateClassSemesterCoursesAttendanceData,
         message: "Attendance Successfully updated!",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public createClassSemesterCourseSessions = async (
+    req: Request<any, any, CreateClassSemesterCourseSessionsDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const createClassSemesterCourseSessionsData =
+        await this.class.createClassSemesterCourseSessions(req.body.payload);
+
+      res.status(200).json({
+        data: createClassSemesterCourseSessionsData,
+        message: "Course Sessions Successfully created!",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getClassSemesterCourseSessions = async (
+    req: Request<any, any, GetClassSemesterCourseSessionsDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const payload = req.body.payload;
+      const isMiniView = req.body.payload.isMiniView;
+
+      const findOneClassSemestersData: ISessions[] =
+        await this.class.findClassSemesterCoursesSessions(payload, isMiniView);
+
+      res.status(200).json({
+        data: findOneClassSemestersData,
+        message: "Class Semesters successfully loaded",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateClassSemesterCourseSessions = async (
+    req: Request<any, any, UpdateClassSemesterCourseSessionsDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const payload: UpdateClassSemesterCourseSessionPayload = req.body.payload;
+
+      const updateClassSemesterCoursesSessionData =
+        await this.class.updateClassSemesterCoursesSession(payload);
+
+      res.status(200).json({
+        data: updateClassSemesterCoursesSessionData,
+        message: "Session Successfully updated!",
       });
     } catch (error) {
       next(error);

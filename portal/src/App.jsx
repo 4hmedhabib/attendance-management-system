@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import { Routes, Route } from "react-router-dom";
 import { connect } from "react-redux";
+import { Route, Routes } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 
@@ -10,12 +10,12 @@ import { useSelector } from "react-redux";
 import { authProtectedRoutes, publicRoutes } from "./routes";
 
 // Import all middleware
-import Authmiddleware from "./routes/route";
+import AuthMiddleware, { AuthPermMiddleware } from "./routes/route";
 
 // layouts Format
-import VerticalLayout from "./components/VerticalLayout/";
 import HorizontalLayout from "./components/HorizontalLayout/";
 import NonAuthLayout from "./components/NonAuthLayout";
+import VerticalLayout from "./components/VerticalLayout/";
 
 // Import scss
 import "./assets/scss/theme.scss";
@@ -78,9 +78,14 @@ const App = (props) => {
           <Route
             path={route.path}
             element={
-              // <Authmiddleware>
-                <Layout>{route.component}</Layout>
-              // </Authmiddleware>
+              <AuthMiddleware>
+                <AuthPermMiddleware
+                  isRoute
+                  allowedPerms={route?.allowedPerms || []}
+                >
+                  <Layout>{route.component}</Layout>
+                </AuthPermMiddleware>
+              </AuthMiddleware>
             }
             key={idx}
             exact={true}

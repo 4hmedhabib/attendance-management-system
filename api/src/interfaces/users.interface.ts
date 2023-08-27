@@ -35,8 +35,15 @@ export interface IRPCreateUserPayload {
   passwordConfirm: string;
   isStudent: boolean;
   isTeacher: boolean;
+  group: string;
 }
 
 export interface IRBCreateUser {
   payload: IRPCreateUserPayload;
+}
+
+export interface IGroup {
+  groupid?: number;
+  groupname?: string;
+  groupslug?: string;
 }

@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
 import { GetCoursesBySlugFilters, UpdateCourseData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
-import { ICourse, IRPCreateCoursePayload } from "../interfaces";
+import { ICourse, IRPCreateCoursePayload, IRequest } from "../interfaces";
 import { logger } from "../utils";
 
 const prisma = new PrismaClient();
@@ -17,22 +17,25 @@ class CourseService {
   ): Promise<ICourse[]> {
     const courses: ICourse[] = await coursesDB?.findMany({
       where: {
-        AND: [
-          {
-            semesters: {
-              some: {
-                class_semester: {
-                  class: {
-                    classslug: filters?.classSlug ?? undefined,
-                  },
-                  semester: {
-                    semesterslug: filters?.semesterSlug ?? undefined,
+        semesters:
+          filters?.classSlug || filters?.semesterSlug
+            ? {
+                some: {
+                  class_semester: {
+                    class: filters?.classSlug
+                      ? {
+                          classslug: filters?.classSlug,
+                        }
+                      : undefined,
+                    semester: filters?.semesterSlug
+                      ? {
+                          semesterslug: filters?.semesterSlug,
+                        }
+                      : undefined,
                   },
                 },
-              },
-            },
-          },
-        ],
+              }
+            : undefined,
       },
       select: {
         courseid: true,
@@ -131,7 +134,10 @@ class CourseService {
     }
   }
 
-  public async createCourse(courseData: IRPCreateCoursePayload): Promise<any> {
+  public async createCourse(
+    req: IRequest,
+    courseData: IRPCreateCoursePayload
+  ): Promise<any> {
     let savedData: Prisma.coursesCreateInput;
 
     const findCourse = await coursesDB?.findUnique({

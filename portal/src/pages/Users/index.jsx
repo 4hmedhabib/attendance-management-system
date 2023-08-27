@@ -12,29 +12,26 @@ import ResError from "../../components/Common/ResError";
 import TableContainer from "../../components/Common/TableContainer";
 import useApiCall from "../../hooks/apiHook";
 
-function Attendance() {
+function Users() {
   //meta title
-  document.title = "Attendances | FFU - ATMS";
+  document.title = "Users | FFU - ATMS";
 
-  const [enrollments, setAttendances] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const {
     data,
     isError,
     isLoading,
     errMsg,
-    refetch: enrollmentsRefetch,
+    refetch: usersRefetch,
   } = useApiCall(
-    "ATTENDANCE_LIST",
-    urls.enrollments(),
+    "USER_LIST",
+    urls.users(),
     {
       payload: {
-        isMiniView: false,
+        isMiniView: true,
         filters: {
-          studentId: "",
-          classId: "",
-          courseId: "",
-          semesterId: "",
+          isAdmin: null,
         },
       },
     },
@@ -43,19 +40,24 @@ function Attendance() {
 
   const navigate = useNavigate();
 
-  const handleAttendanceClicks = () => {
+  const handleUserClicks = () => {
     navigate("create");
   };
 
   useEffect(() => {
     if (data) {
-      setAttendances(data.data);
+      setUsers(data.data);
     }
   }, [data]);
 
   const onRefresh = useCallback(() => {
-    enrollmentsRefetch({
-      payload: { isMiniView: false },
+    usersRefetch({
+      payload: {
+        isMiniView: true,
+        filters: {
+          isAdmin: true,
+        },
+      },
     });
   }, []);
 
@@ -67,7 +69,7 @@ function Attendance() {
     () => [
       {
         Header: "ID",
-        accessor: "enrollment_id",
+        accessor: "userid",
         style: {
           textAlign: "center",
           width: "10%",
@@ -78,62 +80,51 @@ function Attendance() {
         },
       },
       {
-        Header: "Attendance ID",
-        accessor: "student.stdid",
+        Header: "Username",
+        accessor: "username",
         Cell: ({ cell }) => {
-          console.log(cell);
-          return `${cell?.value?.toUpperCase()}`;
+          return `${cell?.value?.toLowerCase()}`;
         },
       },
       {
-        Header: "Semester",
-        accessor: "semester_course.class_semester.semester.semestername",
+        Header: "First Name",
+        accessor: "firstname",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
       {
-        Header: "Class",
-        accessor: "semester_course.class_semester.class.classname",
+        Header: "Middle Name",
+        accessor: "middlename",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
       {
-        Header: "Course",
-        accessor: "semester_course.course.coursename",
+        Header: "Last Name",
+        accessor: "lastname",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
       {
-        Header: "Teacher",
-        accessor: "semester_course.teacher",
+        Header: "Group",
+        accessor: "group",
         Cell: ({ cell }) => {
-          return `${cell?.value.firstname} ${cell?.value.middlename}`;
-        },
-      },
-      {
-        Header: "Created By",
-        accessor: "createdby",
-        Cell: ({ cell }) => {
-          return `${cell?.value.firstname} ${cell?.value.middlename}`;
+          return `${cell?.value?.groupname}`;
         },
       },
       {
         Header: "Date",
-        accessor: "enrollmentdate",
+        accessor: "createdat",
         Cell: ({ cell }) => {
           return dayjs(cell?.value).format("YYYY-MM-DD");
         },
       },
       {
         Header: "View",
-        accessor: "enrollment_id",
-        id: "ViewAttendanceId",
+        accessor: "user_id",
+        id: "ViewUserId",
         disableFilters: true,
         Cell: ({ cell }) => {
           return (
@@ -142,7 +133,7 @@ function Attendance() {
               color="primary"
               className="btn-sm btn-rounded"
               onClick={() =>
-                navigate("detail", { state: { enrollmentId: cell?.value } })
+                navigate("detail", { state: { userId: cell?.value } })
               }
             >
               View
@@ -158,7 +149,7 @@ function Attendance() {
     <React.Fragment>
       <div className="page-content">
         <div className="container-fluid">
-          <Breadcrumbs title="Attendances" breadcrumbItem="Attendances List" />
+          <Breadcrumbs title="Users" breadcrumbItem="Users List" />
 
           {isError && <ResError error={errMsg} />}
 
@@ -168,15 +159,15 @@ function Attendance() {
                 <CardBody>
                   <TableContainer
                     columns={columns}
-                    data={enrollments || []}
+                    data={users || []}
                     isGlobalFilter={false}
                     isAddOptions={true}
-                    handleClick={handleAttendanceClicks}
+                    handleClick={handleUserClicks}
                     customPageSize={50}
                     className="custom-header-css"
                     isLoading={isLoading && !isError}
                     onRefresh={onRefresh}
-                    title="Add New Attendance"
+                    title="Add New User"
                   />
                 </CardBody>
               </Card>
@@ -188,6 +179,6 @@ function Attendance() {
   );
 }
 
-export default Attendance;
-export { default as CreateAttendance } from "./CreatAttendance";
-export { default as AttendanceDetail } from "./AttendanceDetail";
+export default Users;
+export { default as CreateUser } from "./CreateUser";
+export { default as UserDetail } from "./UserDetail";

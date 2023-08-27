@@ -3,6 +3,7 @@ import { UserController } from "../controllers";
 import {
   CreateUserDto,
   DeleteUserBySlugDto,
+  GetGroupsDto,
   GetUserBySlugDto,
   GetUsersDto,
   UpdateUserDto,
@@ -23,6 +24,7 @@ class UserRoute implements IRoutes {
     this.router.post(
       `${this.path}/list`,
       ValidationMiddleware(GetUsersDto),
+
       this.user.getUsers
     );
 
@@ -48,6 +50,12 @@ class UserRoute implements IRoutes {
       `${this.path}/delete`,
       ValidationMiddleware(DeleteUserBySlugDto),
       this.user.deleteUser
+    );
+
+    this.router.post(
+      `${this.path}/groups`,
+      ValidationMiddleware(GetGroupsDto),
+      this.user.findAllGroups
     );
   }
 }

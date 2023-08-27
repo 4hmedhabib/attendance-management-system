@@ -6,3 +6,4 @@ export * from "./shifts.dto";
 export * from "./students.dto";
 export * from "./teachers.dto";
 export * from "./users.dto";
+export * from "./auth.dto";

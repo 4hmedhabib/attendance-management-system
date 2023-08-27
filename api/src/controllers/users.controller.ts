@@ -1,11 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import {
   DeleteUserBySlugDto,
+  GetGroupsDto,
   GetUserBySlugDto,
   GetUsersDto,
   UpdateUserDto,
 } from "../dtos";
-import { IRBCreateUser, IRPCreateUserPayload, IUser } from "../interfaces/";
+import {
+  IGroup,
+  IRBCreateUser,
+  IRPCreateUserPayload,
+  IUser,
+} from "../interfaces/";
 import { UserService } from "../services/";
 
 class UserController {
@@ -112,6 +118,27 @@ class UserController {
       res.status(200).json({
         data: deleteUserData,
         message: "User successfully deleted",
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public findAllGroups = async (
+    req: Request<any, any, GetGroupsDto>,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const isMiniView = req.body.payload.isMiniView;
+
+      const findAllGroupsData: IGroup[] = await this.user.findAllGroups(
+        isMiniView
+      );
+
+      res.status(200).json({
+        data: findAllGroupsData,
+        message: "Groups Successfully loaded!",
       });
     } catch (error) {
       next(error);

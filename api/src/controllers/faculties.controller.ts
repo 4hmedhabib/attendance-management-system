@@ -67,6 +67,7 @@ class FacultyController {
       const facultyData: IRPCreateFacultyPayload = req.body.payload;
 
       const createFacultyData: IFaculty = await this.faculty.createFaculty(
+        req,
         facultyData
       );
 

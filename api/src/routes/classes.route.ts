@@ -2,17 +2,19 @@ import { Router } from "express";
 import { ClassController } from "../controllers";
 import {
   CreateClassDto,
-  CreateClassSemesterCourseAttendancesDto,
+  CreateClassSemesterCourseSessionsDto,
   CreateClassSemesterCoursesDto,
   CreateClassSemesterDto,
   DeleteClassBySlugDto,
   GetClassBySlugDto,
   GetClassSemesterCourseAttendancesDto,
+  GetClassSemesterCourseSessionsDto,
   GetClassSemesterCoursesBySlugDto,
   GetClassSemestersBySlugDto,
   GetClassesDto,
   UpdateClassDto,
   UpdateClassSemesterCourseAttendancesDto,
+  UpdateClassSemesterCourseSessionsDto,
 } from "../dtos";
 import { IRoutes } from "../interfaces/";
 import { ValidationMiddleware } from "../middlewares/validation.middleware";
@@ -57,7 +59,7 @@ class ClassRoute implements IRoutes {
       this.class.deleteClass
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail/semesters`,
       ValidationMiddleware(GetClassSemestersBySlugDto),
       this.class.getClassSemestersBySlug
@@ -69,7 +71,7 @@ class ClassRoute implements IRoutes {
       this.class.createClassSemester
     );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail/semesters/courses`,
       ValidationMiddleware(GetClassSemesterCoursesBySlugDto),
       this.class.getClassSemesterCoursesBySlug
@@ -81,13 +83,13 @@ class ClassRoute implements IRoutes {
       this.class.createClassSemesterCourses
     );
 
-    this.router.post(
-      `${this.path}/detail/semesters/courses/attendances/create`,
-      ValidationMiddleware(CreateClassSemesterCourseAttendancesDto),
-      this.class.createClassSemesterCourseAttendances
-    );
+    // this.router.post(
+    //   `${this.path}/detail/semesters/courses/attendances/create`,
+    //   ValidationMiddleware(CreateClassSemesterCourseAttendancesDto),
+    //   this.class.createClassSemesterCourseAttendances
+    // );
 
-    this.router.get(
+    this.router.post(
       `${this.path}/detail/semesters/courses/attendances/`,
       ValidationMiddleware(GetClassSemesterCourseAttendancesDto),
       this.class.getClassSemesterCourseAttendances
@@ -97,6 +99,24 @@ class ClassRoute implements IRoutes {
       `${this.path}/detail/semesters/courses/attendances/update`,
       ValidationMiddleware(UpdateClassSemesterCourseAttendancesDto),
       this.class.updateClassSemesterCourseAttendances
+    );
+
+    this.router.post(
+      `${this.path}/detail/semesters/courses/sessions/create`,
+      ValidationMiddleware(CreateClassSemesterCourseSessionsDto),
+      this.class.createClassSemesterCourseSessions
+    );
+
+    this.router.post(
+      `${this.path}/detail/semesters/courses/sessions/`,
+      ValidationMiddleware(GetClassSemesterCourseSessionsDto),
+      this.class.getClassSemesterCourseSessions
+    );
+
+    this.router.put(
+      `${this.path}/detail/semesters/courses/sessions/update`,
+      ValidationMiddleware(UpdateClassSemesterCourseSessionsDto),
+      this.class.updateClassSemesterCourseSessions
     );
   }
 }

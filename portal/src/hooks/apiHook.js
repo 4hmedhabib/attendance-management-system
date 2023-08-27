@@ -2,15 +2,30 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { useState } from "react";
 import apiClient from "../api/apiClient";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { apiError, logoutUser } from "../store/actions";
+import { put } from "redux-saga/effects";
+import { toast } from "react-toastify";
 
 const useApiCall = (key = "repoData", resourceUrl, _data, enabled = true) => {
   const [errMsg, setErrMsg] = useState(null);
+  const history = useNavigate();
+  const dispatch = useDispatch();
 
   const fetchAll = async (payload) => {
     try {
       const response = await apiClient.post(resourceUrl, _data);
+
       return response.data;
     } catch (err) {
+      if (err?.response?.data?.message && err?.response?.data?.message === 'Your session has been expired') {
+        let message = err?.response?.data?.message && err?.response?.data?.message
+        dispatch(logoutUser(history))
+
+        toast.error(message);
+      }
+
       let error =
         err?.response?.data?.message ??
         (err.message || "Something went wrong. Please contact support team");
@@ -22,6 +37,11 @@ const useApiCall = (key = "repoData", resourceUrl, _data, enabled = true) => {
 
   const create = async (data) => {
     const response = await apiClient.post(resourceUrl, data);
+    console.log(response);
+
+    if (response?.data?.message) {
+    }
+
     return response.data;
   };
 

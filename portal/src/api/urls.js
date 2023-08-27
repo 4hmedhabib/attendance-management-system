@@ -1,5 +1,9 @@
 export default {
   api: "/api",
+  auth: "/auth",
+  dashboard: function () {
+    return `${this.api}/dashboard`;
+  },
   faculties: function () {
     return `${this.api}/faculties`;
   },
@@ -29,6 +33,9 @@ export default {
   },
   deleteUser: function () {
     return `${this.api}/users/delete`;
+  },
+  groups: function () {
+    return `${this.api}/users/groups`;
   },
 
   shifts: function () {
@@ -141,5 +148,54 @@ export default {
   },
   deleteEnrollment: function () {
     return `${this.api}/students/enrollments/delete`;
+  },
+
+  attendances: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances`;
+  },
+  attendanceDetail: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/detail`;
+  },
+  createattendance: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/create`;
+  },
+  updateattendance: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/update`;
+  },
+  deleteattendance: function () {
+    return `${this.api}/classes/detail/semesters/courses/attendances/delete`;
+  },
+
+  sessions: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/`;
+  },
+  sessionDetail: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/detail`;
+  },
+  createSession: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/create`;
+  },
+  updateSession: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/update`;
+  },
+  deleteSession: function () {
+    return `${this.api}/classes/detail/semesters/courses/sessions/delete`;
+  },
+
+  createClassSemester: function () {
+    return `${this.api}/classes/detail/semesters/create`;
+  },
+  classSemesters: function () {
+    return `${this.api}/classes/detail/semesters`;
+  },
+  createClassSemesterCourses: function () {
+    return `${this.api}/classes/detail/semesters/courses/create`;
+  },
+  classSemesterCourses: function () {
+    return `${this.api}/classes/detail/semesters/courses`;
+  },
+
+  login: function () {
+    return `${this.auth}/login`;
   },
 };

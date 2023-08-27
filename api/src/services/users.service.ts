@@ -2,11 +2,12 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { Service } from "typedi";
 import { GetUsersBySlugFilters, UpdateUserData } from "../dtos";
 import { HttpException } from "../exceptions/httpException";
-import { IRPCreateUserPayload, IUser } from "../interfaces";
-import { logger } from "../utils";
+import { IGroup, IRPCreateUserPayload, IUser } from "../interfaces";
+import { hashPassword, logger } from "../utils";
 
 const prisma = new PrismaClient();
 const usersDB = prisma.users;
+const groupsDB = prisma.groups;
 
 @Service()
 class UserService {
@@ -16,7 +17,7 @@ class UserService {
   ): Promise<IUser[]> {
     const users: IUser[] = await usersDB?.findMany({
       where: {
-        isadmin: filters.isAdmin ?? undefined,
+        isadmin: filters?.isAdmin || undefined,
       },
       select: {
         userid: true,
@@ -24,11 +25,13 @@ class UserService {
         firstname: true,
         middlename: true,
         lastname: true,
+        group: { select: { groupname: true, groupslug: true } },
         mobileno: !isMiniView,
         email: !isMiniView,
         ispwdupgraded: !isMiniView,
         isstudent: !isMiniView,
         isteacher: !isMiniView,
+        createdat: true,
         createdby: !isMiniView
           ? {
               select: {
@@ -62,13 +65,14 @@ class UserService {
           firstname: true,
           middlename: true,
           lastname: true,
+          isadmin: true,
+          isteacher: true,
           mobileno: !isMiniView,
           email: !isMiniView,
           ispwdupgraded: !isMiniView,
           lastaccessdate: !isMiniView,
           lastchangepwd: !isMiniView,
           isstudent: !isMiniView,
-          isteacher: !isMiniView,
           createdat: !isMiniView,
           updatedat: !isMiniView,
           createdusers: !isMiniView
@@ -91,6 +95,7 @@ class UserService {
                 },
               }
             : false,
+          group: { select: { groupname: true, groupslug: true } },
           createdby: !isMiniView
             ? {
                 select: {
@@ -163,6 +168,14 @@ class UserService {
         `This email ${userData.email} already exists`
       );
 
+    const findGroup = await groupsDB?.findUnique({
+      where: { groupslug: userData.group },
+      select: { groupid: true, groupslug: true },
+    });
+
+    if (!findGroup)
+      throw new HttpException(404, `This group ${userData.group} not found!`);
+
     if (userData.password !== userData.passwordConfirm)
       throw new HttpException(409, `Passwords do NOT match`);
 
@@ -178,6 +191,11 @@ class UserService {
         isstudent: userData.isStudent,
         isteacher: userData.isTeacher,
         password: userData.password,
+        group: {
+          connect: {
+            groupid: findGroup.groupid,
+          },
+        },
       };
     } else {
       savedData = {
@@ -196,10 +214,17 @@ class UserService {
             username: "ahmedhabib",
           },
         },
+        group: {
+          connect: {
+            groupid: findGroup.groupid,
+          },
+        },
       };
     }
 
     try {
+      savedData.password = await hashPassword(userData.password);
+
       const createUserData: IUser = await usersDB?.create({
         data: savedData,
         select: {
@@ -387,6 +412,44 @@ class UserService {
     });
 
     return deleteUserData;
+  }
+
+  public async findAllGroups(isMiniView: boolean): Promise<IGroup[]> {
+    const groups: IGroup[] = await groupsDB?.findMany({
+      select: {
+        groupid: true,
+        groupname: true,
+        groupslug: true,
+        createddate: true,
+        updateddate: true,
+        createdby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+        updatedby: !isMiniView
+          ? {
+              select: {
+                username: true,
+                firstname: true,
+                middlename: true,
+                lastname: true,
+              },
+            }
+          : false,
+      },
+    });
+
+    if (groups.length <= 0) {
+      throw new HttpException(404, "No data found!.");
+    }
+
+    return groups;
   }
 }
 

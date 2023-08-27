@@ -10,6 +10,7 @@ export const ErrorMiddleware = (
 ) => {
   try {
     const status: number = error.status || 500;
+    logger.error(error);
     const message: string = error.message || "Something went wrong";
 
     logger.error(

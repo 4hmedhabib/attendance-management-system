@@ -45,6 +45,11 @@ export interface IAttendances {
   enrollmentid?: number;
 }
 
+export interface ISessions {
+  sessionid?: number;
+  session_uid?: string;
+}
+
 export interface IAttendanceStatus {
   statusid?: number;
   statusname?: string;

@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Form,
-  FormFeedback,
-  Input,
-  Label,
-  Row,
-} from "reactstrap";
+import { Alert, Card, CardBody, Col, Container, Row } from "reactstrap";
 
 // Formik Validation
 import { useFormik } from "formik";
@@ -25,8 +13,9 @@ import withRouter from "../../components/Common/withRouter";
 //Import Breadcrumb
 import Breadcrumb from "../../components/Common/Breadcrumb";
 
-import avatar from "../../assets/images/users/avatar-1.jpg";
+import avatar from "../../assets/images/users/avatar-4.png";
 // actions
+import { Link } from "react-router-dom";
 import { editProfile, resetProfileFlag } from "../../store/actions";
 
 const UserProfile = (props) => {
@@ -80,6 +69,8 @@ const UserProfile = (props) => {
     },
   });
 
+  const authUser = JSON.parse(localStorage.getItem("authUser"));
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -93,7 +84,7 @@ const UserProfile = (props) => {
               {success ? <Alert color="success">{success}</Alert> : null}
 
               <Card>
-                <CardBody>
+                <CardBody className="d-flex flex-column justify-content-center">
                   <div className="d-flex">
                     <div className="ms-3">
                       <img
@@ -106,59 +97,50 @@ const UserProfile = (props) => {
                       <div className="text-muted">
                         <h5>{name}</h5>
                         <p className="mb-1">{email}</p>
-                        <p className="mb-0">Id no: #{idx}</p>
+                        <p className="mb-0">
+                          Full Name:{" "}
+                          <span className="fw-bold">{`${authUser?.user?.firstname} ${authUser?.user?.middlename} ${authUser?.user?.lastname}`}</span>
+                        </p>
+                        <p className="mb-0">
+                          Group :{" "}
+                          <span className="fw-bold">
+                            {authUser?.group?.groupname}
+                          </span>
+                        </p>
+                        <p className="mb-0">
+                          Username :{" "}
+                          <span className="fw-bold">
+                            {authUser?.user?.username}
+                          </span>
+                        </p>
+                        <p className="mb-0">
+                          Email :{" "}
+                          <span className="fw-bold">
+                            {authUser?.user?.email}
+                          </span>
+                        </p>
+                        <p className="mb-0">
+                          Mobile No :{" "}
+                          <span className="fw-bold">
+                            {authUser?.user?.mobileno}
+                          </span>
+                        </p>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="text-center my-3">
+                    <Link
+                      to={"/logout"}
+                      className="bg-danger text-white btn btn-sm"
+                    >
+                      Logout
+                    </Link>
                   </div>
                 </CardBody>
               </Card>
             </Col>
           </Row>
-
-          <h4 className="card-title mb-4">Change User Name</h4>
-
-          <Card>
-            <CardBody>
-              <Form
-                className="form-horizontal"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  validation.handleSubmit();
-                  return false;
-                }}
-              >
-                <div className="form-group">
-                  <Label className="form-label">User Name</Label>
-                  <Input
-                    name="username"
-                    // value={name}
-                    className="form-control"
-                    placeholder="Enter User Name"
-                    type="text"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.username || ""}
-                    invalid={
-                      validation.touched.username && validation.errors.username
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.username && validation.errors.username ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.username}
-                    </FormFeedback>
-                  ) : null}
-                  <Input name="idx" value={idx} type="hidden" />
-                </div>
-                <div className="text-center mt-4">
-                  <Button type="submit" color="danger">
-                    Update User Name
-                  </Button>
-                </div>
-              </Form>
-            </CardBody>
-          </Card>
         </Container>
       </div>
     </React.Fragment>

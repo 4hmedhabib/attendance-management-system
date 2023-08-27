@@ -1,5 +1,7 @@
+export { default as AuthService } from "./auth.service";
 export { default as ClassService } from "./classes.service";
 export { default as CourseService } from "./courses.service";
+export { default as DashboardSrv } from "./dashboard.service";
 export { default as FacultyService } from "./faculties.service";
 export { default as SemesterService } from "./semesters.service";
 export { default as ShiftService } from "./shifts.service";

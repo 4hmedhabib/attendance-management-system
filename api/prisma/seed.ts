@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import async from "async";
 import { attandanceStatuses, users } from "../src/constants";
 import { logger } from "../src/utils";
+import slugify from "slugify";
 
 const prisma = new PrismaClient();
 
@@ -28,7 +29,28 @@ async function main() {
             logger.error(err);
             _next(err);
           });
-      }, // attandance statuses
+
+        prisma.groups
+          .createMany({
+            data: [
+              { groupname: "Teachers" },
+              { groupname: "Deans" },
+              { groupname: "Admin" },
+            ].map((group) => ({
+              groupname: group.groupname,
+              groupslug: slugify(group.groupname?.toLowerCase(), "_"),
+            })),
+            skipDuplicates: true,
+          })
+          .then((res) => {
+            logger.info("=> SUCCESSFULLY GROUPS SEEDED!");
+            _next(null);
+          })
+          .catch((err) => {
+            logger.error(err);
+            _next(err);
+          });
+      }, // groups
       (_next: any) => {
         prisma.users
           .createMany({

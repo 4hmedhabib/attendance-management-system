@@ -119,9 +119,7 @@ const CreateEnrollment = () => {
 
           formik.resetForm();
           setIsSubmitting(false);
-          navigate("/enrollments/detail", {
-            state: { enrollmentId: res?.data?.enrollmentid },
-          });
+          navigate("/enrollments/");
         })
         .catch((err) => {
           toast.update("createEnrollment", {
@@ -146,14 +144,12 @@ const CreateEnrollment = () => {
     refetch: coursesRefetch,
   } = useApiCall(
     "COURSES_ENROLLMENT_CREATE",
-    urls.courses(),
+    urls.classSemesterCourses(),
     {
       payload: {
         isMiniView: true,
-        filters: {
-          classSlug: _class?.value ?? "",
-          semesterSlug: semester?.value ?? "",
-        },
+        classSlug: _class?.value ?? "",
+        semesterSlug: semester?.value ?? "",
       },
     },
     false
@@ -222,15 +218,16 @@ const CreateEnrollment = () => {
 
   const getTeacherData = () => {
     let _course = coursesData?.data?.find(
-      (course) => course?.classslug === course?.value
+      (course) => course?.course?.classslug === course?.value
     );
 
-    if (_course && _course.semesters[0]?.teacher) {
+    if (_course) {
       let teacher = {
-        label: `${_course?.semesters[0]?.teacher?.firstname} ${_course?.semesters[0]?.teacher?.middlename} ${_course?.semesters[0]?.teacher?.lastname}`,
+        label: `${_course.teacher?.firstname} ${_course.teacher?.middlename} - ${_course.teacher?.techid}`,
         value: coursesData?.data?.find(
-          (course) => course?.courseslug === formik.values?.course?.value
-        )?.semesters[0]?.teacher?.techid,
+          (course) =>
+            course?.course?.courseslug === formik.values?.course?.value
+        ).teacher?.techid,
       };
       formik.setFieldValue("teacher", teacher);
     }
@@ -428,8 +425,8 @@ const CreateEnrollment = () => {
                               className="flex-grow-1"
                               title="Course"
                               options={coursesData?.data?.map((course) => ({
-                                label: `${course?.coursename}`,
-                                value: course?.courseslug,
+                                label: `${course?.course?.coursename}`,
+                                value: course?.course?.courseslug,
                               }))}
                               value={formik.values?.course}
                               onBlur={formik.handleBlur}

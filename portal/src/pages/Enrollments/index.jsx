@@ -81,7 +81,6 @@ function Enrollment() {
         Header: "Enrollment ID",
         accessor: "student.stdid",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value?.toUpperCase()}`;
         },
       },
@@ -89,7 +88,6 @@ function Enrollment() {
         Header: "Semester",
         accessor: "semester_course.class_semester.semester.semestername",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
@@ -97,7 +95,6 @@ function Enrollment() {
         Header: "Class",
         accessor: "semester_course.class_semester.class.classname",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
@@ -105,7 +102,6 @@ function Enrollment() {
         Header: "Course",
         accessor: "semester_course.course.coursename",
         Cell: ({ cell }) => {
-          console.log(cell);
           return `${cell?.value}`;
         },
       },
@@ -113,14 +109,14 @@ function Enrollment() {
         Header: "Teacher",
         accessor: "semester_course.teacher",
         Cell: ({ cell }) => {
-          return `${cell?.value.firstname} ${cell?.value.middlename}`;
+          return `${cell?.value?.firstname} ${cell?.value?.middlename}`;
         },
       },
       {
         Header: "Created By",
         accessor: "createdby",
         Cell: ({ cell }) => {
-          return `${cell?.value.firstname} ${cell?.value.middlename}`;
+          return `${cell?.value?.firstname} ${cell?.value?.middlename}`;
         },
       },
       {

@@ -63,7 +63,10 @@ class ShiftController {
     try {
       const shiftData: IRPCreateShiftPayload = req.body.payload;
 
-      const createShiftData: IShift = await this.shift.createShift(shiftData);
+      const createShiftData: IShift = await this.shift.createShift(
+        req,
+        shiftData
+      );
 
       res.status(201).json({
         data: createShiftData,

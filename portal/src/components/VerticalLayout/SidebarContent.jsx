@@ -12,6 +12,7 @@ import withRouter from "../Common/withRouter";
 //i18n
 import { useCallback } from "react";
 import { withTranslation } from "react-i18next";
+import { AuthPermMiddleware } from "../../routes/route";
 
 const SidebarContent = (props) => {
   const ref = useRef();
@@ -145,84 +146,107 @@ const SidebarContent = (props) => {
         <div id="sidebar-menu">
           <ul className="metismenu list-unstyled" id="side-menu">
             <li className="menu-title">{props.t("Menu")} </li>
-            <li>
-              <Link to="/dashboard">
-                <i className="bx bx-home-circle"></i>
-                <span>{props.t("Dashboards")}</span>
-              </Link>
-            </li>
+
+            <AuthPermMiddleware allowedPerms={["teachers", "deans", "admin"]}>
+              <li>
+                <Link to="/dashboard">
+                  <i className="bx bx-home-circle"></i>
+                  <span>{props.t("Dashboards")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
             <li className="menu-title">{props.t("Pages")}</li>
 
-            <li>
-              <Link to="/faculties">
-                <i className="bx bx-chalkboard"></i>
-                <span>{props.t("Faculties")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["deans", "admin"]}>
+              <li>
+                <Link to="/faculties">
+                  <i className="bx bx-chalkboard"></i>
+                  <span>{props.t("Faculties")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/shifts">
-                <i className="bx bx-brightness-half"></i>
-                <span>{props.t("Shifts")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["admin"]}>
+              <li>
+                <Link to="/shifts">
+                  <i className="bx bx-brightness-half"></i>
+                  <span>{props.t("Shifts")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/semesters">
-                <i className="bx bx-hive"></i>
-                <span>{props.t("Semesters")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["deans", "admin"]}>
+              <li>
+                <Link to="/semesters">
+                  <i className="bx bx-hive"></i>
+                  <span>{props.t("Semesters")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/classes">
-                <i className="bx bx-buildings"></i>
-                <span>{props.t("Classes")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["teachers", "deans", "admin"]}>
+              <li>
+                <Link to="/classes">
+                  <i className="bx bx-buildings"></i>
+                  <span>{props.t("Classes")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/courses">
-                <i className="bx bxs-book"></i>
-                <span>{props.t("Courses")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["deans", "admin"]}>
+              <li>
+                <Link to="/courses">
+                  <i className="bx bxs-book"></i>
+                  <span>{props.t("Courses")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/teachers">
-                <i className="bx bxs-user-voice"></i>
-                <span>{props.t("Teachers")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["deans", "admin"]}>
+              <li>
+                <Link to="/teachers">
+                  <i className="bx bxs-user-voice"></i>
+                  <span>{props.t("Teachers")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/students">
-                <i className="bx bxs-graduation"></i>
-                <span>{props.t("Students")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["deans", "admin"]}>
+              <li>
+                <Link to="/students">
+                  <i className="bx bxs-graduation"></i>
+                  <span>{props.t("Students")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/enrollments">
-                <i className="bx bxs-pen"></i>
-                <span>{props.t("Enrollments")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["deans", "admin"]}>
+              <li>
+                <Link to="/enrollments">
+                  <i className="bx bxs-pen"></i>
+                  <span>{props.t("Enrollments")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/attendances">
-                <i className="bx bxs-calendar"></i>
-                <span>{props.t("Attendances")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={[]}>
+              <li>
+                <Link to="/sessions">
+                  <i className="bx bxs-calendar"></i>
+                  <span>{props.t("Sessions")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
 
-            <li>
-              <Link to="/administrations">
-                <i className="bx bx-command"></i>
-                <span>{props.t("Administrations")}</span>
-              </Link>
-            </li>
+            <AuthPermMiddleware allowedPerms={["deans", "admin"]}>
+              <li>
+                <Link to="/administrations">
+                  <i className="bx bx-command"></i>
+                  <span>{props.t("Administrations")}</span>
+                </Link>
+              </li>
+            </AuthPermMiddleware>
           </ul>
         </div>
       </SimpleBar>

@@ -65,6 +65,7 @@ class SemesterController {
       const semesterData: IRPCreateSemesterPayload = req.body.payload;
 
       const createSemesterData: ISemester = await this.semester.createSemester(
+        req,
         semesterData
       );
 

@@ -19,6 +19,7 @@ import NotFound from "../../../components/Common/NotFound";
 import ResError from "../../../components/Common/ResError";
 import useApiCall from "../../../hooks/apiHook";
 import { updateClassSchema } from "../../../validations";
+import Semesters from "./Semesters";
 import Sidebar from "./Sidebar";
 import UpdateForm from "./UpdateForm";
 
@@ -46,6 +47,7 @@ const ClassDetail = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setErrors] = useState(null);
   const [modal_backdrop, setDeleteModal] = useState(false);
+  const [showSemesters, setShowSemesters] = useState(false);
 
   const {
     data: classData,
@@ -300,6 +302,10 @@ const ClassDetail = () => {
     );
   }
 
+  const onSemesters = () => {
+    setShowSemesters(true);
+  };
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -318,6 +324,15 @@ const ClassDetail = () => {
                   <div className="d-flex align-items-center">
                     <ul className="list-unstyled hstack gap-3 mb-0 flex-grow-1"></ul>
                     <div className="hstack gap-2">
+                      {!showSemesters && (
+                        <button
+                          className="btn btn-success d-flex justify-content-center align-items-center"
+                          onClick={onSemesters}
+                        >
+                          <i className="bx bx-caret-right align-baseline me-1"></i>
+                          Semesters
+                        </button>
+                      )}
                       <button
                         className="btn btn-info d-flex justify-content-center align-items-center"
                         onClick={onRefresh}
@@ -358,6 +373,9 @@ const ClassDetail = () => {
                       <Link
                         className="btn btn-secondary d-flex justify-content-center align-items-center"
                         to={"/classes"}
+                        onClick={() => {
+                          setShowSemesters(false);
+                        }}
                       >
                         <i className="bx bx-left-arrow align-baseline me-1"></i>
                         Back
@@ -369,24 +387,33 @@ const ClassDetail = () => {
             </Col>
           </Row>
 
-          <Row>
-            <Sidebar _class={_class} />
-            <UpdateForm
-              _class={_class}
-              classSlug={state?.classSlug}
-              isEdit={isEdit}
-              facultiesData={facultiesData}
-              facultiesIsErr={facultiesIsErr}
-              facultiesErrMsg={facultiesErrMsg}
-              facultiesIsLoading={facultiesIsLoading}
-              shiftsData={shiftsData}
-              shiftsIsErr={shiftsIsErr}
-              shiftsIsLoading={shiftsIsLoading}
-              shiftsErrMsg={shiftsErrMsg}
-              formik={formik}
-              isSubmitting={isSubmitting}
+          {!showSemesters && (
+            <Row>
+              <Sidebar _class={_class} />
+              <UpdateForm
+                _class={_class}
+                classSlug={state?.classSlug}
+                isEdit={isEdit}
+                facultiesData={facultiesData}
+                facultiesIsErr={facultiesIsErr}
+                facultiesErrMsg={facultiesErrMsg}
+                facultiesIsLoading={facultiesIsLoading}
+                shiftsData={shiftsData}
+                shiftsIsErr={shiftsIsErr}
+                shiftsIsLoading={shiftsIsLoading}
+                shiftsErrMsg={shiftsErrMsg}
+                formik={formik}
+                isSubmitting={isSubmitting}
+              />
+            </Row>
+          )}
+
+          {showSemesters && (
+            <Semesters
+              classData={classData?.data}
+              onShowSemester={setShowSemesters}
             />
-          </Row>
+          )}
         </Container>
       </div>
 
